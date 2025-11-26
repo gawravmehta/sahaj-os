@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: .
+    container_name: nextjs-app
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://127.0.0.1:8000/api/v1"
+    restart: unless-stopped

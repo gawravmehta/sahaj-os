@@ -1,0 +1,138 @@
+<div class="cookie-banner" id="cookie-banner">
+  <div class="banner-header">
+    <img
+      src="{{LOGO_URL}}"
+      alt="Flipkart Logo"
+      class="logo-icon"
+    />
+    <div class="language-selector" id="language-selector-banner">
+      🌐 <span id="selected-language-banner">English</span>
+      <div class="dropdown-arrow"></div>
+      <div class="language-dropdown" id="language-dropdown-banner">
+        <div class="language-option" data-lang="eng">English</div>
+        <div class="language-option" data-lang="hin">हिन्दी</div>
+        <div class="language-option" data-lang="ben">বাংলা</div>
+        <div class="language-option" data-lang="tel">తెలుగు</div>
+        <div class="language-option" data-lang="mar">मराठी</div>
+        <div class="language-option" data-lang="tam">தமிழ்</div>
+        <div class="language-option" data-lang="urd">اردو</div>
+        <div class="language-option" data-lang="guj">ગુજરાતી</div>
+        <div class="language-option" data-lang="kan">ಕನ್ನಡ</div>
+        <div class="language-option" data-lang="mal">മലയാളം</div>
+        <div class="language-option" data-lang="ori">ଓଡ଼ିଆ</div>
+        <div class="language-option" data-lang="pan">ਪੰਜਾਬੀ</div>
+        <div class="language-option" data-lang="asm">অসমীয়া</div>
+        <div class="language-option" data-lang="mai">मैथिली</div>
+        <div class="language-option" data-lang="sat">ᱥᱟᱱᱛᱟᱲᱤ</div>
+        <div class="language-option" data-lang="kas">كٲشُر</div>
+        <div class="language-option" data-lang="nep">नेपाली</div>
+        <div class="language-option" data-lang="snd">سنڌي</div>
+        <div class="language-option" data-lang="kok">कोंकणी</div>
+        <div class="language-option" data-lang="doi">डोगरी</div>
+        <div class="language-option" data-lang="mni">মেইতেইলোন্</div>
+        <div class="language-option" data-lang="brx">बोड़ो</div>
+        <div class="language-option" data-lang="san">संस्कृत</div>
+      </div>
+    </div>
+  </div>
+  <div class="banner-divider"></div>
+  <div class="banner-body">
+    <div class="cookie-content" id="cookie-content"></div>
+    <div class="button-group">
+      <button class="btn btn-secondary" id="cookie-settings-btn"></button
+      ><button class="btn btn-primary" id="accept-essential-btn"></button
+      ><button class="btn btn-accept-all" id="accept-all-btn"></button>
+    </div>
+  </div>
+</div>
+<div class="preference-modal" id="preference-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="header-top">
+        <img
+          src="{{LOGO_URL}}"
+          alt="Flipkart Logo"
+          class="logo-icon"
+        />
+        <div class="language-selector" id="language-selector-modal">
+          <span>🌐</span><span id="selected-language-modal">English</span>
+          <div class="dropdown-arrow"></div>
+          <div class="language-dropdown" id="language-dropdown-modal">
+            <div class="language-option" data-lang="eng">English</div>
+            <div class="language-option" data-lang="hin">हिन्दी</div>
+            <div class="language-option" data-lang="ben">বাংলা</div>
+            <div class="language-option" data-lang="tel">తెలుగు</div>
+            <div class="language-option" data-lang="mar">मराठी</div>
+            <div class="language-option" data-lang="tam">தமிழ்</div>
+            <div class="language-option" data-lang="urd">اردو</div>
+            <div class="language-option" data-lang="guj">ગુજરાતી</div>
+            <div class="language-option" data-lang="kan">ಕನ್ನಡ</div>
+            <div class="language-option" data-lang="mal">മലയാളം</div>
+            <div class="language-option" data-lang="ori">ଓଡ଼ିଆ</div>
+            <div class="language-option" data-lang="pan">ਪੰਜਾਬੀ</div>
+            <div class="language-option" data-lang="asm">অসমীয়া</div>
+            <div class="language-option" data-lang="mai">मैथिली</div>
+            <div class="language-option" data-lang="sat">ᱥᱟᱱᱛᱟᱲᱤ</div>
+            <div class="language-option" data-lang="kas">كٲشُر</div>
+            <div class="language-option" data-lang="nep">नेपाली</div>
+            <div class="language-option" data-lang="snd">سنڌي</div>
+            <div class="language-option" data-lang="kok">कोंकणी</div>
+            <div class="language-option" data-lang="doi">डोगरी</div>
+            <div class="language-option" data-lang="mni">মেইতেইলোন্</div>
+            <div class="language-option" data-lang="brx">बोड़ो</div>
+            <div class="language-option" data-lang="san">संस्कृत</div>
+          </div>
+        </div>
+        <button class="close-button" id="close-modal-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="feather feather-x"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="header-bottom">
+        <h1 class="preference-title" id="preference-title"></h1>
+        <div class="preference-description" id="preference-description"></div>
+      </div>
+    </div>
+    <h2 class="consent-section-title" id="consent-section-title"></h2>
+    <div class="modal-body">
+      <div class="consent-categories">
+        <div class="category-list"></div>
+        <div class="category-details" id="category-details"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="footer-content">
+        <div class="powered-by">
+          <span id="powered-by-text">Powered by</span
+          ><svg class="concur-logo" viewBox="0 0 60 12" fill="currentColor">
+            <path
+              d="M0 6c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm8-2c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"
+            />
+            <text x="14" y="8" font-size="8" font-weight="600">concur</text>
+          </svg>
+        </div>
+        <div class="button-group">
+          <div class="small-scr-btn">
+            <button class="btn btn-reject"></button
+            ><button class="btn btn-allow"></button>
+          </div>
+          <button class="btn btn-confirm"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<button id="open-preferences-btn">Cookie Settings</button>

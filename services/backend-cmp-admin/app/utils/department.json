@@ -1,0 +1,42 @@
+[
+  {
+    "department_name": "Privacy Office",
+    "department_description": "Focuses on implementing and overseeing data privacy programs, conducting Data Protection Impact Assessments (DPIAs), and ensuring the organization complies with global privacy laws. Handles and reviews privacy-related inquiries and audits."
+  },
+  {
+    "department_name": "Legal & Compliance",
+    "department_description": "Responsible for ensuring that the organization adheres to data protection laws and compliance frameworks (e.g., DPDPA, GDPR, CCPA). Works closely with regulators, drafts policies, and handles legal risks related to data privacy and consent management."
+  },
+  {
+    "department_name": "Cybersecurity",
+    "department_description": "Ensures that personal data and sensitive information are protected from breaches, unauthorized access, and cyber threats. Team handles data encryption, security monitoring, and incident response planning."
+  },
+  {
+    "department_name": "IT & Infrastructure",
+    "department_description": "Manages the organization's technology stack, cloud infrastructure, and internal data systems. IT teams ensure secure data storage, access controls, and integration with third-party privacy tools."
+  },
+  {
+    "department_name": "Human Resources",
+    "department_description": "Handles employee privacy, training, and compliance with workplace data regulations. HR ensures that employee consent for data processing is obtained and managed properly."
+  },
+  {
+    "department_name": "Marketing & Customer Relations",
+    "department_description": "Manages customer data, consent collection for marketing communications, and compliance with regulations like DPDPA and GDPR’s 'opt-in' and 'opt-out' policies. This department is responsible for transparent data usage in marketing campaigns."
+  },
+  {
+    "department_name": "Finance",
+    "department_description": "Ensures that financial transactions and vendor relationships comply with privacy requirements. Procurement teams also vet third-party service providers for data protection standards."
+  },
+  {
+    "department_name": "Product & Engineering",
+    "department_description": "Integrates privacy by design and ensures that SaaS products comply with data protection laws. Collectively works on data minimization, anonymization, and secure data handling within the product ecosystem."
+  },
+  {
+    "department_name": "Customer Support & Service",
+    "department_description": "Handles data-related inquiries from customers, such as data access requests (DSARs), consent withdrawal, and privacy-related concerns. Ensures compliance with consumer rights laws regarding data protection."
+  },
+  {
+    "department_name": "Risk & Audit",
+    "department_description": "Conducts internal audits, risk assessments, and compliance checks to ensure the organization adheres to privacy and security standards. This department helps mitigate risks associated with data handling."
+  }
+]

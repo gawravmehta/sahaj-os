@@ -1,0 +1,49 @@
+version: "3"
+services:
+  api:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 3300 --reload --timeout-keep-alive 300
+    ports:
+      - "3300:3300"
+
+  data-veda:
+    image: 4646krisna/data-veda
+    container_name: data-veda
+    ports:
+      - "8081:8080"
+
+  consumer-dp-processing:
+    build: .
+    command: python -m app.worker.dp_processing_consumer
+    depends_on:
+      - api
+
+  consumer-dp-external-processing:
+    build: .
+    command: python -m app.worker.dp_external_processing_consumer
+    depends_on:
+      - api
+
+  consumer-failed-records:
+    build: .
+    command: python -m app.worker.failed_records
+    depends_on:
+      - api
+
+  consumer-notice-notification:
+    build: .
+    command: python -m app.worker.notice_notification_consumer
+    depends_on:
+      - api
+
+  consumer-send-email:
+    build: .
+    command: python -m app.worker.send_email_consumer
+    depends_on:
+      - api
+
+  consumer-consent-validation-internal:
+    build: .
+    command: python -m app.worker.consent_validation_internal_consumer
+    depends_on:
+      - api

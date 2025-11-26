@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notice</title>
+    <style>
+      :root {
+        /* Font size variables */
+        --base-font-size: 16px;
+        --h1-size: 2rem;
+        --h2-size: 1.75rem;
+        --h3-size: 1.5rem;
+        --h4-size: 1.25rem;
+        --p-size: 1rem;
+        --small-size: 0.875rem;
+        --xsmall-size: 0.75rem;
+
+        /* Light theme as default */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f4f4f4;
+        --bg-tertiary: #eeeeee;
+
+        --bg-accent: #fff6f6;
+        --text-primary: #333333;
+        --text-secondary: #555555;
+        --text-accent: #002fa7;
+        --border-color: #cccccc;
+        --button-accept: #38b918;
+        --button-deny: #ee734b;
+        --button-accept-hover: #2da312;
+        --button-deny-hover: #e05c30;
+        --checkbox-bg: #f6f8ff;
+      }
+
+      /* Dark theme */
+      [data-theme="dark"] {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --bg-tertiary: #2a2a2a;
+
+        --bg-accent: #2a1a1a;
+        --text-primary: #f0f0f0;
+        --text-secondary: #cccccc;
+        --text-accent: #4d7cff;
+        --border-color: #444444;
+        --checkbox-bg: #2a2a2a;
+      }
+
+      /* High contrast theme */
+      [data-theme="high-contrast"] {
+        --bg-primary: #000000;
+        --bg-secondary: #333333;
+
+        --bg-tertiary: #555555;
+        --bg-accent: #330000;
+        --text-primary: #ffffff;
+        --text-secondary: #eeeeee;
+        --text-accent: #ffff00;
+        --border-color: #ffffff;
+        --button-accept: #00ff00;
+        --button-deny: #ff0000;
+        --button-accept-hover: #00cc00;
+        --button-deny-hover: #cc0000;
+        --checkbox-bg: #222222;
+      }
+
+      html {
+        font-size: var(--base-font-size);
+      }
+
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      * {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .body-container {
+        max-width: 1080px;
+        margin: 2rem auto;
+      }
+
+      h1 {
+        font-size: var(--h1-size);
+        font-weight: bold;
+      }
+
+      h2 {
+        font-size: var(--h2-size);
+        font-weight: bold;
+      }
+
+      h3 {
+        font-size: var(--h3-size);
+        font-weight: bold;
+      }
+
+      h4 {
+        font-size: var(--h4-size);
+        font-weight: bold;
+      }
+
+      p {
+        font-size: var(--p-size);
+      }
+      .main-container {
+        border: 1px solid var(--border-color);
+        padding: 2rem;
+      }
+      .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .theme-toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .cn-title {
+        margin-top: 2.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        color: var(--text-accent);
+      }
+
+      .checkboxes {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .speak-svg {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+      .lang-svg {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        margin-top: 5px;
+        cursor: pointer;
+      }
+      .checkbox-check {
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+
+      .rights-section {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: var(--bg-accent);
+        padding: 20px;
+        height: auto;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        position: relative;
+      }
+
+      .rights-section h5 {
+        font-size: var(--p-size);
+        color: var(--text-secondary);
+        margin-bottom: 15px;
+      }
+
+      .purpose-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .rights-section p {
+        font-size: var(--small-size);
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .rights-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 60%;
+      }
+
+      .image-placeholder {
+        width: 149px;
+        height: 162px;
+        background-color: var(--bg-tertiary);
+        border: 1px solid var(--border-color);
+      }
+
+      .consent-text {
+        font-size: var(--p-size);
+        color: var(--text-primary);
+        line-height: 1.6;
+      }
+
+      .consent-text p {
+        margin-bottom: 12px;
+      }
+
+      .sticky-contaner {
+        background-color: var(--bg-secondary);
+        position: sticky;
+        bottom: 0;
+        width: 100%;
+        z-index: 10;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .sticky-contaner2 {
+        max-width: 1080px;
+        margin: auto;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .sticky-contaner2 p {
+        font-size: 20px;
+      }
+
+      .actions button {
+        padding: 8px 20px;
+        font-size: var(--p-size);
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        width: 189px;
+        margin-left: 1rem;
+      }
+
+      .accept {
+        background: var(--button-accept);
+        color: white;
+      }
+
+      .accept:hover {
+        background: var(--button-accept-hover);
+      }
+
+      .deny {
+        background: var(--button-deny);
+        color: white;
+      }
+
+      .deny:hover {
+        background: var(--button-deny-hover);
+      }
+
+      .section-top {
+        background-color: var(--bg-tertiary);
+        border-radius: 4px;
+      }
+
+      .section-header {
+        padding: 4px 12px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        gap: 16px;
+      }
+
+      .section-header h3 {
+        margin: 0;
+        font-size: var(--h4-size);
+        color: var(--text-primary);
+      }
+
+      .section-header input[type="checkbox"] {
+        display: flex;
+        margin: 0;
+        cursor: pointer;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+
+      .dropdown-checkbox {
+        cursor: pointer;
+        height: 1.2rem;
+        width: 1.2rem;
+      }
+
+      .dropdown {
+        display: none;
+      }
+
+      .dropdown.active {
+        display: block;
+      }
+
+      .dropdown-item {
+        margin-top: 8px;
+        margin-bottom: 8px;
+        background-color: var(--checkbox-bg);
+        margin-left: 25px;
+        margin-right: 20px;
+        padding: 18px 12px;
+      }
+
+      /* .dropdown-item:last-child {
+        margin-bottom: 0;
+      } */
+
+      .personal-data-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .personal-data-buttons button {
+        border: 1px solid var(--text-accent);
+        background: var(--bg-primary);
+        border-radius: 16px;
+        padding: 6px 12px;
+        color: var(--text-accent);
+        cursor: pointer;
+        margin-bottom: 10px;
+        font-size: var(--xsmall-size);
+      }
+
+      .personal-data-buttons button.selected {
+        background: var(--text-accent);
+        color: #fff;
+      }
+
+      .consent-duration {
+        font-size: var(--xsmall-size);
+        color: var(--text-secondary);
+      }
+
+      .dropdown-lable {
+        display: flex;
+        justify-content: space-between;
+        margin-left: 10px;
+        margin-right: 8px;
+        margin-bottom: 16px;
+        position: relative;
+      }
+      .dropdown-item p {
+        margin-left: 10px;
+        margin-right: 80px;
+        position: relative;
+        color: var(--text-primary);
+        font-size: var(--small-size);
+      }
+      .btn-title {
+        font-size: var(--xsmall-size);
+        font-weight: 500;
+      }
+      .btn-container {
+        margin-left: 10px;
+      }
+      .question-svg {
+        display: flex;
+        gap: 2px;
+      }
+      .exclamation-svg {
+        display: flex;
+        gap: 2px;
+      }
+
+      /* Container for the SVG and Dropdown */
+      .dropdown-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* The dropdown menu */
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        width: 110px;
+        z-index: 1000;
+        font-size: var(--xsmall-size);
+        height: 260px;
+        width: 125px;
+        overflow-y: auto;
+      }
+
+      /* Dropdown items */
+      .dropdown-menu div {
+        padding: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        border-bottom: 0.5px solid var(--border-color);
+      }
+
+      /* Hover effect */
+      .dropdown-menu div:hover {
+        background-color: var(--bg-tertiary);
+      }
+
+      .theme-dropdown {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0px;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-size: var(--xsmall-size);
+        width: 130px;
+        border-radius: 4px;
+      }
+
+      .theme-dropdown div {
+        padding: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        border-bottom: 0.5px solid var(--border-color);
+      }
+
+      .theme-dropdown div:hover {
+        background-color: var(--bg-tertiary);
+      }
+
+      .font-size-controls {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: var(--xsmall-size);
+        margin-right: 0.1rem;
+        padding: 0.4rem 0.6rem;
+        cursor: pointer;
+      }
+
+      .font-size-controls:hover {
+        background: var(--bg-secondary);
+      }
+
+      .checkbox-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+
+      .mandatory-tooltip {
+        visibility: hidden;
+        position: absolute;
+        bottom: 125%;
+        right: 0;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        font-size: var(--xsmall-size);
+        white-space: pre-wrap;
+        width: 250px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .checkbox-wrapper:hover .mandatory-tooltip {
+        visibility: visible;
+      }
+
+      .mandatory-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        right: 10px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--border-color) transparent transparent transparent;
+      }
+
+      .theme-button {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        padding: 0.4rem 0.6rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+        font-size: var(--xsmall-size);
+      }
+
+      .theme-button:hover {
+        background: var(--bg-secondary);
+      }
+
+      .theme-icon {
+        width: 16px;
+        height: 16px;
+        fill: var(--text-primary);
+      }
+
+      /* Responsive styles for medium devices */
+      @media screen and (max-width: 1024px) {
+        .body-container {
+          max-width: 95%;
+          margin: 1.5rem auto;
+          padding: 0 1rem;
+        }
+        .sticky-contaner2 {
+          max-width: 95%;
+          margin: auto;
+          padding: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .sticky-contaner2 p {
+          font-size: 18px;
+        }
+        .main-heading {
+          font-size: 30px;
+        }
+
+        .rights-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 80%;
+        }
+        .rights-text p {
+          font-size: 13px;
+          color: #555;
+        }
+
+        .image-placeholder {
+          width: 134px;
+          height: 144px;
+          background-color: #ccc;
+        }
+
+        .dropdown-item {
+          margin-top: 8px;
+          margin-bottom: 8px;
+          background-color: var(--checkbox-bg);
+          margin-left: 0px;
+          margin-right: 0px;
+          padding: 18px 12px;
+        }
+        .dropdown-label {
+          display: none;
+        }
+      }
+
+      @media screen and (max-width: 720px) {
+        .body-container {
+          max-width: 95%;
+          margin: 1.5rem auto;
+          padding: 0 1rem;
+        }
+        .sticky-contaner2 {
+          max-width: 94%;
+          margin: auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .main-heading {
+          font-size: 30px;
+        }
+
+        .rights-section {
+          display: flex;
+          /* flex-direction: column; */
+          justify-content: space-between;
+          align-items: center;
+          background-color: var(--bg-accent);
+          padding: 18px;
+          height: auto;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          position: relative;
+        }
+
+        .rights-section h5 {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          margin-bottom: 15px;
+        }
+
+        .rights-section p {
+          font-size: var(--xsmall-size);
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .rights-text {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .rights-text p {
+          font-size: 12px;
+          color: #555;
+        }
+
+        .image-placeholder {
+          margin-top: 15px;
+          width: 134px;
+          height: 144px;
+          background-color: #ccc;
+        }
+
+        .actions {
+          display: flex;
+        }
+
+        .sticky-contaner2 p {
+          font-size: var(--p-size);
+        }
+
+        .actions button {
+          padding: 8px 10px;
+          font-size: var(--small-size);
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+          width: 110px;
+          margin-left: 1rem;
+        }
+      }
+      @media screen and (max-width: 680px) {
+        .body-container {
+          max-width: 100%;
+          margin: 1.5rem auto;
+          padding: 0 1rem;
+        }
+
+        .main-container {
+          border: 1px solid var(--border-color);
+          padding: 0rem 0rem 0rem;
+        }
+
+        .checkboxes {
+          padding: 0rem 1rem 1rem;
+        }
+        .consent-text {
+          padding: 0rem 1rem 1rem;
+        }
+        .header-container {
+          display: flex;
+          flex-direction: column-reverse;
+          align-items: center;
+          justify-content: center;
+        }
+        .consent-header {
+          margin-top: 10px;
+        }
+
+        .theme-toggle-container {
+          display: flex;
+          margin-bottom: 10px;
+          align-items: center;
+          justify-content: center;
+          /* padding: 2% 6%; */
+          border-bottom: 1px solid var(--border-color);
+          gap: 2rem;
+          width: 100%;
+        }
+        .controls {
+          display: flex;
+          gap: 8px;
+        }
+
+        .sticky-contaner2 {
+          max-width: 100%;
+          margin: auto;
+          padding: 14px;
+          display: flex;
+          /* flex-direction: column; */
+          align-items: center;
+          justify-content: center;
+        }
+        .main-heading {
+          font-size: 30px;
+        }
+
+        .rights-section {
+          display: flex;
+          /* flex-direction: column; */
+          justify-content: space-between;
+          align-items: center;
+          background-color: var(--bg-accent);
+          padding: 18px;
+          height: auto;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          margin-left: 1rem;
+          margin-right: 1rem;
+          position: relative;
+        }
+
+        .rights-section h5 {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          margin-bottom: 15px;
+        }
+
+        .rights-section p {
+          font-size: var(--small-size);
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .rights-text {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .rights-text p {
+          font-size: 14px;
+          color: #555;
+        }
+
+        .image-placeholder {
+          margin-top: 15px;
+          width: 134px;
+          height: 144px;
+          background-color: #ccc;
+        }
+
+        .actions {
+          margin-top: 10px;
+          display: flex;
+        }
+        .actions button {
+          padding: 8px 10px;
+          font-size: var(--p-size);
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+          width: 130px;
+          margin-left: 1rem;
+        }
+        .sticky-contaner2 p {
+          font-size: 18px;
+          margin-left: 10px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .body-container {
+          max-width: 100%;
+          margin: 1.5rem auto;
+          padding: 0 1rem;
+        }
+
+        .dropdown-item p {
+          margin-left: 0px;
+          margin-right: 0px;
+          position: relative;
+          color: var(--text-primary);
+          font-size: var(--small-size);
+        }
+
+        .speak-svg {
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
+        }
+        .lang-svg {
+          width: 30px;
+          height: 30px;
+          margin-top: 5px;
+          cursor: pointer;
+        }
+        .main-container {
+          border: 1px solid var(--border-color);
+          padding: 0rem 0rem 0rem;
+        }
+
+        .checkboxes {
+          padding: 0rem 1rem 1rem;
+        }
+        .consent-text {
+          padding: 0rem 1rem 1rem;
+        }
+        .header-container {
+          display: flex;
+          flex-direction: column-reverse;
+          align-items: center;
+          justify-content: center;
+        }
+        .consent-header {
+          margin-top: 10px;
+        }
+
+        .dropdown-menu {
+          display: none;
+          position: absolute;
+          top: 33px;
+          right: -30px;
+          background: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+          overflow: hidden;
+          width: 110px;
+          z-index: 1000;
+          font-size: var(--xsmall-size);
+          height: 260px;
+          width: 125px;
+          overflow-y: auto;
+        }
+
+        .theme-dropdown {
+          display: none;
+          position: absolute;
+          top: 34px;
+          right: 0px;
+          left: 2px;
+          background: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+          font-size: var(--xsmall-size);
+          width: 130px;
+          border-radius: 4px;
+        }
+
+        .theme-toggle-container {
+          display: flex;
+          margin-bottom: 10px;
+          align-items: center;
+          justify-content: center;
+          /* padding: 2% 6%; */
+          border-bottom: 1px solid var(--border-color);
+          gap: 1rem;
+          width: 100%;
+        }
+        .controls {
+          display: flex;
+          gap: 7px;
+        }
+        .theme-button {
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+          padding: 0.3rem 0.5rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.1rem;
+          font-size: var(--xsmall-size);
+        }
+        .font-size-controls {
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+          border: 1px solid var(--border-color);
+          border-radius: 4px;
+          font-size: var(--xsmall-size);
+          margin-right: 0.1rem;
+          padding: 0.3rem 0.5rem;
+          cursor: pointer;
+        }
+
+        .sticky-contaner2 {
+          max-width: 100%;
+          margin: auto;
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .main-heading {
+          font-size: 30px;
+        }
+
+        .rights-section {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          background-color: var(--bg-accent);
+          padding: 18px;
+          height: auto;
+          margin-bottom: 0px;
+          margin-top: 0px;
+          margin-left: 1rem;
+          margin-right: 1rem;
+          position: relative;
+        }
+
+        .rights-section h5 {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          margin-bottom: 15px;
+        }
+
+        .rights-section p {
+          font-size: var(--small-size);
+          color: var(--text-secondary);
+          line-height: 1.6;
+        }
+
+        .rights-text {
+          font-size: var(--p-size);
+          color: var(--text-secondary);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          width: 100%;
+        }
+        .rights-text p {
+          font-size: 14px;
+          color: #555;
+        }
+
+        .image-placeholder {
+          margin-top: 15px;
+          width: 90%;
+          height: 10%;
+          /* object-fit: cover; */
+        }
+
+        .actions {
+          margin-top: 10px;
+          display: flex;
+        }
+        .actions button {
+          padding: 8px 10px;
+          font-size: var(--p-size);
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+          width: 150px;
+          margin-left: 1rem;
+        }
+        .sticky-contaner2 p {
+          font-size: 18px;
+          margin-left: 10px;
+        }
+      }
+
+      /* OTP Modal Styles */
+      .otp-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .otp-modal {
+        background-color: var(--bg-primary);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        border: 1px solid var(--border-color);
+      }
+
+      .otp-modal h3 {
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+      }
+
+      .otp-modal p {
+        margin-bottom: 1.5rem;
+        color: var(--text-secondary);
+      }
+
+      .otp-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      .otp-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .otp-btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: var(--p-size);
+      }
+
+      .otp-verify-btn {
+        background-color: var(--button-accept);
+        color: white;
+      }
+
+      .otp-verify-btn:hover {
+        background-color: var(--button-accept-hover);
+      }
+
+      .otp-cancel-btn {
+        background-color: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .otp-cancel-btn:hover {
+        background-color: var(--bg-secondary);
+      }
+
+      .otp-error {
+        color: var(--button-deny);
+        font-size: var(--small-size);
+        margin-top: 0.5rem;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content" class="body-container">
+      <main style="display: flex; justify-content: center; align-items: center">
+        <div>
+          <h1 class="main-heading" style="text-align: center">
+            Digital Personal Data Protection Act, 2023
+          </h1>
+          <p style="margin-top: 10px; text-align: center">
+            Trust Bank is requesting your consent for data collection and
+            processing to enhance banking services and ensure secure
+            transactions. <br />
+            Please provide consent for us to collect and process your
+            information for the purposes outlined below.
+          </p>
+        </div>
+      </main>
+      <h2 class="cn-title">Consent Notice</h2>
+      <div class="main-container">
+        <div class="header-container">
+          <h3 class="consent-header">Manage My Consents</h3>
+          <div class="theme-toggle-container">
+            <div class="controls">
+              <button class="font-size-controls" id="decrease">A-</button>
+              <button class="font-size-controls" id="reset">A</button>
+              <button class="font-size-controls" id="increase">A+</button>
+            </div>
+
+            <div class="dropdown-container">
+              <div id="theme-toggle">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  style="color: gray; cursor: pointer; margin-top: 4px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="7" r="2" />
+                  <path d="M7 11l5 2 5-2" />
+                  <path d="M12 13v5" />
+                  <path d="M9 21l3-5 3 5" />
+                </svg>
+              </div>
+              <div id="theme-dropdown" class="theme-dropdown">
+                <div data-theme="light">Light Theme</div>
+                <div data-theme="dark">Dark Theme</div>
+                <div data-theme="high-contrast">High Contrast</div>
+              </div>
+            </div>
+
+            <div class="speak-svg" id="speak-svg"></div>
+            <div class="lang-svg" id="lang-svg">
+              <svg
+                version="1.2"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <defs>
+                  <image
+                    id="img1"
+                    href="data:image/png;base64,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"
+                  />
+                </defs>
+                <style></style>
+                <use href="#img1" x="0" y="0" />
+              </svg>
+              <div id="dropdown-menu" class="dropdown-menu">
+                <div onclick="selectLanguage('eng')">English</div>
+                <div onclick="selectLanguage('hin')">हिन्दी</div>
+                <div onclick="selectLanguage('tam')">தமிழ்</div>
+                <div onclick="selectLanguage('mar')">मराठी</div>
+                <div onclick="selectLanguage('ben')">বাংলা</div>
+                <div onclick="selectLanguage('tel')">తెలుగు</div>
+                <div onclick="selectLanguage('guj')">ગુજરાતી</div>
+                <div onclick="selectLanguage('pan')">ਪੰਜਾਬੀ</div>
+                <div onclick="selectLanguage('urd')">اردو</div>
+                <div onclick="selectLanguage('ori')">ଓଡ଼ିଆ</div>
+                <div onclick="selectLanguage('mal')">മലയാളം</div>
+                <div onclick="selectLanguage('kan')">ಕನ್ನಡ</div>
+                <div onclick="selectLanguage('asm')">অসমীয়া</div>
+                <div onclick="selectLanguage('mni')">ꯃꯩꯇꯝꯅꯤ</div>
+                <div onclick="selectLanguage('san')">संस्कृत</div>
+                <div onclick="selectLanguage('doi')">বিষ্ণুপ্রিয়া মণিপুরী</div>
+                <div onclick="selectLanguage('kok')">कोंकणी</div>
+                <div onclick="selectLanguage('brx')">बरोंजी</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkboxes">
+          <div id="purposes-container"></div>
+        </div>
+        <div class="rights-section">
+          <div class="rights-text">
+            <h5>
+              Your Rights under Digital Personal Data Protection Act, 2023
+            </h5>
+            <div style="display: flex; align-items: center; gap: 6px">
+              <span> ✔</span>
+              <p>
+                Section 11 - Right to access: You can request information about
+                your personal data.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px">
+              <span> ✔</span>
+              <p>
+                Section 12 - Right to rectification: You can request corrections
+                to inaccurate data.
+              </p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px">
+              <span> ✔</span>
+              <p>
+                Section 13 - Right to erasure: You can request the deletion of
+                personal data.
+              </p>
+            </div>
+            <p style="margin-top: 7px">
+              Consent managers for any violations of their rights or
+              non-compliance with the DPDPA.
+            </p>
+          </div>
+          <img
+            class="image-placeholder"
+            src="https://i.postimg.cc/J4k1SH68/Screenshot-2025-08-28-225155.png"
+          />
+        </div>
+        <div class="consent-text">
+          <p>
+            <!-- I consent to Trust Bank collecting, using, sharing, and processing
+            my personal information for the specified purposes. I have reviewed
+            the information collected, understood the consent purpose, and terms
+            & conditions. I confirm that my consent is given freely,
+            specifically for the stated purposes, based on a clear understanding
+            of how my data will be used, and without any conditions. -->
+          </p>
+
+          <p>
+            <!-- I can withdraw my consent for processing of my personal data at any
+            time, by accessing the preference center or consent manager. If I do
+            so, my personal data will be erased, unless there is any legal
+            requirement to retain it. -->
+          </p>
+
+          <p>
+            I understand that my data will be processed according to the Digital
+            Personal Data Protection Act, 2023. I declare that the information I
+            provided is accurate and true.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="sticky-contaner">
+      <div class="sticky-contaner2">
+        <p>Do you agree to provide consent ?</p>
+        <div class="actions">
+          <button class="deny" id="rejectConsent">
+            <a href="#" style="color: white; text-decoration: none">No</a>
+          </button>
+          <button class="accept" id="submitConsent">
+            <a href="#" style="color: white; text-decoration: none">Yes</a>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP Modal -->
+    <div id="otp-modal-overlay" class="otp-modal-overlay">
+      <div class="otp-modal">
+        <h3>Enter OTP</h3>
+        <p id="otp-message">OTP sent successfully. Please verify.</p>
+        <input
+          type="text"
+          id="otp-input"
+          class="otp-input"
+          placeholder="Enter OTP"
+          maxlength="6"
+        />
+        <div class="otp-buttons">
+          <button id="otp-cancel-btn" class="otp-btn otp-cancel-btn">
+            Cancel
+          </button>
+          <button id="otp-verify-btn" class="otp-btn otp-verify-btn">
+            Verify
+          </button>
+        </div>
+        <p id="otp-error" class="otp-error"></p>
+      </div>
+    </div>
+
+    <script>
+      let currentLang = "eng";
+      let audioPlaying = false;
+      let agreementId = null;
+
+      const translations = // {{ NOTICE_DATA }}
+        // Initialize theme
+        function initTheme() {
+          const savedTheme = localStorage.getItem("theme") || "light";
+          document.documentElement.setAttribute("data-theme", savedTheme);
+          return savedTheme;
+        };
+
+      let currentTheme = initTheme();
+
+      // Theme switching
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", function (e) {
+          e.stopPropagation();
+          const dropdown = document.getElementById("theme-dropdown");
+          dropdown.style.display =
+            dropdown.style.display === "block" ? "none" : "block";
+        });
+
+      document.querySelectorAll("#theme-dropdown div").forEach((item) => {
+        item.addEventListener("click", function () {
+          const theme = this.getAttribute("data-theme");
+          document.documentElement.setAttribute("data-theme", theme);
+          localStorage.setItem("theme", theme);
+          document.getElementById("theme-dropdown").style.display = "none";
+        });
+      });
+
+      // Close theme dropdown when clicking outside
+      document.addEventListener("click", function (e) {
+        const themeDropdown = document.getElementById("theme-dropdown");
+        if (
+          !e.target.closest(".theme-button") &&
+          themeDropdown.style.display === "block"
+        ) {
+          themeDropdown.style.display = "none";
+        }
+      });
+
+      // Font size controller options
+      // Font size controller
+      const html = document.documentElement;
+      const increaseBtn = document.getElementById("increase");
+      const decreaseBtn = document.getElementById("decrease");
+      const resetBtn = document.getElementById("reset");
+
+      // Initialize font size
+      function initFontSize() {
+        const savedSize = localStorage.getItem("fontSize");
+        if (savedSize) {
+          html.style.fontSize = savedSize + "px";
+          return parseInt(savedSize);
+        }
+        return 16;
+      }
+
+      let baseFontSize = initFontSize();
+      const minFontSize = 12;
+      const maxFontSize = 24;
+
+      function updateFontSize(size) {
+        baseFontSize = size;
+        html.style.fontSize = `${size}px`;
+        localStorage.setItem("fontSize", size);
+      }
+
+      increaseBtn.addEventListener("click", () => {
+        if (baseFontSize < maxFontSize) {
+          updateFontSize(baseFontSize + 2);
+        }
+      });
+
+      decreaseBtn.addEventListener("click", () => {
+        if (baseFontSize > minFontSize) {
+          updateFontSize(baseFontSize - 2);
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        updateFontSize(16);
+      });
+
+      function expandAllDropdowns() {
+        document.querySelectorAll(".dropdown").forEach((dropdown) => {
+          dropdown.classList.add("active");
+        });
+      }
+
+      const playSVG = `
+             <svg
+                      version="1.2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+
+                    >
+                      <defs>
+                        <image
+                          id="img2"
+                          href="data:image/png;base64,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"
+                        />
+                      </defs>
+                      <style></style>
+                      <use href="#img2" x="36" y="53" />
+                    </svg>
+      `;
+
+      const pauseSVG = `
+      <svg viewBox="0 0 24 24"
+                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>/svg/ic-pause</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic-pause" fill="#A5A5A5"> <path d="M8,6.00684547 C8,5.45078007 8.44386482,5 9,5 C9.55228475,5 10,5.44994876 10,6.00684547 L10,17.9931545 C10,18.5492199 9.55613518,19 9,19 C8.44771525,19 8,18.5500512 8,17.9931545 L8,6.00684547 Z M14,6.00684547 C14,5.45078007 14.4438648,5 15,5 C15.5522847,5 16,5.44994876 16,6.00684547 L16,17.9931545 C16,18.5492199 15.5561352,19 15,19 C14.4477153,19 14,18.5500512 14,17.9931545 L14,6.00684547 Z" id="Combined-Shape"> </path> </g> </g> </g></svg>
+      `;
+
+      document.getElementById("speak-svg").innerHTML = playSVG;
+      let currentAudio = null;
+      let isPlaying = false;
+
+      function playConsentAudio() {
+        const speakSvgDiv = document.getElementById("speak-svg");
+
+        // If audio is currently playing, pause it and revert icon
+        if (isPlaying && currentAudio) {
+          currentAudio.pause();
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+          return;
+        }
+
+        // Stop any previous audio
+        if (currentAudio) {
+          currentAudio.pause();
+        }
+
+        // Determine language-specific audio source
+        let audioSrc = translations[currentLang]?.audio_file_url || "";
+
+        const audio = new Audio(audioSrc);
+        currentAudio = audio;
+
+        // Set pause icon on play
+        audio.addEventListener("play", () => {
+          speakSvgDiv.innerHTML = pauseSVG;
+          isPlaying = true;
+        });
+
+        // Revert to play icon when audio ends
+        audio.addEventListener("ended", () => {
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+        });
+
+        // If user pauses manually
+        audio.addEventListener("pause", () => {
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+        });
+
+        // Play audio
+        audio.play().catch((e) => {
+          console.error("Audio play failed:", e);
+          speakSvgDiv.innerHTML = playSVG;
+        });
+
+        // Trigger other logic
+        audioPlaying = true;
+        selectLanguage(currentLang);
+        expandAllDropdowns();
+      }
+
+      // Function to create SVG icons (optional)
+      function createSVGIcon(type) {
+        if (type === "question") {
+          return `
+                  <svg width="14" height="12" viewBox="0 0 24 24" fill="none"
+                       xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 9.00001C9.00011 8.45004 9.15139 7.91068 9.43732 7.44088C9.72325 6.97108 10.1328 6.58891 10.6213 6.33616C11.1097 6.08341 11.6583 5.96979 12.2069 6.00773C12.7556 6.04566 13.2833 6.23369 13.7323 6.55126C14.1813 6.86883 14.5344 7.30372 14.7529 7.8084C14.9715 8.31308 15.0471 8.86813 14.9715 9.41288C14.8959 9.95763 14.6721 10.4711 14.3244 10.8972C13.9767 11.3234 13.5185 11.6457 13 11.829C12.7074 11.9325 12.4541 12.1241 12.275 12.3775C12.0959 12.6309 11.9998 12.9337 12 13.244V14.5"
+                        stroke="#8a8a8a" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    <path d="M12 18V18.5001" stroke="#8a8a8a" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M12 23.25C18.2132 23.25 23.25 18.2132 23.25 12C23.25 5.7868 18.2132 0.75 12 0.75C5.7868 0.75 0.75 5.7868 0.75 12C0.75 18.2132 5.7868 23.25 12 23.25Z"
+                          stroke="#8a8a8a" stroke-width="1.5" stroke-miterlimit="10"></path>
+                  </svg>
+                `;
+        } else if (type === "exclamation") {
+          return `
+                  <svg width="16" height="15" viewBox="0 0 24 24"
+                       xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                    <path d="M12,2.25A9.75,9.75,0,1,0,21.75,12,9.761,9.761,0,0,0,12,2.25Zm0,18A8.25,8.25,0,1,1,20.25,12,8.259,8.259,0,0,1,12,20.25ZM13,16a1,1,0,1,1-1-1A1,1,0,0,1,13,16Zm-1.75-4V8a.75.75,0,0,1,1.5,0v4a.75.75,0,0,1-1.5,0Z"
+                          fill="#8a8a8a"></path>
+                  </svg>
+                `;
+        }
+      }
+
+      function createConsentDropdown(consent, index, deId) {
+        const consentItem = document.createElement("div");
+        consentItem.classList.add("dropdown-item");
+
+        // Check if purpose is mandatory
+        const isServiceMandatory =
+          consent.service_message && consent.service_message.trim() !== "";
+        const isLegalMandatory =
+          consent.legal_message && consent.legal_message.trim() !== "";
+        const isMandatory = isServiceMandatory || isLegalMandatory;
+
+        // Build tooltip message
+        let tooltipMessage = "";
+        if (isServiceMandatory && isLegalMandatory) {
+          tooltipMessage = `Legal Mandatory: ${consent.legal_message}\n\nService Mandatory: ${consent.service_message}`;
+        } else if (isServiceMandatory) {
+          tooltipMessage = `Service Mandatory: ${consent.service_message}`;
+        } else if (isLegalMandatory) {
+          tooltipMessage = `Legal Mandatory: ${consent.legal_message}`;
+        }
+
+        const timelineLine = `
+                <div style="position: absolute; top: ${
+                  index === 0 ? "-220%" : "-500%"
+                }; left: -2.3rem;">
+                  <div style="width: 5px; height:${
+                    index === 0 ? "3rem" : "7rem"
+                  }; background-color: #eeeeee;"></div>
+                  <div style="width: 1.5rem; height: 5px; background-color: #eeeeee;"></div>
+                </div>
+              `;
+
+        const normalCheckbox = `
+                <div class="checkbox-wrapper" ${
+                  isMandatory ? `title="${tooltipMessage}"` : ""
+                }>
+                  <input type="checkbox" class="dropdown-checkbox" data-de-id="${deId}" data-purpose-id="${
+          consent.purpose_id
+        }" ${isMandatory ? "checked disabled" : ""} />
+                  ${
+                    isMandatory
+                      ? '<span class="mandatory-tooltip">' +
+                        tooltipMessage.replace(/\n\n/g, "<br><br>") +
+                        "</span>"
+                      : ""
+                  }
+                </div>
+              `;
+
+        const checkboxHTML = normalCheckbox;
+
+        consentItem.innerHTML = `
+          <div class="allpurpose" style="position: relative;">
+            <label class="dropdown-label">
+              ${timelineLine}
+            </label>
+            <div class="purpose-container">
+              <p>${consent.description}</p>
+                <div>
+                ${checkboxHTML}
+                </div>
+            </div>
+
+          </div>
+        `;
+
+        return consentItem;
+      }
+
+      // Function to create a single section
+      function createSection(section) {
+        const sectionDiv = document.createElement("div");
+        sectionDiv.classList.add("section");
+
+        // Calculate the maximum consent_expiry_period from all consents
+        const maxConsentExpiry = Math.max(
+          ...section.consents.map((c) => c.consent_expiry_period)
+        );
+
+        sectionDiv.innerHTML = `
+            <div class="section-top" style="margin: 12px 0px">
+              <div class="section-header">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="dropdown-arrow" style="margin-left: 0px;height:15px;width:15px; transition: transform 0.3s ease;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 9L12 15L18 9" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                       <h3 style="font-size:var(--small-size);font-weight:bold">${
+                         section.title
+                       }</h3>
+                  </div>
+
+                <div class="section-header">
+                  <div class="question-svg">
+                    <p class="consent-duration">${
+                      translations[currentLang].consent_duration_label
+                    }: ${maxConsentExpiry} ${
+          translations[currentLang].days_text
+        }</p>
+                    ${createSVGIcon("question")}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="dropdown">
+              ${section.consents
+                .map(
+                  (consent, index) =>
+                    createConsentDropdown(consent, index, section.de_id)
+                      .outerHTML
+                )
+                .join("")}
+            </div>
+          `;
+
+        // Add event listeners for dropdown toggle and main checkbox
+        const sectionHeader = sectionDiv.querySelector(".section-header");
+        const dropdown = sectionDiv.querySelector(".dropdown");
+        const dropdownCheckboxes =
+          sectionDiv.querySelectorAll(".dropdown-checkbox");
+
+        // Toggle dropdown visibility
+        const dropdownArrow = sectionDiv.querySelector(".dropdown-arrow");
+        sectionHeader.addEventListener("click", (e) => {
+          if (e.target.tagName.toLowerCase() !== "input") {
+            dropdown.classList.toggle("active");
+
+            if (dropdown.classList.contains("active")) {
+              dropdownArrow.style.transform = "rotate(180deg)";
+            } else {
+              dropdownArrow.style.transform = "rotate(0deg)";
+            }
+          }
+        });
+
+        // Add event listeners for buttons to allow multiple selections
+        sectionDiv
+          .querySelectorAll(".single-select-button")
+          .forEach((button) => {
+            button.addEventListener("click", () => {
+              button.classList.toggle("selected"); // Toggle selection state
+              console.log(
+                `${button.innerText} is ${
+                  button.classList.contains("selected")
+                    ? "selected"
+                    : "deselected"
+                }`
+              );
+            });
+          });
+
+        return sectionDiv;
+      }
+
+      // Event listeners for audio playback
+      document
+        .getElementById("speak-svg")
+        .addEventListener("click", playConsentAudio);
+
+      // Function to initialize the purposes rendering
+      function renderPreferences(data) {
+        const container = document.getElementById("purposes-container");
+        container.innerHTML = "";
+
+        data.forEach((section) => {
+          const sectionElement = createSection(section);
+          container.appendChild(sectionElement);
+        });
+      }
+
+      function getTokenFromURL() {
+        const url = window.location.href;
+        const tokenPart = url.split("/").pop(); // Get the last part
+        return tokenPart.split("?")[0]; // Remove query parameters
+      }
+
+      // Extract token and log it
+      const token = getTokenFromURL();
+      console.log("Extracted Token:", token);
+
+      // Function to submit consent
+      async function submitConsent() {
+        console.log("Submitting consent...");
+
+        if (!token) {
+          document.getElementById("responseMessage").textContent =
+            "❌ Token not found in URL!";
+          return;
+        }
+
+        // Include both checked checkboxes and disabled (mandatory) checkboxes
+        const checkedCheckboxes = document.querySelectorAll(
+          ".dropdown-checkbox:checked, .dropdown-checkbox[disabled]"
+        );
+        const consentData = {};
+
+        checkedCheckboxes.forEach((checkbox) => {
+          const deId = checkbox.dataset.deId;
+          const purposeId = checkbox.dataset.purposeId;
+
+          if (!consentData[deId]) {
+            consentData[deId] = new Set();
+          }
+          consentData[deId].add(purposeId);
+        });
+
+        // Format for API
+        const dataElements = Object.entries(consentData).map(
+          ([de_id, purposes]) => ({
+            de_id,
+            consents: Array.from(purposes).map((purpose_id) => ({
+              purpose_id,
+            })),
+          })
+        );
+
+        console.log("Consent Data to Submit:", dataElements);
+
+        const baseUrl = window.location.origin;
+
+        try {
+          const response = await fetch(`${baseUrl}/api/v1/n/submit-consent`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              token: token,
+              data_elements: dataElements,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            if (
+              result.status === "OTP_REQUIRED" ||
+              result.otp_required === true
+            ) {
+              // Show OTP Modal
+              document.getElementById("otp-modal-overlay").style.display =
+                "flex";
+              document.getElementById("otp-message").textContent =
+                result.message || "OTP sent successfully. Please verify.";
+              // Store agreement_id if needed, though verify-otp uses token
+              return;
+            }
+
+            handleSuccess(result);
+          } else {
+            console.error("Failed to submit consent:", result);
+          }
+        } catch (error) {
+          console.error("Failed to submit consent:", error);
+        }
+      }
+
+      function handleSuccess(result) {
+        console.log("Consent submitted successfully:", result);
+
+        agreementId = result.agreement_id;
+
+        if (window.opener) {
+          window.opener.postMessage(
+            {
+              auth_status: "200",
+              message: result.redirection_url,
+              consent_submitted: true,
+            },
+            "*"
+          );
+        }
+
+        // Get current language data
+        const langData = translations[currentLang];
+        const initialTime = 5;
+
+        // Create success message HTML from translations
+        const successHTML = `
+              <div
+                style="
+                  max-width: 1080px;
+                  margin: 2rem auto;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <div style="margin-top: 5px; margin-bottom: 5px">
+                  <img
+                    src="https://i.ibb.co/jvyG1hp/inmconcur.png"
+                    alt="Consent Icon"
+                    style="width: 150px; height: 160px"
+                  />
+                </div>
+                <h1 style="font-size: 1.5rem; color: #333">
+                    ${langData.success_message.title}
+                </h1>
+                <p style="font-size: 1rem; color: #666; margin-top: 1rem">
+                ${langData.success_message.description}
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 1rem;
+                    margin-top: 3rem;
+                  "
+                >
+                  <a
+                    href="#"
+                    id="manage-consent-link"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      flex-direction: column;
+                      text-decoration: none;
+                      font-weight: bold;
+                      color: #007bff;
+                      text-align: center;
+                    "
+                  >
+               ${langData.download_options.agreement_text_primary} →
+                  </a>
+                  <a
+                    href="#"
+                    id="raise-greviance-link"
+                    style="
+                      display: flex;
+                      align-items: center;
+                      flex-direction: column;
+                      text-decoration: none;
+                      color: #007bff;
+                      font-weight: bold;
+                      text-align: center;
+                    "
+                  >
+                     ${langData.download_options.agreement_text_secondary} →
+                  </a>
+                </div>
+                <div class="redirect-timer">
+                  <p
+                    style="
+                      margin-top: 3rem;
+                      margin-bottom: 26px;
+                      font-size: 0.9rem;
+                      color: #888;
+                    "
+                  >
+                    ${langData.manage_consent_description.replace(
+                      /\d+/,
+                      `<span id="countdown">${initialTime}</span>`
+                    )}
+                  </p>
+                </div>
+              </div>
+            `;
+
+        document.body.innerHTML = successHTML;
+
+        document
+          .getElementById("manage-consent-link")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            openInParentAndClose("manage-consent");
+          });
+
+        document
+          .getElementById("raise-greviance-link")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            openInParentAndClose("raise-greviance");
+          });
+
+        // Countdown timer
+        let timeLeft = initialTime;
+        const countdownElement = document.getElementById("countdown");
+        const countdownInterval = setInterval(() => {
+          timeLeft -= 1;
+          countdownElement.textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            window.close();
+          }
+        }, 1000);
+      }
+
+      // OTP Verification Logic
+      async function verifyOtp() {
+        const otpInput = document.getElementById("otp-input");
+        const otpError = document.getElementById("otp-error");
+        const otp = otpInput.value.trim();
+        const baseUrl = window.location.origin;
+
+        if (!otp) {
+          otpError.textContent = "Please enter OTP";
+          otpError.style.display = "block";
+          return;
+        }
+
+        try {
+          // Using query parameters as per the python signature: verify_otp(request, token, otp, ...)
+          const response = await fetch(
+            `${baseUrl}/api/v1/n/verify-otp?token=${token}&otp=${otp}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById("otp-modal-overlay").style.display = "none";
+            handleSuccess(result);
+          } else {
+            otpError.textContent =
+              result.detail ||
+              result.message ||
+              "Invalid OTP. Please try again.";
+            otpError.style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error verifying OTP:", error);
+          otpError.textContent = "An error occurred. Please try again.";
+          otpError.style.display = "block";
+        }
+      }
+
+      // OTP Event Listeners
+      document
+        .getElementById("otp-verify-btn")
+        .addEventListener("click", verifyOtp);
+
+      document
+        .getElementById("otp-cancel-btn")
+        .addEventListener("click", function () {
+          document.getElementById("otp-modal-overlay").style.display = "none";
+          document.getElementById("otp-input").value = "";
+          document.getElementById("otp-error").style.display = "none";
+        });
+
+      // Function to open in parent window and close popup
+      function openInParentAndClose(action) {
+        if (window.opener) {
+          // Send the action and agreement ID to the parent window
+          window.opener.postMessage(
+            {
+              action: action,
+              agreement_id: agreementId,
+            },
+            "*"
+          );
+        }
+        window.close();
+      }
+      // Event listener for the submit button
+      document
+        .getElementById("submitConsent")
+        .addEventListener("click", submitConsent);
+
+      // language dropdown
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedLang = window.prefLanguage || "eng";
+        selectLanguage(savedLang);
+        updateDropdownSelection(savedLang);
+
+        const svgIcon = document.getElementById("lang-svg");
+        const dropdownMenu = document.getElementById("dropdown-menu");
+
+        // Toggle dropdown on click
+        svgIcon.addEventListener("click", function (event) {
+          event.stopPropagation();
+          dropdownMenu.style.display =
+            dropdownMenu.style.display === "block" ? "none" : "block";
+        });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener("click", function (event) {
+          if (
+            !svgIcon.contains(event.target) &&
+            !dropdownMenu.contains(event.target)
+          ) {
+            dropdownMenu.style.display = "none";
+          }
+        });
+      });
+
+      function updateDropdownSelection(langCode) {
+        const dropdownItems = document.querySelectorAll(".dropdown-menu div");
+        dropdownItems.forEach((item) => {
+          item.classList.remove("selected-language");
+          if (item.textContent.toLowerCase() === langCode) {
+            item.classList.add("selected-language");
+          }
+        });
+      }
+
+      function selectLanguage(langCode) {
+        console.log("Selected language:", langCode);
+
+        currentLang = langCode;
+        const langData = translations[langCode];
+
+        renderPreferences(langData.data_elements);
+
+        if (!langData) return;
+
+        currentLang = langCode;
+
+        // Update text directions for RTL languages
+        document.body.dir = ["arb", "urd", "snd"].includes(langCode)
+          ? "rtl"
+          : "ltr";
+
+        // Update all translatable elements
+        document.querySelector(".main-heading").textContent =
+          langData.main_title;
+        document.querySelector(".cn-title").textContent =
+          langData.consent_title;
+
+        // Update main paragraph
+        const mainPara = document.querySelector("main p");
+        mainPara.innerHTML = langData.main_sub_title.replace(
+          "<Df Name>",
+          "Trust Bank"
+        );
+
+        // Update rights section
+        const rightsSection = document.querySelector(".rights-section");
+        rightsSection.querySelector("h5").textContent = langData.dpr_title;
+        rightsSection.querySelectorAll("p")[0].textContent =
+          langData.dpr_rights.section_11;
+        rightsSection.querySelectorAll("p")[1].textContent =
+          langData.dpr_rights.section_12;
+        rightsSection.querySelectorAll("p")[2].textContent =
+          langData.dpr_rights.section_13;
+        rightsSection.querySelectorAll("p")[3].textContent =
+          langData.dpr_statement;
+
+        // Update consent text paragraphs
+        const consentHeader = document.querySelector(".consent-header");
+        consentHeader.textContent = langData.consent_sub_title;
+
+        const consentParagraphs = document.querySelectorAll(".consent-text p");
+        // consentParagraphs[0].textContent =
+        //   langData.data_subject_statements.ds_1.replace(
+        //     "<DF Name>",
+        //     "Trust Bank"
+        //   );
+        // consentParagraphs[1].textContent =
+        //   langData.data_subject_statements.ds_2;
+        consentParagraphs[2].textContent =
+          langData.data_subject_statements.ds_3;
+
+        // Update sticky section
+        document.querySelector(".sticky-contaner p").textContent =
+          langData.consent_statement;
+        document.getElementById("rejectConsent").textContent =
+          langData.consent_buttons.reject;
+        document.getElementById("submitConsent").textContent =
+          langData.consent_buttons.accept;
+
+        // Update section headers
+        document
+          .querySelectorAll(".section-header h3")
+          .forEach((header, index) => {
+            header.textContent = langData.data_elements[index].title;
+          });
+
+        // Update success message content
+        const successMessage = {
+          title: langData.success_message.title,
+          description: langData.success_message.description,
+          redirect: langData.manage_consent_description,
+        };
+      }
+      // Event listener for the "No" button
+      document
+        .getElementById("rejectConsent")
+        .addEventListener("click", function () {
+          // Replace the entire page content with a message.
+          document.body.innerHTML = `
+                  <div style="max-width: 1080px; margin: 2rem auto; text-align: center;">
+                    <h1 style="font-size: 1.5rem; color: #333;">Consent Required</h1>
+                    <p style="font-size: 1rem; color: #666; margin: 20px 0;">
+                      Without giving your consent, you can't go further.
+                    </p>
+                  </div>
+                  <div class="redirect-timer">
+                    <p style="margin-top: 115px;
+              margin-bottom: 26px;
+              font-size: 0.9rem;
+              text-align:center;
+              color: #888;">You will be redirected in <span id="countdown">3</span> seconds...</p>
+                  </div>
+                `;
+
+          // Countdown timer
+          let timeLeft = 3;
+          const countdownElement = document.getElementById("countdown");
+          const countdownInterval = setInterval(() => {
+            timeLeft -= 1;
+            countdownElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+              clearInterval(countdownInterval);
+              window.close();
+            }
+          }, 1000);
+        });
+    </script>
+  </body>
+</html>

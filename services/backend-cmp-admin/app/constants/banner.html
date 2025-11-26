@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flipkart Cookie Banner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background-color: #f1f3f6;
+        min-height: 100vh;
+      }
+
+      .cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        border-top: 1px solid #e0e6eb;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+      }
+
+      .cookie-banner.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .banner-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+      }
+
+      .logo-icon {
+        height: 40px;
+        cursor: pointer;
+      }
+
+      .language-selector {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border: 1px solid #e0e6eb;
+        border-radius: 4px;
+        background-color: white;
+        cursor: pointer;
+        font-size: 12px;
+        color: #555;
+        position: relative;
+      }
+
+      .banner-divider {
+        height: 2px;
+        background-color: #e0e6eb;
+      }
+
+      .dropdown-arrow {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #555;
+        transition: transform 0.3s;
+      }
+
+      .language-selector.open .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+
+      .language-dropdown {
+        display: none;
+        position: absolute;
+        top: 36px;
+        right: 0;
+        background: white;
+        border: 1px solid #e0e6eb;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+        z-index: 10;
+      }
+
+      .language-dropdown.show {
+        display: block;
+      }
+
+      .language-option {
+        padding: 8px 14px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .language-option:hover {
+        background-color: #f5f5f5;
+      }
+
+      .cookie-content {
+        color: #212121;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 12px 4px 0 0;
+      }
+
+      .cookie-policy-link {
+        color: #2874f0;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .cookie-policy-link:hover {
+        text-decoration: underline;
+      }
+
+      .banner-body {
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 10px 0;
+      }
+
+      .btn {
+        padding: 4px 8px;
+        border-radius: 0px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+      }
+
+      .btn-secondary {
+        background-color: white;
+        color: #212121;
+        border: 1px solid #ccc;
+      }
+
+      .btn-secondary:hover {
+        background-color: #f5f5f5;
+      }
+
+      .btn-primary {
+        background-color: white;
+        color: #388e3c;
+        border: 1px solid #388e3c;
+      }
+
+      .btn-primary:hover {
+        background-color: #f1f8e9;
+      }
+
+      .btn-accept-all {
+        background-color: #218838;
+        color: white;
+        border: 1px solid #218838;
+      }
+
+      .btn-accept-all:hover {
+        background-color: #1f6e30;
+        border-color: #1f6e30;
+      }
+
+      @media (max-width: 768px) {
+        .banner-header {
+          flex-direction: row;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .cookie-content {
+          font-size: 12px;
+        }
+
+        .button-group {
+          flex-direction: column;
+          gap: 6px;
+          width: 100%;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+          padding: 10px 16px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cookie-banner" id="cookie-banner">
+      <div class="banner-header">
+        <img
+          src="https://www.boardinfinity.com/blog/content/images/2024/09/Flipkart-Logo.png"
+          alt="Flipkart Logo"
+          class="logo-icon"
+        />
+
+        <!-- Language Selector -->
+        <div class="language-selector" id="language-selector">
+          🌐 <span id="selected-language">English</span>
+          <div class="dropdown-arrow"></div>
+          <div class="language-dropdown" id="language-dropdown">
+            <div class="language-option" data-lang="en">English</div>
+            <div class="language-option" data-lang="hi">हिन्दी</div>
+            <div class="language-option" data-lang="ta">தமிழ்</div>
+            <div class="language-option" data-lang="te">తెలుగు</div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-divider"></div>
+
+      <div class="banner-body">
+        <div class="cookie-content" id="cookie-content"></div>
+
+        <div class="button-group">
+          <button class="btn btn-secondary" id="cookie-settings-btn"></button>
+          <button class="btn btn-primary" id="accept-essential-btn"></button>
+          <button class="btn btn-accept-all" id="accept-all-btn"></button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const translations = {
+        en: {
+          content:
+            "Protean uses cookies to improve service reliability, website quality, and enable personalized features. These cookies may collect personal data for analytics, advertising, and functionality. By consenting to cookies, you agree to data processing as described in our Privacy Policy and Cookie Policy. You can withdraw consent and manage preferences in Cookie Settings.",
+          links: [
+            {
+              text: "Privacy Policy",
+              url: "https://proteantech.in/privacy-policy",
+            },
+            {
+              text: "Cookie Policy",
+              url: "https://proteantech.in/cookie-policy",
+            },
+          ],
+          buttons: {
+            settings: "Cookie Settings",
+            essential: "Accept Only Essential",
+            acceptAll: "Accept All",
+          },
+        },
+
+        hi: {
+          content:
+            "प्रोटीन सेवा की विश्वसनीयता, वेबसाइट की गुणवत्ता और व्यक्तिगत सुविधाओं को सक्षम करने के लिए कुकीज़ का उपयोग करता है। ये कुकीज़ विश्लेषण, विज्ञापन और कार्यक्षमता के लिए व्यक्तिगत डेटा एकत्र कर सकती हैं। कुकीज़ की सहमति देकर, आप हमारे गोपनीयता नीति और कुकी नीति में वर्णित डेटा प्रोसेसिंग से सहमत होते हैं। आप कभी भी सहमति वापस ले सकते हैं और कुकी सेटिंग्स में प्राथमिकताएँ प्रबंधित कर सकते हैं।",
+          links: [
+            {
+              text: "गोपनीयता नीति",
+              url: "https://proteantech.in/privacy-policy",
+            },
+            {
+              text: "कुकी नीति",
+              url: "https://proteantech.in/cookie-policy",
+            },
+          ],
+          buttons: {
+            settings: "कुकी सेटिंग्स",
+            essential: "केवल आवश्यक स्वीकार करें",
+            acceptAll: "सभी स्वीकार करें",
+          },
+        },
+
+        ta: {
+          content:
+            "புரோட்டீன் சேவை நம்பகத்தன்மை, வலைத்தள தரம் மற்றும் தனிப்பட்ட அம்சங்களை இயக்குவதற்காக குக்கிகளைப் பயன்படுத்துகிறது. இந்த குக்கிகள் பகுப்பாய்வு, விளம்பரம் மற்றும் செயல்பாட்டிற்கான தனிப்பட்ட தரவுகளைச் சேகரிக்கலாம். குக்கிகளுக்கு ஒப்புதல் அளிப்பதன் மூலம், எங்கள் தனியுரிமைக் கொள்கை மற்றும் குக்கி கொள்கையில் விவரிக்கப்பட்டுள்ள தரவு செயலாக்கத்திற்கு நீங்கள் சம்மதிக்கிறீர்கள். நீங்கள் எப்போதும் ஒப்புதலை வாபஸ் பெறலாம் மற்றும் குக்கி அமைப்புகளில் முன்னுரிமைகளை நிர்வகிக்கலாம்.",
+          links: [
+            {
+              text: "தனியுரிமைக் கொள்கை",
+              url: "https://proteantech.in/privacy-policy",
+            },
+            {
+              text: "குக்கி கொள்கை",
+              url: "https://proteantech.in/cookie-policy",
+            },
+          ],
+          buttons: {
+            settings: "குக்கி அமைப்புகள்",
+            essential: "தேவையானவற்றை மட்டுமே ஏற்கவும்",
+            acceptAll: "அனைத்தையும் ஏற்கவும்",
+          },
+        },
+
+        te: {
+          content:
+            "ప్రోటీన్ సేవా విశ్వసనీయత, వెబ్‌సైట్ నాణ్యత మరియు వ్యక్తిగతీకరించిన లక్షణాలను ప్రారంభించడానికి కుకీలను ఉపయోగిస్తుంది. ఈ కుకీలు విశ్లేషణ, ప్రకటన మరియు కార్యాచరణ కోసం వ్యక్తిగత డేటాను సేకరించవచ్చు. కుకీలకు అంగీకరించడం ద్వారా, మా గోప్యతా విధానం మరియు కుకీ విధానంలో వర్ణించిన డేటా ప్రాసెసింగ్‌కి మీరు అంగీకరిస్తున్నారు. మీరు ఎప్పుడైనా అంగీకారాన్ని ఉపసంహరించుకోవచ్చు మరియు కుకీ సెట్టింగ్‌లలో ప్రాధాన్యతలను నిర్వహించవచ్చు.",
+          links: [
+            {
+              text: "గోప్యతా విధానం",
+              url: "https://proteantech.in/privacy-policy",
+            },
+            {
+              text: "కుకీ విధానం",
+              url: "https://proteantech.in/cookie-policy",
+            },
+          ],
+          buttons: {
+            settings: "కుకీ సెట్టింగ్‌లు",
+            essential: "కేవలం అవసరమైనవే అంగీకరించండి",
+            acceptAll: "అన్నింటినీ అంగీకరించండి",
+          },
+        },
+      };
+
+      const cookieBanner = document.getElementById("cookie-banner");
+      const cookieContent = document.getElementById("cookie-content");
+      const cookieSettingsBtn = document.getElementById("cookie-settings-btn");
+      const acceptEssentialBtn = document.getElementById(
+        "accept-essential-btn"
+      );
+      const acceptAllBtn = document.getElementById("accept-all-btn");
+      const languageSelector = document.getElementById("language-selector");
+      const languageDropdown = document.getElementById("language-dropdown");
+      const selectedLanguage = document.getElementById("selected-language");
+
+      function setLanguage(lang) {
+        localStorage.setItem("selectedLanguage", lang);
+
+        selectedLanguage.textContent =
+          lang === "en"
+            ? "English"
+            : lang === "hi"
+            ? "हिन्दी"
+            : lang === "ta"
+            ? "தமிழ்"
+            : "తెలుగు";
+
+        // Set initial content as plain text
+        cookieContent.textContent = translations[lang].content;
+
+        // Now replace matching words with links
+        const links = translations[lang].links || [];
+        let contentHTML = cookieContent.innerHTML;
+
+        links.forEach((link) => {
+          // Use RegExp for exact word match
+          const regex = new RegExp(`(${link.text})`, "g");
+          contentHTML = contentHTML.replace(
+            regex,
+            `<a href="${link.url}" target="_blank" class="cookie-policy-link">$1</a>`
+          );
+        });
+
+        // Update HTML content
+        cookieContent.innerHTML = contentHTML;
+
+        // Update button texts
+        cookieSettingsBtn.textContent = translations[lang].buttons.settings;
+        acceptEssentialBtn.textContent = translations[lang].buttons.essential;
+        acceptAllBtn.textContent = translations[lang].buttons.acceptAll;
+      }
+
+      document.querySelectorAll(".language-option").forEach((option) => {
+        option.addEventListener("click", function (e) {
+          e.stopPropagation(); // 🔹 Prevent bubbling to parent
+          const lang = this.dataset.lang;
+          setLanguage(lang);
+          languageDropdown.classList.remove("show");
+          languageSelector.classList.remove("open");
+        });
+      });
+
+      languageSelector.addEventListener("click", () => {
+        languageSelector.classList.toggle("open");
+        languageDropdown.classList.toggle("show");
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!languageSelector.contains(event.target)) {
+          languageDropdown.classList.remove("show");
+          languageSelector.classList.remove("open");
+        }
+      });
+
+      acceptAllBtn.addEventListener("click", () => {
+        localStorage.setItem("cookieConsent", "all");
+        hideBanner();
+      });
+
+      acceptEssentialBtn.addEventListener("click", () => {
+        localStorage.setItem("cookieConsent", "essential");
+        hideBanner();
+      });
+
+      cookieSettingsBtn.addEventListener("click", () => {
+        alert("Preference Center will open here");
+      });
+
+      function hideBanner() {
+        cookieBanner.classList.remove("show");
+        setTimeout(() => {
+          cookieBanner.style.display = "none";
+        }, 400);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedLang = localStorage.getItem("selectedLanguage") || "en";
+        setLanguage(savedLang);
+
+        if (!localStorage.getItem("cookieConsent")) {
+          setTimeout(() => {
+            cookieBanner.classList.add("show");
+          }, 300);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+[
+  {
+    "role": "Chief Privacy Officer",
+    "role_description": "Senior executive overseeing global privacy strategies, risk management, and regulatory compliance."
+  },
+  {
+    "role": "Head of Privacy",
+    "role_description": "Leads the privacy team, defining policies, frameworks, and organizational privacy initiatives."
+  },
+  {
+    "role": "Data Protection Officer",
+    "role_description": "Ensures compliance with privacy laws (e.g., DPDPA, GDPR, CCPA), manages Data Protection Impact Assessments (DPIAs), and acts as a liaison with regulators."
+  },
+  {
+    "role": "Privacy Program Manager",
+    "role_description": "Develops and implements privacy programs, ensuring the organization meets compliance and operational goals."
+  },
+  {
+    "role": "Privacy Manager",
+    "role_description": "Manages day-to-day privacy operations, working with legal, IT, and security teams to enforce privacy policies."
+  },
+  {
+    "role": "Compliance Manager",
+    "role_description": "Ensures regulatory compliance across jurisdictions, conducts audits, and manages compliance risks."
+  },
+  {
+    "role": "Head of Compliance",
+    "role_description": "Oversees all compliance initiatives, aligning the organization with global regulatory frameworks."
+  },
+  {
+    "role": "Privacy Analyst",
+    "role_description": "Conducts privacy assessments, evaluates data handling practices, and monitors regulatory developments."
+  },
+  {
+    "role": "Privacy Engineer",
+    "role_description": "Works with product and IT teams to integrate privacy-by-design principles into systems and applications."
+  },
+  {
+    "role": "Privacy Consultant",
+    "role_description": "Advises the organization on best practices for data protection and regulatory compliance."
+  },
+  {
+    "role": "Data Governance Officer",
+    "role_description": "Manages data classification, data retention policies, and governance frameworks."
+  },
+  {
+    "role": "Privacy Compliance Analyst",
+    "role_description": "Analyzes compliance gaps, audits processes, and ensures adherence to privacy laws."
+  },
+  {
+    "role": "Data Privacy Specialist",
+    "role_description": "Focuses on implementing privacy-enhancing technologies (PETs) and controls to safeguard personal data."
+  },
+  {
+    "role": "Records & Retention Manager",
+    "role_description": "Oversees data retention policies and ensures compliance with legal retention periods."
+  },
+  {
+    "role": "Privacy Risk Manager",
+    "role_description": "Identifies privacy risks and ensures risk mitigation strategies are in place."
+  },
+  {
+    "role": "Privacy Auditor",
+    "role_description": "Conducts internal audits on privacy policies, data flows, and organizational compliance."
+  },
+  {
+    "role": "Privacy Counsel",
+    "role_description": "Provides legal guidance on privacy laws, contract negotiations, and regulatory compliance."
+  },
+  {
+    "role": "Regulatory Affairs Manager",
+    "role_description": "Monitors privacy laws, engages with regulators, and ensures proactive compliance strategies."
+  },
+  {
+    "role": "Privacy Awareness & Training Officer",
+    "role_description": "Develops training programs for employees on privacy best practices."
+  },
+  {
+    "role": "DPAR Manager",
+    "role_description": "Manages consumer rights requests, such as access, deletion, and correction of personal data."
+  }
+]

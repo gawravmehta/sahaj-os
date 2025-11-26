@@ -1,0 +1,794 @@
+[
+  {
+    "step_number": 1,
+    "step_details": {
+      "step_title": "Organization Setup & Branding",
+      "step_introduction": "Begin by setting up your sub-organization, customizing your branding, and configuring communication channels to streamline and unify your operations. This foundational setup will ensure consistency across your organization and allow you to manage identity, compliance, and communication effectively.",
+      "description": "Set up your sub-organization, customize branding, and configure communication channels for unified operations.",
+      "step_description": "In this setup phase, you'll establish a cohesive organizational structure by creating sub-organizations, subsidiaries, or international branches, as needed. Customize your branding, including logo, colors, and brand identity, to align with your organization's vision. Configure communication channels, such as email, SMS, and IVR, to maintain smooth and direct contact with your audience. Additionally, manage legal and compliance requirements by adding relevant information, policies, and terms of service.",
+      "step_why": "A well-structured organization setup with consistent branding and efficient communication channels supports operational efficiency and strengthens trust with your audience. By establishing clear communication methods and a uniform brand identity, you present a professional image and create a cohesive experience across all points of interaction. This setup also simplifies legal and compliance adherence, helping you protect both your organization and customers.",
+      "estimated_time": "60 minutes",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Customize Branding",
+          "action_description": "Manage brand identity by customizing the logo, color scheme, and other visual elements.",
+          "is_action_completed": false,
+          "redirection_url": "/branding",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["marketing"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Add SMTP for Email Communication",
+          "action_description": "Add SMTP for email communication to ensure reliable message delivery.",
+          "is_action_completed": false,
+          "redirection_url": "/email-setup",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Set up SMS and IVR Gateway",
+          "action_description": "Setting up gateways for mobile communication and streamlined customer calls",
+          "is_action_completed": false,
+          "redirection_url": "/sms-setup",
+          "is_mandatory": false,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Data Fiduciary Registration",
+          "action_description": "Register as a Data Fiduciary under DPDP Act to legally process personal data as per Indian regulations.",
+          "is_action_completed": false,
+          "redirection_url": "/df-registration",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 2,
+    "step_details": {
+      "step_title": "Management Organization & Roles",
+      "step_introduction": "Define roles, manage departments, invite team members, control access, and foster collaboration across your organization. This setup allows you to structure teams effectively, clarify responsibilities, and ensure compliance with internal policies.",
+      "description": "Define roles, manage departments, invite team members, control access, and ensure compliance together.",
+      "step_description": "In this phase, you’ll build a structured organization by creating departments, assigning roles, and defining access controls. Invite team members and allocate roles according to their responsibilities, setting up permissions to maintain data security and compliance. This organized management of roles and departments helps streamline workflows, supports efficient communication, and ensures that every team member has the necessary access to perform their duties effectively.",
+      "step_why": "Establishing a well-defined organizational structure with clear roles and access controls is essential for operational efficiency, data security, and regulatory compliance. By segmenting the organization into departments and assigning roles with specific permissions, you prevent unauthorized access, streamline collaboration, and maintain accountability within each department. A structured organization and role management system promote productivity and enhance security by granting team members access only to information and tools relevant to their roles.",
+      "estimated_time": "45 minutes",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Create Departments",
+          "action_description": "Create departments such as Marketing, Engineering, Legal, Operations, Finance, and others as needed to define areas of responsibility.",
+          "is_action_completed": false,
+          "redirection_url": "/create-departments",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["administrative"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Add Team Members",
+          "action_description": "Add team members to the organization and assign them to the appropriate departments.",
+          "is_action_completed": false,
+          "redirection_url": "/add-team-members",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["administrative"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Define and Allocate User Roles",
+          "action_description": "Define user roles (e.g., Manager, Analyst, Admin) based on responsibilities and allocate them to the team members.",
+          "is_action_completed": false,
+          "redirection_url": "/define-roles",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["administrative"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Set Up Role Base Access Control (RBAC)",
+          "action_description": "Set up access control measures to manage permissions and data security, ensuring that team members have access only to the resources they need.",
+          "is_action_completed": false,
+          "redirection_url": "/access-control",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "administrative"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 3,
+    "step_details": {
+      "step_title": "Perform Data Discovery & Mapping",
+      "step_introduction": "Automate data discovery, map data flows, and create visual data flow diagrams for all organizational data sources. This structured approach to data management enables you to gain insights into data movement, secure sensitive information, and ensure compliance with data privacy regulations.",
+      "description": "Automate data discovery, map data flow, and create visual data flow diagrams for organizational data sources.",
+      "step_description": "In this stage, you’ll add and manage data sources, configure credentials, and establish nodes and scan profiles to automate the discovery process. Data flow mapping allows you to visualize how data travels within your organization, both locally and across borders. Scheduling regular data discovery scans and reviewing data lineage provides a comprehensive understanding of data origins, paths, and destinations, helping maintain data integrity and compliance.",
+      "step_why": "A well-organized data discovery and mapping process is crucial for understanding, managing, and securing data across the organization. By automating data discovery, you can locate and identify sensitive data, ensuring that it’s handled in compliance with regulatory standards. Mapping data flows and reviewing data lineage offers visibility into data usage, facilitating risk management, optimizing workflows, and enhancing trust in data governance.",
+      "estimated_time": "1 hour",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Add Data Sources",
+          "action_description": "Add and manage data sources to be scanned during the discovery process, ensuring comprehensive coverage of organizational data.",
+          "is_action_completed": false,
+          "redirection_url": "/add-data-sources",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Manage Credentials for Data Discovery",
+          "action_description": "Securely store and manage credentials needed for accessing data sources during discovery processes.",
+          "is_action_completed": false,
+          "redirection_url": "/manage-credentials",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "security"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Create Worker Nodes",
+          "action_description": "Establish worker nodes to perform data discovery tasks, ensuring efficient resource allocation and task distribution.",
+          "is_action_completed": false,
+          "redirection_url": "/create-worker-nodes",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Schedule Data Discovery",
+          "action_description": "Automate data discovery by scheduling regular scans, ensuring timely identification of data changes and potential risks.",
+          "is_action_completed": false,
+          "redirection_url": "/schedule-discovery",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Examine Data Lineage",
+          "action_description": "Examine the lineage of data to track its origins, transformations, and destinations, supporting transparency and compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/review-data-lineage",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "compliance"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 4,
+    "step_details": {
+      "step_title": "Data Cataloguing & Identification",
+      "step_introduction": "Develop a comprehensive data glossary, manage your data catalog, and identify personal data to support compliance across multiple jurisdictions. This setup will organize your data assets, enable efficient data governance, and ensure adherence to regulatory standards.",
+      "description": "Build a data glossary, manage the data catalog, and identify personal data for multi-jurisdiction compliance.",
+      "step_description": "In this stage, you’ll organize discovered data into a well-maintained catalog, define domains, and tag personal and sensitive information. Building a data glossary and managing access roles facilitates clear communication and ensures that all stakeholders understand data classifications and sensitivity levels. Identifying and cataloging personal data supports compliance with privacy laws across regions, making it easier to monitor, protect, and control data access.",
+      "step_why": "A robust data catalog and well-defined glossary improve data governance, enhance security, and reduce regulatory risks. By identifying and categorizing personal data, your organization can respond more effectively to compliance requirements, control access, and prevent unauthorized exposure. Clear definitions and structured access controls streamline data management, optimize data utility, and support accountability throughout the organization.",
+      "estimated_time": "2 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Build Data Catalog",
+          "action_description": "Create a comprehensive data catalog to organize and manage your data assets effectively.",
+          "is_action_completed": false,
+          "redirection_url": "/data_catelog",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "legal"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Categorize Domain & Organize Data",
+          "action_description": "Structure your data into relevant domains (e.g., customer, financial, operational) for efficient organization and compliance tracking.",
+          "is_action_completed": false,
+          "redirection_url": "/data-domains",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Manage and Classify Data Elements",
+          "action_description": "Identify, classify, and manage data element (PII) to ensure privacy and multi-jurisdictional compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/pii-management",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "legal"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Create Glossary & Manage Tags",
+          "action_description": "Develop a comprehensive data glossary and apply tags to classify data by type, sensitivity, and compliance needs, enhancing data clarity.",
+          "is_action_completed": false,
+          "redirection_url": "/data-glossary",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "communications"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Define Access Roles and Manage Access",
+          "action_description": "Establish and manage access roles for stakeholders, ensuring that only authorized personnel can access sensitive data.",
+          "is_action_completed": false,
+          "redirection_url": "/access-management",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "security"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 5,
+    "step_details": {
+      "step_title": "Data Principal Management & Segmentation",
+      "step_introduction": "Organize and segment data principals across jurisdictions, optimizing consent collection strategies for effective data governance and regulatory compliance. This approach will streamline data principal management, allowing for tailored communication and efficient handling of consent across regions.",
+      "description": "Manage and segment data principals across jurisdictions, optimizing consent collection strategies.",
+      "step_description": "In this phase, you’ll import legacy data principals, create and manage unique personas, and segment them to meet compliance needs in various jurisdictions. Structuring data principals enables targeted consent management, making it easier to handle preferences, consent types, and data usage for specific groups. With segmentation, you can refine consent strategies, ensuring that interactions align with both regulatory requirements and user expectations.",
+      "step_why": "Efficient data principal management and segmentation are essential for meeting jurisdictional compliance, building trust, and optimizing consent processes. By categorizing data principals based on characteristics, locations, or consent preferences, you can deliver tailored experiences and improve regulatory responsiveness. This setup simplifies consent collection and management, enhances data security, and helps your organization maintain accountability.",
+      "estimated_time": "2.5 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Add Legacy Data Principals",
+          "action_description": "Import existing data principals to ensure continuity and compliance with historical data across your organization.",
+          "is_action_completed": false,
+          "redirection_url": "/legacy-data-import",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Create & Manage Data Principal Personas",
+          "action_description": "Create unique personas that represent various data principal types (e.g., customers, employees, partners) to align data handling with specific attributes and needs.",
+          "is_action_completed": false,
+          "redirection_url": "/data-principal-personas",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "communications"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Segment & Structure Data Principals",
+          "action_description": "Segment data principals by categories such as region, consent type, or data sensitivity, supporting customized consent collection and compliance efforts.",
+          "is_action_completed": false,
+          "redirection_url": "/data-principal-segmentation",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "legal"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 6,
+    "step_details": {
+      "step_title": "Purpose & Consent Governance",
+      "step_introduction": "Document consent purposes, retention periods, and essential details to maintain compliance with data processing laws. This approach provides a structured framework for managing consent, ensuring that your organization aligns with legal requirements and upholds data protection standards.",
+      "description": "Document consent purposes, retention periods, and other details to maintain compliance with data processing laws.",
+      "step_description": "In this stage, you’ll define data elements required for consent, set retention periods, and establish a clear inventory of business processes and their purposes. Planning consent collection and testing through AI-driven methods ensures efficient and scalable consent management. Creating multilingual collection points and leveraging AI for translations supports accessibility, compliance, and user engagement across regions.",
+      "step_why": "Purpose and consent governance are critical for transparent data processing, regulatory compliance, and trust-building with data principals. By clearly defining the purposes and processes associated with consent, your organization demonstrates accountability and responsibility in data handling. Additionally, configuring retention periods and multilingual support enhances accessibility and ensures adherence to legal obligations.",
+      "estimated_time": "3 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Add Data Elements for Consents",
+          "action_description": "Identify and document specific data elements needed for consent, ensuring transparency in data collection.",
+          "is_action_completed": false,
+          "redirection_url": "/data-elements-consents",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal", "data-management"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Define Consent Purpose & Business Process",
+          "action_description": "Create an inventory detailing business process and the specific purposes of each, supporting regulatory compliance and clarity in consent management.",
+          "is_action_completed": false,
+          "redirection_url": "/business-process-inventory",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "legal"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Configure Retention Periods and Legal Review",
+          "action_description": "Set retention periods for each data element and establish a schedule for legal reviews to maintain compliance over time.",
+          "is_action_completed": false,
+          "redirection_url": "/retention-legal-review",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Create Collection Points for Consent Collection",
+          "action_description": "Set up designated collection points (e.g., forms, pop-ups, landing pages) to gather user consents effectively.",
+          "is_action_completed": false,
+          "redirection_url": "/collection-points-setup",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Plan Consents Collection and AI Testing",
+          "action_description": "Develop and test consent collection methods, including AI-driven approaches to streamline and optimize the process.",
+          "is_action_completed": false,
+          "redirection_url": "/ai-testing-consent-collection",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "data-management"]
+        },
+        {
+          "action_number": "6",
+          "action_title": "Review Multi-lingual AI Translation",
+          "action_description": "Implement AI translation for multilingual support, ensuring that consent information is accessible and accurately translated for users in different regions.",
+          "is_action_completed": false,
+          "redirection_url": "/multilingual-ai-translation",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        },
+        {
+          "action_number": "7",
+          "action_title": "Publish Collection Points",
+          "action_description": "Make collection points live and accessible to data principals, enabling them to provide consents through various channels.",
+          "is_action_completed": false,
+          "redirection_url": "/publish-collection-points",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 7,
+    "step_details": {
+      "step_title": "Model Notice Campaign & Consent Collection",
+      "step_introduction": "Launch consent collection campaigns, set campaign rules, and manage ongoing consent acquisition efforts. This approach enables you to gather and maintain consent effectively, ensuring compliance and a smooth user experience.",
+      "description": "Launch consent collection campaigns, define campaign rules, and manage ongoing consent acquisition.",
+      "step_description": "In this phase, you’ll launch consent collection campaigns across various channels, reaching data principals where they’re most likely to engage. Defining campaign rules and customizing notices for direct outreach or specific platforms ensures that each interaction is clear and compliant. Reviewing campaign performance and gathering insights helps you continuously improve consent acquisition strategies, enhancing reach and regulatory alignment.",
+      "step_why": "Effective consent collection campaigns are critical for maintaining compliance and building trust with data principals. By strategically managing campaign rules and utilizing multiple channels, you can improve response rates, increase data transparency, and streamline the consent process. Regular performance reviews allow you to optimize campaigns over time, ensuring they remain effective and compliant.",
+      "estimated_time": "3 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Create Custom Model Notices",
+          "action_description": "Design custom notices tailored to specific segments or purposes, ensuring alignment with your organization’s communication style and legal requirements.",
+          "is_action_completed": false,
+          "redirection_url": "/custom-model-notices",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["communications", "legal"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Review and Configure Model Notices ",
+          "action_description": "Review custum model notices and configure them for different segments, languages, and regions to ensure effective consent collection.",
+          "is_action_completed": false,
+          "redirection_url": "/model-notice-templates",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["communications", "legal"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Create Campaign for Consent Collection",
+          "action_description": "Plan and design consent collection campaigns that align with your notice templates, ensuring consistent messaging and compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/campaign",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Send Configured Campaign for Model Notice",
+          "action_description": "Launch campaigns with pre-configured model notices tailored to audience segments and specific consent requirements.",
+          "is_action_completed": false,
+          "redirection_url": "/configured-campaign",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["communications", "marketing"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Send Direct Consent Notice to Data Principal",
+          "action_description": "Reach out to data principals individually, providing clear and personalized consent notices to ensure informed consent.",
+          "is_action_completed": false,
+          "redirection_url": "/direct-consent-notice",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["communications", "legal"]
+        },
+        {
+          "action_number": "6",
+          "action_title": "Send Consent Notice to Mobile or Web Application",
+          "action_description": "Integrate consent notices directly into mobile apps or web platforms, allowing users to respond within the application environment.",
+          "is_action_completed": false,
+          "redirection_url": "/mobile-web-consent",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        },
+        {
+          "action_number": "7",
+          "action_title": "Send Consent Notice to Email, SMS, or IVR",
+          "action_description": "Use omni-channel outreach by sending consent notices through email, SMS, or IVR (Interactive Voice Response) for broader engagement.",
+          "is_action_completed": false,
+          "redirection_url": "/omni-channel-consent",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["communications", "marketing"]
+        },
+        {
+          "action_number": "8",
+          "action_title": "Review Campaign Performance and Gather Insights",
+          "action_description": "Analyze campaign metrics to assess response rates, engagement levels, and consent acquisition success, refining strategies based on insights.",
+          "is_action_completed": false,
+          "redirection_url": "/campaign-performance",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["analytics", "communications"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 8,
+    "step_details": {
+      "step_title": "Technical Integration & Consent Collection",
+      "step_introduction": "Integrate consent SDKs into mobile apps, websites, or points of sale to enable seamless multi-channel consent collection. This setup ensures that consent is collected efficiently across all user touchpoints, enhancing compliance and data governance.",
+      "description": "Integrate consent SDKs into mobile apps, websites, or points of sale for multi-channel consent collection.",
+      "step_description": "In this stage, you’ll integrate SDKs and APIs across various platforms, such as mobile apps, websites, Connected TV (CTV), and point-of-sale systems, to streamline consent collection. Implementing and testing children identification mechanisms, along with parental control verification, ensures compliance with regulations related to minors. This technical integration helps gather consent consistently across channels, providing a unified approach to user privacy and data protection.",
+      "step_why": "Integrating consent collection into multiple platforms is essential for a seamless user experience and regulatory compliance. By using SDKs and APIs, your organization can reach users wherever they interact with your services, ensuring that consent is gathered transparently and efficiently. Children identification and parental control features further ensure that your consent processes comply with child data protection laws, enhancing trust and legal compliance.",
+      "estimated_time": "3.5 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Learn about API, SDKs & Consent Gateway",
+          "action_description": "Understand the technical aspects of APIs, SDKs, and consent gateways to facilitate consent collection across multiple platforms.",
+          "is_action_completed": false,
+          "redirection_url": "/sdk-documentation",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Integrate SDK/API in Mobile App/Website",
+          "action_description": "Implement APIs to facilitate consent collection within mobile apps or websites, ensuring a user-friendly experience.",
+          "is_action_completed": false,
+          "redirection_url": "/api-integration",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Integrate SDK/API within CTV or Point of Sale",
+          "action_description": "Integrate SDKs or APIs into Connected TV platforms or point-of-sale systems to capture consent across all user touchpoints.",
+          "is_action_completed": false,
+          "redirection_url": "/sdk-ctv-pos",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Test Consent Collection Journey",
+          "action_description": "Test the consent collection process across all integrated platforms to ensure a seamless user experience and compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/sdk-ctv-pos",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 9,
+    "step_details": {
+      "step_title": "Consent Insights & Analytics",
+      "step_introduction": "Analyze consent data, track performance, and optimize strategies for enhanced consent collection. This approach helps refine consent practices by providing actionable insights into user behavior and consent collection effectiveness.",
+      "description": "Analyze consent data, track performance, and optimize strategies for improved consent collection.",
+      "step_description": "In this stage, you’ll assess the performance of different consent collection points, analyze data principal behavior, and map psychographic trends to understand consent preferences. Reviewing optimization recommendations and generating consent provenance reports ensures transparency and accountability in consent practices. Accessing in-depth analytics reports further empowers data-driven decision-making, allowing you to refine consent strategies continuously.",
+      "step_why": "Gaining insights into consent collection performance and user behavior is crucial for optimizing consent acquisition and ensuring compliance. By analyzing collection point performance and user psychographics, you can adapt your strategies to enhance engagement and maximize consent rates. Consent provenance reports provide verifiable consent histories, promoting transparency and regulatory adherence, while detailed analytics reports enable a thorough review of consent data, supporting continuous improvement.",
+      "estimated_time": "3 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Analyze Collection Point Performance and Gather Insights",
+          "action_description": "Assess the effectiveness of various consent collection points, identifying areas for improvement to increase consent rates.",
+          "is_action_completed": false,
+          "redirection_url": "/collection-point-analysis",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["analytics", "communications"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Review Consent Optimization Recommendations",
+          "action_description": "Examine suggestions for enhancing consent collection strategies, applying best practices to improve user engagement and compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/consent-optimization",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["analytics", "communications"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Gather Data Principal Behavior and Map Psychography",
+          "action_description": "Collect and analyze data on user behavior, segmenting users by psychographic factors to tailor consent approaches.",
+          "is_action_completed": false,
+          "redirection_url": "/user-behavior-analysis",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["analytics", "marketing"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Generate and Review Consent Provenance Report",
+          "action_description": "Generate and review consent provenance reports to document and verify consent history, supporting compliance and transparency.",
+          "is_action_completed": false,
+          "redirection_url": "/provenance-report",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal", "analytics"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Download and Review Insights Reports",
+          "action_description": "Access detailed analytics reports that provide a comprehensive view of consent trends, helping refine strategies based on evidence.",
+          "is_action_completed": false,
+          "redirection_url": "/analytics-insights",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["analytics"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 10,
+    "step_details": {
+      "step_title": "Setup Privacy Centre",
+      "step_introduction": "Customize a Privacy center to enable data principals to manage their consents and privacy Privacys independently, even without a web or mobile app. This setup ensures that users have control over their data and consent choices, fostering transparency and trust.",
+      "description": "Customize a Privacy center to allow data principals to manage consents without needing a web or mobile app.",
+      "step_description": "In this phase, you’ll set up a centralized Privacy center where data principals can easily manage their consents. Customizing the Privacy center’s design aligns it with your brand, while privacy controls offer users clear options for managing their data. Reviewing APIs and integrating the Privacy center into your website or mobile app allows seamless access, ensuring a user-friendly experience for data control.",
+      "step_why": "A well-designed Privacy center empowers users to manage their consent choices proactively, enhancing transparency and user satisfaction. By offering direct access to consent and privacy settings, your organization builds trust and complies with data protection regulations. Integrating this functionality across platforms ensures that all users, regardless of the medium, can control their Privacys conveniently.",
+      "estimated_time": "4 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Setup Privacy Centre to Manage Consents",
+          "action_description": "Create a user-friendly Privacy center where customers can view, modify, or withdraw consents at any time.",
+          "is_action_completed": false,
+          "redirection_url": "/Privacy-centre-setup",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "communications"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Customize Privacy Centre as per Design Needs",
+          "action_description": "Align the Privacy center with your brand’s design requirements for consistency and improved user experience.",
+          "is_action_completed": false,
+          "redirection_url": "/customize-Privacy-centre",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "design"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Test Privacy Centre for Privacy Controls",
+          "action_description": "Ensure that the privacy controls function as intended, allowing users to manage data access, consent settings, and other privacy Privacys.",
+          "is_action_completed": false,
+          "redirection_url": "/privacy-controls-testing",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "legal"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Review Privacy Centre APIs and Documentation",
+          "action_description": "Review the available APIs and documentation to ensure they meet the necessary privacy and security standards.",
+          "is_action_completed": false,
+          "redirection_url": "/Privacy-centre-api-docs",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        },
+        {
+          "action_number": "5",
+          "action_title": "Integrate Privacy Centre in Website or Mobile App as Required",
+          "action_description": "Embed the Privacy center within your website or mobile app to provide users with direct and convenient access to manage their Privacys.",
+          "is_action_completed": false,
+          "redirection_url": "/integrate-Privacy-centre",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 11,
+    "step_details": {
+      "step_title": "Data Principal Access Request (DPAR) Setup",
+      "step_introduction": "Establish workflows and pre-checks to handle Data Subject Access Requests (DPARs) seamlessly, ensuring data principals can exercise their rights in a compliant and efficient manner.",
+      "description": "Set up workflows and pre-checks to handle data principal rights and DPARs seamlessly.",
+      "step_description": "In this phase, you’ll set up a customized Data Principal Access Request (DPAR) system to facilitate data principals’ rights to access, modify, or delete their data. Configuring pre-checks and request scopes ensures that each request is processed accurately, while identification verification processes safeguard data security. By defining data enrichment and handling practices, you’ll streamline request fulfillment and ensure data accuracy. Testing these workflows allows for efficient, user-friendly DPAR processing.",
+      "step_why": "Efficient handling of DPARs is essential for regulatory compliance and user trust. By implementing structured workflows and security checks, your organization can manage requests in a timely and secure manner. Verification processes ensure data integrity and privacy, while defined handling practices promote accuracy and reduce processing times. These workflows enhance user trust by demonstrating your commitment to respecting data privacy rights.",
+      "estimated_time": "4 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Set up DPAR for Honoring Data Principal Rights",
+          "action_description": "Develop a customized DPAR system to honor data access, correction, and deletion rights of data principals.",
+          "is_action_completed": false,
+          "redirection_url": "/custom-DPAR-setup",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal", "technical"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Configure Pre-flight Checks and Request Scopes",
+          "action_description": "Define pre-checks and the scope of each request to ensure accurate, compliant processing.",
+          "is_action_completed": false,
+          "redirection_url": "/pre-flight-checks",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "legal"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Set up Identification Verification Processes",
+          "action_description": "Implement verification methods to confirm requesters’ identities, maintaining security and privacy.",
+          "is_action_completed": false,
+          "redirection_url": "/identity-verification",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["security", "technical"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Create, Handle, and Test DPAR Requests",
+          "action_description": "Develop and test workflows for receiving, processing, and fulfilling DPARs to streamline operations and enhance the user experience.",
+          "is_action_completed": false,
+          "redirection_url": "/test-DPAR-requests",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "legal"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 12,
+    "step_details": {
+      "step_title": "Data Breach Management Life-cycle",
+      "step_introduction": "Establish workflows for incident management, create reports to meet compliance requirements, and assess your organization’s readiness to respond effectively to data incidents. This structure ensures that incidents are handled swiftly and documented accurately to support regulatory compliance.",
+      "description": "Establish incident workflows, create reports for compliance, and assess readiness for incident response.",
+      "step_description": "In this phase, you’ll develop a comprehensive Incident Management Plan tailored for Digital Personal Data Protection Act (DPDPA) compliance, outlining steps for identifying, managing, and reporting data incidents. Testing the plan ensures your team is prepared to respond to potential incidents. Generating and reviewing incident response reports provides insights into incident handling and ensures that all necessary documentation is in place for regulatory compliance.",
+      "step_why": "Effective incident management is critical for mitigating risks, maintaining user trust, and achieving regulatory compliance. A clear Incident Management Plan allows your organization to respond swiftly, reducing the impact of data breaches or other incidents. Regular testing and thorough reporting enhance preparedness and transparency, helping meet DPDPA requirements while supporting continuous improvement in incident response.",
+      "estimated_time": "4 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Create Data Breach Consent Artifact",
+          "action_description": "Develop a consent artifact that outlines the procedures and protocols for obtaining and managing user consent in the event of a data breach.",
+          "is_action_completed": false,
+          "redirection_url": "/create-consent-artifact",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal", "security"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Define Mitigation Steps for Data Breach",
+          "action_description": "Identify and document the steps to be taken to mitigate the impact of a data breach, including containment, eradication, and recovery procedures.",
+          "is_action_completed": false,
+          "redirection_url": "/define-mitigation-steps",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["security", "technical"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Test Personal Data Breach Response Plan",
+          "action_description": "Conduct drills and simulations to test the effectiveness of the personal data breach response plan, ensuring that all team members are familiar with their roles and responsibilities.",
+          "is_action_completed": false,
+          "redirection_url": "/test-response-plan",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["security", "technical"]
+        },
+        {
+          "action_number": "4",
+          "action_title": "Create & Test Data Breach Report for DPDPA Compliance",
+          "action_description": "Conduct testing scenarios to ensure the plan’s effectiveness and refine procedures, then generate incident reports to document responses and compliance measures.",
+          "is_action_completed": false,
+          "redirection_url": "/test-incident-plan",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["legal", "security", "technical"]
+        }
+      ]
+    }
+  },
+  {
+    "step_number": 13,
+    "step_details": {
+      "step_title": "DPO Studio Setup & Compliance Monitoring",
+      "step_introduction": "Create custom dashboards and monitoring tools for the Data Protection Officer (DPO) to streamline regulatory compliance and facilitate effective oversight of data privacy operations. This setup provides real-time insights and tools to maintain adherence to data protection laws.",
+      "description": "Create custom dashboards and compliance monitoring tools to streamline regulatory adherence.",
+      "step_description": "In this phase, you’ll explore pre-made DPO dashboards, create custom dashboards to support specific operational needs, and generate sample reports to ensure compliance. With these tools, the DPO can track key metrics, oversee consent management, monitor data processing activities, and respond to incidents efficiently. Adding additional actions, such as automated alerts and trend analysis, supports proactive compliance management.",
+      "step_why": "Customizable dashboards and compliance monitoring tools are crucial for keeping DPO operations aligned with regulatory requirements. These tools provide immediate visibility into key compliance indicators, empowering the DPO to manage risks, detect issues early, and ensure data privacy standards are consistently upheld. Real-time reporting and alert systems further enhance the organization’s ability to stay compliant and respond swiftly to any potential breaches or regulatory changes.",
+      "estimated_time": "5 hours",
+      "difficulty": "medium",
+      "recommended_actions": [
+        {
+          "action_number": "1",
+          "action_title": "Learn About Ready-made DPO Dashboards",
+          "action_description": "Explore existing dashboards designed to support DPO operations, providing foundational tools and metrics to ensure compliance.",
+          "is_action_completed": false,
+          "redirection_url": "/ready-made-dpo-dashboards",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "technical"]
+        },
+        {
+          "action_number": "2",
+          "action_title": "Generate Sample Reports for Compliance",
+          "action_description": "Produce sample compliance reports that cover key regulatory metrics, demonstrating how data is managed, protected, and aligned with legal requirements.",
+          "is_action_completed": false,
+          "redirection_url": "/sample-compliance-reports",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["data-management", "legal"]
+        },
+        {
+          "action_number": "3",
+          "action_title": "Set Up Automated Alerts for Compliance Events",
+          "action_description": "Configure alerts to notify the DPO of any compliance events, such as expiring consents, incident reports, or non-compliant activities.",
+          "is_action_completed": false,
+          "redirection_url": "/automated-alerts",
+          "is_mandatory": true,
+          "not_applicable": false,
+          "department": ["technical", "security"]
+        }
+      ]
+    }
+  }
+]

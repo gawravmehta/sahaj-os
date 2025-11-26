@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background: #fff;
+        padding: 2rem;
+        border: 1px solid #ccc;
+        text-align: center;
+        width: 90%;
+        max-width: 360px;
+      }
+
+      h2 {
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .otp-inputs {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .otp-inputs input {
+        width: 48px;
+        height: 56px;
+        font-size: 1.5rem;
+        text-align: center;
+        border: 1px solid #ccc;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
+      .otp-inputs input:focus {
+        border-color: #3c3d64;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+
+      button {
+        background-color: #3c3d64;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #3c3d64c7;
+      }
+
+      .message {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Enter OTP</h2>
+      <form id="otpForm" action="/auth/otp-verify" method="POST">
+        <div class="otp-inputs">
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+          <input
+            type="text"
+            maxlength="1"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+          />
+        </div>
+        <button type="submit">Verify OTP</button>
+      </form>
+      <div class="message" id="message"></div>
+    </div>
+
+    <script>
+      const inputs = document.querySelectorAll(".otp-inputs input");
+      const form = document.getElementById("otpForm");
+
+      // Focus next input automatically
+      inputs.forEach((input, index) => {
+        input.addEventListener("input", (e) => {
+          if (input.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+      });
+
+      function getTokenFromURL() {
+        const url = window.location.href;
+        const tokenPart = url.split("/").pop(); // Get the last part
+        return tokenPart.split("?")[0]; // Remove query parameters
+      }
+
+      // Extract token and log it
+      const token = getTokenFromURL();
+
+      // Combine OTP and submit
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const otp = Array.from(inputs)
+          .map((input) => input.value)
+          .join("");
+
+        if (otp.length !== 6) {
+          document.getElementById("message").textContent =
+            "Please enter all 6 digits.";
+          return;
+        }
+
+        const res = await fetch(
+          `{{api_url}}/api/v1/n/verify-otp?token=${token}&otp=${otp}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        const data = await res.json();
+        if (res.ok) {
+          document.getElementById("message").textContent =
+            "✅ OTP Verified Successfully!";
+
+          setTimeout(() => {
+            window.location.href = data.redirect_url;
+          }, 1000);
+        } else {
+          document.getElementById("message").textContent =
+            "❌ Invalid OTP. Please try again.";
+        }
+      });
+    </script>
+  </body>
+</html>

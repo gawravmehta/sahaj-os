@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Legacy Notice</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: rgb(145, 161, 180);
+      }
+      .main-div {
+        width: 595px;
+        background: #f9fcff;
+      }
+
+      .head-div {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .logo-box {
+        padding-bottom: 32px;
+        padding: 32px;
+      }
+
+      .info-box {
+        margin: 32px;
+        font-size: 12px;
+        color: #4e4e4e;
+      }
+
+      .language-div {
+        font-size: 10px;
+        padding: 6px 50px;
+        background: #e6f3ff;
+        color: #939393;
+        line-height: 25px;
+      }
+
+      .hero-section {
+        padding: 10px 32px;
+      }
+
+      .heading-div {
+        font-size: 22px;
+        margin-top: 32px;
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+
+      .para-div {
+        text-align: start;
+        font-size: 12px;
+        font-weight: 300;
+        color: #4e4e4e;
+        margin-bottom: 10px;
+      }
+
+      .ol-div {
+        box-sizing: border-box;
+        margin: 0px;
+        padding: 0px;
+        padding-left: 15px;
+        text-align: start;
+      }
+
+      .list-heading {
+        padding: 0px;
+        margin-bottom: 10px;
+      }
+
+      .list1 {
+        padding: 0px 5px;
+      }
+
+      .inside-list {
+        padding-left: 15px;
+        list-style-type: disc;
+        font-size: 12px;
+        column-gap: 30px;
+        row-gap: 10px;
+        display: flex;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .inside-list2 {
+        padding-left: 15px;
+        list-style-type: disc;
+        font-size: 12px;
+        margin-bottom: 20px;
+      }
+      .li-1 {
+        margin-bottom: 8px;
+      }
+
+      .list-span {
+        margin-left: 12px;
+      }
+
+      .list-span2 {
+        margin-left: 14px;
+      }
+
+      .list-span3 {
+        margin-left: 72px;
+      }
+
+      .list-p {
+        margin-bottom: 20px;
+      }
+
+      .end-div {
+        text-align: start;
+        margin-top: 12px;
+      }
+
+      .end-para {
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .end-para2 {
+        font-size: 12px;
+        line-height: 18px;
+      }
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      .sticky-contaner {
+        background-color: #f4f4f4;
+        position: sticky;
+        bottom: 0;
+        width: 595px;
+        margin: 0 auto;
+        z-index: 10;
+      }
+
+      .sticky-contaner2 {
+        max-width: 1080px;
+        margin: auto;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .manage-consent {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .delete-consent {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+      a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <center>
+      <img src="{{pixel_url}}" width="1" height="1" alt="" />
+      <div class="main-div">
+        <div class="head-div">
+          <div class="logo-box">
+            <img
+              id="logo"
+              src="{{df_logo_url}}"
+              alt="yo"
+              width="100px"
+              height="32px"
+            />
+          </div>
+          <div class="info-box">
+            <p id="companyName">{{df_name}}</p>
+            <p id="companyAddress">{{df_address}}</p>
+            <p id="companyWebsite">{{df_website_url}}</p>
+          </div>
+        </div>
+        <div class="language-div">
+          <div>
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >English</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >অসমীয়া</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >বাংলা</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >ગુજરાતી</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >हिंदी</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >ಕನ್ನಡ</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >کٲشُر</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >कोंकणी</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >മലയാളം</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >মণিপুরী</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >मराठी</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >नेपाली</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >ଓଡ଼ିଆ</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >ਪੰਜਾਬੀ</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >संस्कृतम्</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >ᱥᱟᱱᱛᱟᱲᱤ</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >سنڌي</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >தமிழ்</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >తెలుగు</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >اُردُو</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >बड़ो</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >मैथिली</a
+            >
+            |
+            <a
+              style="color: #939393"
+              href="{{base_url}}/click/{{event_id}}/{{token}}/ln"
+              >डोगरी</a
+            >
+          </div>
+        </div>
+        <div class="hero-section">
+          <div class="heading-div">
+            Digital Personal Data Protection Act, 2023
+          </div>
+          <div class="para-div">
+            This notice is intended to inform you, the Data Principal, of how
+            we, Furqan Company/Furqan Brand (the Data Fiduciary), intend to
+            process your personal data. Your informed consent is crucial, so
+            please review this notice carefully.
+          </div>
+          <ol class="ol-div">
+            <li>
+              <h5 class="list-heading">Data Collection</h5>
+              <p class="para-div list1">
+                The following personal data will be collected from you, solely
+                for the purposes mentioned below:
+              </p>
+              <ul class="inside-list">
+                {{ data_collection_items }}
+              </ul>
+            </li>
+            {{ purpose_processing_table }}
+            <li>
+              <h5 class="list-heading">Limitation On Data Collection</h5>
+              <p class="para-div list1 list-p">
+                Only the minimum necessary personal data required for the stated
+                purposes will be collected.
+              </p>
+            </li>
+            <li>
+              <h5 class="list-heading">Use Restriction</h5>
+              <p class="para-div list1 list-p">
+                Personal data provided will not be used for purposes other than
+                those explicitly stated in this notice.
+              </p>
+            </li>
+            <li>
+              <h5 class="list-heading">Data Retention</h5>
+              <p class="para-div list1">
+                Personal data will be retained only as long as necessary for the
+                purposes listed, or as required by law:
+              </p>
+              <ul class="inside-list2">
+                <li class="para-div">
+                  Data related to customer status will be retained only while
+                  you remain an active customer.
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h5 class="list-heading">Consent Withdrawal</h5>
+              <p class="para-div list1 list-p">
+                You may withdraw your consent at any time, resulting in the
+                deletion of your data, unless legal obligations necessitate
+                retention. <strong><u>Withdraw Consent</u></strong>
+              </p>
+            </li>
+            <li>
+              <h5 class="list-heading">Consent Withdrawal</h5>
+              <p class="para-div list1">
+                You have rights concerning your personal data, including:
+              </p>
+              <ul class="inside-list2">
+                <li class="para-div">Accessing your data</li>
+                <li class="para-div">Correcting inaccuracies</li>
+                <li class="para-div">Data portability</li>
+                <li class="para-div">
+                  Requesting erasure or suspension of data
+                </li>
+                <li class="para-div">
+                  Seeking remedies for data processing issues
+                </li>
+              </ul>
+            </li>
+            <li>
+              <h5 class="list-heading">Grievance Redressal</h5>
+              <p class="para-div list1 list-p">
+                If you have concerns or complaints about data processing, you
+                can register a grievance Here. If you do not receive a response
+                within the legal timeframe, recourse is available under the
+                Protection of Privacy in Information Technology Act.
+                <strong><u>File Complaint </u></strong>
+              </p>
+            </li>
+            <li>
+              <h5 class="list-heading">Save Notice</h5>
+              <p class="para-div list1 list-p">
+                You can download and save a copy of this notice for your
+                records. <strong><u>Download </u></strong>
+              </p>
+            </li>
+          </ol>
+          <div class="end-div">
+            <p class="end-para">Data Protection Officer</p>
+            <p class="end-para2" id="dpoName">{{dpo_name}}</p>
+            <p class="end-para2" id="dpoEmail">{{dpo_email}}</p>
+          </div>
+          <div class="end-div">
+            <a
+              href="{{base_url}}/click/{{event_id}}/{{token}}/mln"
+              class="manage-consent"
+              >Manage Consent</a
+            >
+            <a
+              href="{{notice_worker_base_url}}/delete?token={{token}}"
+              class="delete-consent"
+              >Delete Consent</a
+            >
+          </div>
+        </div>
+        <div>
+          <div
+            class="actions"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 15px 10px;
+            "
+          >
+            <p style="font-size: 14px">Do you agree to provide consent ?</p>
+            <button
+              class="accept"
+              id="submitConsent"
+              style="text-decoration: none; border: 0"
+            >
+              <a
+                href="{{notice_worker_base_url}}/acknowledge?token={{token}}"
+                style="
+                  color: white;
+                  text-decoration: none;
+                  background-color: #38b918;
+                  padding: 10px;
+                "
+                >Acknowledge</a
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </center>
+  </body>
+</html>

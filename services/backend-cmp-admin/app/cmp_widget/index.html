@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Widget Test Page</title>
+    <!-- Clear local storage on load for easy testing of a fresh start -->
+    <!-- <script>
+      localStorage.clear();
+    </script> -->
+  </head>
+  <body>
+    <h1>Testing my CMP Widget</h1>
+    <p>The cookie consent banner should appear at the bottom of the page.</p>
+
+    <!-- Essential cookies that are always loaded -->
+    <script>
+      document.cookie = "session_id=abc123; path=/; Secure; SameSite=Lax";
+      document.cookie = "session_id22=abc123; path=/; Secure; SameSite=Lax";
+      document.cookie = "session_id2211=abc123; path=/; Secure; SameSite=Lax";
+      console.log("Essential cookies have been loaded.");
+    </script>
+
+    <!--
+      Non-essential scripts. Note the type="text/plain" attribute,
+      which prevents them from executing until the CMP changes it.
+    -->
+
+    <!-- Performance scripts -->
+    <script type="text/plain" data-cookie-category="performance">
+      document.cookie = "perf_metric=fast-load; path=/; Max-Age=3600; Secure; SameSite=Lax";
+      console.log("Performance cookies have been set.");
+    </script>
+
+    <!-- Marketing scripts -->
+    <script type="text/plain" data-cookie-category="marketing">
+      document.cookie = "ad_tracker_id=AD98765; path=/; Max-Age=604800; Secure; SameSite=None";
+      console.log("Marketing cookies have been set.");
+    </script>
+
+    <!-- Analytics scripts -->
+    <script
+      type="text/plain"
+      data-cookie-category="analytics"
+      data-src="https://www.googletagmanager.com/gtag/js?id=G-8WJ0F6KDPQ"
+    ></script>
+    <script type="text/plain" data-cookie-category="analytics">
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-8WJ0F6KDPQ");
+      console.log("Google Analytics has been loaded and configured.");
+    </script>
+    <script type="text/plain" data-cookie-category="analytics">
+      (() => {
+        const analyticsScript = document.createElement("script");
+        analyticsScript.innerHTML = `
+          document.cookie = "analytics_dynamic_id=ANLYTCS123; path=/; Max-Age=7200; Secure; SameSite=Lax";
+        `;
+        document.body.appendChild(analyticsScript);
+        console.log("Dynamic analytics cookie has been set.");
+      })();
+    </script>
+    <script type="text/plain" data-cookie-category="analytics">
+      const trackingPixel = document.createElement("img");
+      trackingPixel.src = "https://dummyimage.com/1x1/000/fff&text=.";
+      trackingPixel.alt = "tracking-pixel";
+      trackingPixel.width = "1";
+      trackingPixel.height = "1";
+      trackingPixel.onload = () => {
+        console.log("Tracking pixel loaded");
+      };
+      document.body.appendChild(trackingPixel);
+    </script>
+    <script type="text/plain" data-cookie-category="analytics">
+      const iframe = document.createElement("iframe");
+      iframe.src = "https://www.youtube.com/embed/dQw4w9WgXcQ";
+      iframe.width = "0";
+      iframe.height = "0";
+      iframe.style.border = "none";
+      iframe.loading = "lazy";
+      document.body.appendChild(iframe);
+      console.log("YouTube iframe has been appended.");
+    </script>
+    <script type="text/plain" data-cookie-category="analytics">
+      const setCookies = () => {
+        document.cookie = "analytics_dynamic_id12=ANLYTCS123; path=/; Max-Age=7200; Secure; SameSite=Lax";
+      };
+      setInterval(() => {
+        setCookies();
+        console.log("Dynamic analytics cookie (setInterval) has been set.");
+      }, 10000);
+    </script>
+
+    <!-- Main CMP Script -->
+    <script type="module" src="src/builds/default_widget-dev/cmp-entry.js"></script>
+  </body>
+</html>
