@@ -24,7 +24,7 @@ There are many ways to contribute, from reporting bugs to writing documentation,
 1.  **Fork the Repository**: Start by forking the `sahaj-os` repository to your GitHub account.
 2.  **Clone Your Fork**:
     ```bash
-    git clone https://github.com/YOUR_USERNAME/sahaj-os.git
+    git clone https://github.com/gawravmehta/sahaj-os
     cd sahaj-os
     ```
 3.  **Create a New Branch**:
