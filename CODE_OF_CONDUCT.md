@@ -1,57 +1,106 @@
-# Contributor Covenant Code of Conduct
-
 ## Our Pledge
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+At *Concur, we believe that **awareness and access* are the true foundations of privacy.  
+Privacy should not be a privilege reserved for large organizations with deep resources - it is a *fundamental right* that every individual and organization, big or small, must be able to uphold.
 
-We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+Our mission is to *democratize privacy* by making powerful data protection and compliance tools accessible to everyone.  
+We are building open, interoperable systems under the *Digital Public Infrastructure (DPI)* vision - enabling every organization in India to implement privacy and compliance seamlessly, without cost being a barrier.
 
-## Our Standards
+Through this open-source initiative, we aim to empower the next generation of data fiduciaries, developers, and innovators to build a privacy-respecting digital future.
 
-Examples of behavior that contributes to a positive environment for our community include:
+If you share our vision of a fair, transparent, and privacy-first India - *join the movement, contribute to the cause, and be part of the privacy revolution.*
 
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall community
+### *#JaanKayDo*
 
-Examples of unacceptable behavior include:
 
-* The use of sexualized language or imagery, and sexual attention or advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+## Our Community Values
 
-## Data Privacy and Ethical Handling
+We are committed to maintaining a respectful, transparent, and inclusive community.  
+To ensure that SAHAJ remains a healthy, productive, and welcoming environment for everyone, all participants agree to:
 
-Given this project relates to a Consent Management System, we emphasize the critical importance of data privacy and ethical data handling. All contributors are expected to:
+- Treat all contributors and users with *respect and empathy*.  
+- Engage in *constructive discussions* and provide feedback that is helpful and kind.  
+- Encourage diversity of thought and foster a sense of *shared ownership*.  
+- Uphold ethical standards when handling data, code, or research.  
+- Respect privacy in both communication and implementation.  
+- Never use this project or its components for activities that violate privacy, data protection, or applicable laws.
 
-* Adhere to strict data protection principles, including GDPR, CCPA, and other relevant regulations.
-* Never expose or misuse personal data in any form.
-* Be mindful of privacy-by-design and security-by-design principles in all contributions.
-* Report any potential data breaches or vulnerabilities immediately and responsibly.
-* Respect user consent and preferences as fundamental to the system's design and operation.
+## Developer Guidelines
 
-## Enforcement Responsibilities
+To maintain high standards and ensure alignment with SAHAJ’s goals, contributors are expected to follow these development principles:
 
-Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
+### 1. Code Quality
+- Follow best practices in security, readability, and maintainability.  
+- Use meaningful commit messages and follow established branching conventions.  
+- Ensure all submitted code passes linting, testing, and security checks.  
+- Include sufficient documentation and comments explaining complex logic.
 
-Community leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
+### 2. Contribution Workflow
+- Fork the repository and create a feature branch from main (e.g., feature/add-consent-dashboard).  
+- Submit a pull request (PR) describing your changes, rationale, and any dependencies.  
+- Link related issues or feature requests for clarity.  
+- Be open to review, discussion, and potential revision before merge.
 
-## Scope
+## Feature Requests
 
-This Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces. Examples of representing our community include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
+We welcome suggestions that enhance privacy, usability, or interoperability.  
+Before submitting a new feature request:
 
-## Enforcement
+1. *Search existing issues* to avoid duplicates.  
+2. Clearly describe:
+   - The problem or limitation you’re trying to solve.  
+   - The value it brings to privacy or compliance enablement.  
+   - Any alternative solutions or prior discussions.  
+3. Use the label feature-request when creating an issue.  
+4. Avoid proposing features that introduce commercial dependencies or break the open-access philosophy.
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at [INSERT EMAIL ADDRESS].
-All complaints will be reviewed and investigated promptly and fairly. All community leaders are obligated to respect the privacy and security of the reporter of any incident.
+Feature proposals that align with DPDPA compliance, DPI interoperability, or community benefit will be prioritized.
+
+## Support and Help Channels
+
+For assistance or community collaboration:
+
+- Email: [info@concur.live](mailto:info@concur.live)  
+- Slack Community: [Join SAHAJ Community](https://thesahaj.slack.com/ssb/redirect)  
+- Report Bugs: Use GitHub Issues with the tag bug  
+- Documentation: [https://docs.sahaj.live](https://docs.sahaj.live)
+
+When seeking support:
+- Provide detailed context (steps to reproduce, expected vs. actual behavior).  
+- Avoid sharing any sensitive or personal data in public tickets.  
+- Be patient and respectful — maintainers are volunteers contributing time and expertise.
+
+## Responsible Use
+
+As an open-source privacy tool, SAHAJ must never be misused.  
+By participating in this community, you agree:
+
+- *Not* to use the software to monitor, exploit, or harm individuals.  
+- *Not* to incorporate SAHAJ into proprietary or commercial offerings without a valid license.  
+- To respect all data protection laws and principles in your jurisdiction.  
+- To report any potential vulnerabilities or misuse to [info@concur.live](mailto:info@concur.live).
+
+## Enforcement Policy
+
+Violations of this Code of Conduct may result in:
+1. A warning or private communication from the maintainers.  
+2. Temporary or permanent removal from community channels.  
+3. Revocation of contribution privileges or project access.  
+
+Reports of misconduct should be directed to:  
+*[info@concur.live](mailto:info@concur.live)*
+
+All reports will be handled confidentially and with care.
 
 ## Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.0, available at [https://www.contributor-covenant.org/version/2/0/code_of_conduct.html][v2.0].
+This Code of Conduct is adapted from the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct.html),  
+with additional guidelines reflecting the *Privacy by Concur* principles of ethical software development.
 
-[homepage]: https://www.contributor-covenant.org
-[v2.0]: https://www.contributor-covenant.org/version/2/0/code_of_conduct.html
+## Final Note
+
+Our community thrives on collaboration, trust, and respect.  
+By contributing to SAHAJ, you are helping build a digital future where privacy is accessible, ethical, and interoperable — for everyone.
+
+Let’s work together to make privacy a right, not a privilege.  
+## *#JaanKayDo*
