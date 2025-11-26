@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Notice</title>
+    <style>
+      :root {
+        /* Theme variables - Light theme default */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-tertiary: #eeeeee;
+        --text-primary: #333333;
+        --text-secondary: #555555;
+        --text-accent: #002fa7;
+        --text-muted: #6b7280;
+        --text-strong: #111827;
+
+        --bg: #ffffff;
+        --card: #ffffff;
+        --bg-hover: #f3f4f6;
+        --bg-input: #f9fafb;
+        --bg-table: #fafbff;
+        --bg-table-header: #f8fafc;
+
+        --muted: #6c6c6c;
+        --accent: #060654;
+        --chip-bg: #eef1ff;
+        --chip-text: #060654;
+        --border: #e5e7eb;
+
+        --dropdown-bg: #ffffff;
+        --dropdown-hover: #f3f4f6;
+        --dropdown-text: #374151;
+
+        --tooltip-bg: #333333;
+        --tooltip-text: #ffffff;
+
+        --icon-bg: #eef2ff;
+        --icon-color: #4b5563;
+
+        --button-accept: #38b918;
+        --button-deny: #ee734b;
+        --button-accept-hover: #2da312;
+        --button-deny-hover: #e05c30;
+
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Dark theme */
+      [data-theme="dark"] {
+        --bg-primary: #121212;
+        --bg-secondary: #1e1e1e;
+        --bg-tertiary: #2a2a2a;
+        --text-primary: #f0f0f0;
+        --text-secondary: #cccccc;
+        --text-accent: #4d7cff;
+        --text-muted: #9ca3af;
+        --text-strong: #ffffff;
+
+        --bg: #121212;
+        --card: #1e1e1e;
+        --bg-hover: #2a2a2a;
+        --bg-input: #2a2a2a;
+        --bg-table: #1a1a1a;
+        --bg-table-header: #252525;
+
+        --muted: #9ca3af;
+        --accent: #4d7cff;
+        --chip-bg: #2a2a2a;
+        --chip-text: #a5b4fc;
+        --border: #444444;
+
+        --dropdown-bg: #1e1e1e;
+        --dropdown-hover: #2a2a2a;
+        --dropdown-text: #f0f0f0;
+
+        --tooltip-bg: #444444;
+        --tooltip-text: #ffffff;
+
+        --icon-bg: #2a2a2a;
+        --icon-color: #9ca3af;
+
+        --button-accept: #4ade80;
+        --button-deny: #fb923c;
+        --button-accept-hover: #22c55e;
+        --button-deny-hover: #f97316;
+      }
+
+      /* High contrast theme */
+      [data-theme="high-contrast"] {
+        --bg-primary: #000000;
+        --bg-secondary: #1a1a1a;
+        --bg-tertiary: #333333;
+        --text-primary: #ffffff;
+        --text-secondary: #eeeeee;
+        --text-accent: #ffff00;
+        --text-muted: #cccccc;
+        --text-strong: #ffffff;
+
+        --bg: #000000;
+        --card: #1a1a1a;
+        --bg-hover: #333333;
+        --bg-input: #1a1a1a;
+        --bg-table: #0a0a0a;
+        --bg-table-header: #1a1a1a;
+
+        --muted: #cccccc;
+        --accent: #ffff00;
+        --chip-bg: #333333;
+        --chip-text: #ffff00;
+        --border: #ffffff;
+
+        --dropdown-bg: #000000;
+        --dropdown-hover: #333333;
+        --dropdown-text: #ffffff;
+
+        --tooltip-bg: #ffffff;
+        --tooltip-text: #000000;
+
+        --icon-bg: #333333;
+        --icon-color: #ffffff;
+
+        --button-accept: #00ff00;
+        --button-deny: #ff0000;
+        --button-accept-hover: #00cc00;
+        --button-deny-hover: #cc0000;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        padding-bottom: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      .lang-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        position: relative;
+      }
+      .lang-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(2, 6, 23, 0.12);
+        background: var(--bg-hover);
+      }
+      .lang-icon svg {
+        width: 20px;
+        height: 20px;
+        color: var(--icon-color);
+      }
+      .lang-label {
+        font-size: 13px;
+        color: var(--dropdown-text);
+        font-weight: 600;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 44px;
+        right: 0;
+        width: 220px;
+        max-height: 320px;
+        overflow: auto;
+        background: var(--dropdown-bg);
+        border-radius: 10px;
+        box-shadow: 0px 6px 20px rgba(2, 6, 23, 0.12);
+        padding: 6px 0;
+        display: none;
+        border: 1px solid var(--border);
+        z-index: 50;
+      }
+      .dropdown-menu div {
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--dropdown-text);
+      }
+      .dropdown-menu div:hover {
+        background: var(--dropdown-hover);
+      }
+
+      .card {
+        width: 720px;
+        background: var(--card);
+        padding: 28px;
+        margin-top: 20px;
+        border: 1px solid var(--border);
+        position: relative;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #7b61ff, #ff7ab6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .title {
+        font-weight: 700;
+        color: var(--text-strong);
+        font-size: 16px;
+        line-height: 1;
+      }
+      .notice {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .desc {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        margin: 12px 0 18px 0;
+        line-height: 1.45;
+        width: 95%;
+      }
+
+      .consent-table {
+        border: 1px solid var(--border);
+        padding: 0;
+        background: var(--bg-table);
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .consent-table::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background-color: var(--border);
+        transform: translateX(-50%);
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 18px 14px;
+        align-items: center;
+        position: relative;
+      }
+      .row + .row {
+        border-top: 1px solid var(--border);
+      }
+
+      .purpose {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .purpose-sub {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        width: 95%;
+        margin-bottom: 8px;
+      }
+      .purpose .icon {
+        width: 18px;
+        height: 18px;
+        display: inline-grid;
+        place-items: center;
+        background: var(--icon-bg);
+        border-radius: 6px;
+      }
+
+      .expiry-info {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        background: var(--bg-secondary);
+        padding: 4px 8px;
+        border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid var(--border);
+      }
+      .expiry-info strong {
+        color: var(--text-primary);
+      }
+
+      .data-cats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-self: end;
+        align-items: center;
+        position: relative;
+        min-height: 80px;
+      }
+
+      .chip {
+        background: var(--chip-bg);
+        color: var(--chip-text);
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 11.5px;
+        font-weight: 600;
+        box-shadow: 0 2px 6px rgba(50, 70, 180, 0.08);
+        transition: 0.18s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .chip.selected {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+      }
+
+      .data-element-icon {
+        position: absolute;
+        right: 0;
+        bottom: -10px;
+        width: 20px;
+        height: 20px;
+        opacity: 0.6;
+      }
+
+      @media (max-width: 720px) {
+        .consent-table::before {
+          display: none;
+        }
+        .row {
+          grid-template-columns: 1fr;
+        }
+        .data-cats {
+          justify-self: start;
+        }
+        .card {
+          width: 94%;
+        }
+        .data-element-icon {
+          position: relative;
+          margin-top: 8px;
+        }
+      }
+
+      /* New Styles from html_simple */
+      :root {
+        --button-accept: #38b918;
+        --button-deny: #ee734b;
+        --button-accept-hover: #2da312;
+        --button-deny-hover: #e05c30;
+      }
+
+      /* OTP Modal Styles */
+      .otp-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .otp-modal {
+        background-color: var(--card);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        border: 1px solid var(--border);
+      }
+
+      .otp-modal h3 {
+        margin-bottom: 1rem;
+        color: var(--text-strong);
+      }
+
+      .otp-modal p {
+        margin-bottom: 1.5rem;
+        color: var(--text-muted);
+      }
+
+      .otp-input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 1rem;
+        box-sizing: border-box;
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+      }
+
+      .otp-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+      }
+
+      .otp-btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .otp-verify-btn {
+        background-color: var(--button-accept);
+        color: white;
+      }
+
+      .otp-verify-btn:hover {
+        background-color: var(--button-accept-hover);
+      }
+
+      .otp-cancel-btn {
+        background-color: var(--bg-hover);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+      }
+
+      .otp-cancel-btn:hover {
+        background-color: var(--bg-tertiary);
+      }
+
+      .otp-error {
+        color: var(--button-deny);
+        font-size: 13px;
+        margin-top: 0.5rem;
+        display: none;
+      }
+
+      /* Mandatory Tooltip */
+      .chip-wrapper {
+        position: relative;
+        display: inline-flex;
+      }
+
+      .chip.disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .mandatory-tooltip {
+        visibility: hidden;
+        position: absolute;
+        bottom: 125%;
+        left: 30%;
+        transform: translateX(-50%);
+        background-color: var(--tooltip-bg);
+        color: var(--tooltip-text);
+        text-align: center;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: pre-wrap;
+        width: 120px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      .chip-wrapper:hover .mandatory-tooltip {
+        visibility: visible;
+      }
+
+      .mandatory-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 30%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--tooltip-bg) transparent transparent transparent;
+        z-index: 1000;
+      }
+
+      /* Rights Section */
+      .rights-section {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: var(--bg-secondary);
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        width: 93%;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: center;
+      }
+      .rights-text {
+        flex: 1;
+      }
+      .rights-image {
+        width: 149px;
+        height: 162px;
+        object-fit: contain;
+        flex-shrink: 0;
+      }
+      .rights-section h5 {
+        font-size: 14px;
+        color: var(--text-primary);
+        margin: 0 0 12px 0;
+        font-weight: 600;
+      }
+      .rights-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .rights-item span {
+        color: var(--button-accept);
+        font-size: 14px;
+      }
+      .rights-item p {
+        margin: 0;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+      .rights-note {
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 12px;
+        font-style: italic;
+      }
+
+      /* Controls */
+      .controls-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .font-controls {
+        display: flex;
+        gap: 4px;
+      }
+      .font-btn {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .font-btn:hover {
+        background: var(--bg-hover);
+      }
+      .theme-toggle {
+        cursor: pointer;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+      }
+      .speak-icon {
+        cursor: pointer;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+      }
+
+      /* Header Controls */
+      .header-controls {
+        position: sticky;
+        top: 0;
+        background: var(--bg-primary);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 0;
+        z-index: 100;
+        width: 100%;
+      }
+      .controls-wrapper {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      .controls-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .font-controls {
+        display: flex;
+        gap: 4px;
+      }
+      .font-btn {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .font-btn:hover {
+        background: var(--bg-secondary);
+      }
+      .theme-toggle {
+        cursor: pointer;
+        position: relative;
+      }
+      .theme-toggle svg {
+        width: 30px;
+        height: 30px;
+        color: var(--text-muted);
+      }
+      .theme-dropdown {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background: var(--bg-primary);
+        border: 1px solid var(--border);
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        font-size: 12px;
+        width: 150px;
+        border-radius: 4px;
+      }
+      .theme-dropdown div {
+        padding: 10px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        display: flex;
+        align-items: center;
+        border-bottom: 0.5px solid var(--border);
+      }
+      .theme-dropdown div:hover {
+        background-color: var(--bg-tertiary);
+      }
+      .speak-icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+      .lang-svg {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+
+      /* Sticky Bottom */
+      .sticky-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--border);
+        padding: 14px 0;
+        z-index: 90;
+      }
+      .sticky-content {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+      .sticky-content p {
+        font-size: 18px;
+        margin: 0;
+        font-weight: 500;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+      }
+      .btn {
+        padding: 10px 24px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: 0.2s;
+        width: 120px;
+      }
+      .btn-deny {
+        background: var(--button-deny);
+        color: white;
+      }
+      .btn-deny:hover {
+        background: var(--button-deny-hover);
+      }
+      .btn-accept {
+        background: var(--button-accept);
+        color: white;
+      }
+      .btn-accept:hover {
+        background: var(--button-accept-hover);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <main
+          style="display: flex; justify-content: center; align-items: center"
+        >
+          <div>
+            <h1 class="title" style="text-align: center">
+              Digital Personal Data Protection Act, 2023
+            </h1>
+            <p id="desc-text" style="margin-top: 10px; text-align: center">
+              Trust Bank is requesting your consent for data collection and
+              processing to enhance banking services and ensure secure
+              transactions. <br />
+              Please provide consent for us to collect and process your
+              information for the purposes outlined below.
+            </p>
+          </div>
+        </main>
+      </div>
+      <!-- Header Controls -->
+      <div class="header-controls">
+        <div class="controls-wrapper">
+          <div class="controls-left">
+            <!-- Font Size Controls -->
+            <!-- <div class="font-controls">
+              <button class="font-btn" id="decrease">A-</button>
+              <button class="font-btn" id="reset">A</button>
+              <button class="font-btn" id="increase">A+</button>
+            </div> -->
+          </div>
+
+          <!-- Language Dropdown -->
+          <div class="lang-wrapper" id="lang-wrapper">
+            <!-- Theme Toggle -->
+            <div class="theme-toggle" id="theme-toggle">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="7" r="2" />
+                <path d="M7 11l5 2 5-2" />
+                <path d="M12 13v5" />
+                <path d="M9 21l3-5 3 5" />
+              </svg>
+              <div id="theme-dropdown" class="theme-dropdown">
+                <div data-theme="light">Light Theme</div>
+                <div data-theme="dark">Dark Theme</div>
+                <div data-theme="high-contrast">High Contrast</div>
+              </div>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="speak-icon" id="speak-svg"></div>
+            <div class="lang-svg" id="lang-svg">
+              <svg
+                version="1.2"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <defs>
+                  <image
+                    id="img1"
+                    href="data:image/png;base64,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"
+                  />
+                </defs>
+                <style></style>
+                <use href="#img1" x="0" y="0" />
+              </svg>
+            </div>
+            <div id="dropdown-menu" class="dropdown-menu">
+              <div onclick="selectLanguage('eng', 'English')">English</div>
+              <div onclick="selectLanguage('hin', 'हिन्दी')">हिन्दी</div>
+              <div onclick="selectLanguage('tam', 'தமிழ்')">தமிழ்</div>
+              <div onclick="selectLanguage('mar', 'मराठी')">मराठी</div>
+              <div onclick="selectLanguage('ben', 'বাংলা')">বাংলা</div>
+              <div onclick="selectLanguage('tel', 'తెలుగు')">తెలుగు</div>
+              <div onclick="selectLanguage('guj', 'ગુજરાતી')">ગુજરાતી</div>
+              <div onclick="selectLanguage('pan', 'ਪੰਜਾਬੀ')">ਪੰਜਾਬੀ</div>
+              <div onclick="selectLanguage('urd', 'اردو')">اردو</div>
+              <div onclick="selectLanguage('ori', 'ଓଡ଼ିଆ')">ଓଡ଼ିଆ</div>
+              <div onclick="selectLanguage('mal', 'മലയാളം')">മലയാളം</div>
+              <div onclick="selectLanguage('kan', 'ಕನ್ನಡ')">ಕನ್ನಡ</div>
+              <div onclick="selectLanguage('asm', 'অসমীয়া')">অসমীয়া</div>
+              <div onclick="selectLanguage('mni', 'ꯃꯩꯇꯝꯅꯤ')">ꯃꯩꯇꯝꯅꯤ</div>
+              <div onclick="selectLanguage('san', 'संस्कृत')">संस्कृत</div>
+              <div onclick="selectLanguage('doi', 'বিষ্ণুপ্রিয়া মণিপুরী')">
+                বিষ্ণুপ্রিয়া মণিপুরী
+              </div>
+              <div onclick="selectLanguage('kok', 'कोंकणी')">कोंकणी</div>
+              <div onclick="selectLanguage('brx', 'बरोंજી')">बरोंजी</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="consent-table" id="consent-table-root">
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background-color: var(--bg-table-header);
+          "
+        >
+          <div>Purpose</div>
+          <div style="text-align: right; padding-right: 20px">
+            Data Elements
+          </div>
+        </div>
+        <!-- Rows will be generated dynamically -->
+      </div>
+
+      <div class="rights-section" id="rights-section">
+        <!-- Rights will be generated dynamically -->
+      </div>
+    </div>
+
+    <!-- Sticky Bottom -->
+    <div class="sticky-bottom">
+      <div class="sticky-content">
+        <p>Do you agree to provide consent?</p>
+        <div class="actions">
+          <button class="btn btn-deny" id="rejectConsent">No</button>
+          <button class="btn btn-accept" id="submitConsent">Yes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTP Modal -->
+    <div id="otp-modal-overlay" class="otp-modal-overlay">
+      <div class="otp-modal">
+        <h3>Enter OTP</h3>
+        <p id="otp-message">OTP sent successfully. Please verify.</p>
+        <input
+          type="text"
+          id="otp-input"
+          class="otp-input"
+          placeholder="Enter OTP"
+          maxlength="6"
+        />
+        <div class="otp-buttons">
+          <button id="otp-cancel-btn" class="otp-btn otp-cancel-btn">
+            Cancel
+          </button>
+          <button id="otp-verify-btn" class="otp-btn otp-verify-btn">
+            Verify
+          </button>
+        </div>
+        <p id="otp-error" class="otp-error"></p>
+      </div>
+    </div>
+
+    <script>
+      let currentLang = "eng";
+      let audioPlaying = false;
+      let agreementId = null;
+
+      const translations = // {{ NOTICE_DATA }}
+        // Initialize theme
+        function initTheme() {
+          const savedTheme = localStorage.getItem("theme") || "light";
+          document.documentElement.setAttribute("data-theme", savedTheme);
+          return savedTheme;
+        };
+
+      let currentTheme = initTheme();
+
+      // Theme toggle
+      document
+        .getElementById("theme-toggle")
+        .addEventListener("click", function (e) {
+          e.stopPropagation();
+          const dropdown = document.getElementById("theme-dropdown");
+          dropdown.style.display =
+            dropdown.style.display === "block" ? "none" : "block";
+        });
+
+      document.querySelectorAll("#theme-dropdown div").forEach((item) => {
+        item.addEventListener("click", function () {
+          const theme = this.getAttribute("data-theme");
+          document.documentElement.setAttribute("data-theme", theme);
+          localStorage.setItem("theme", theme);
+          document.getElementById("theme-dropdown").style.display = "none";
+        });
+      });
+
+      // Close theme dropdown when clicking outside
+      document.addEventListener("click", function (e) {
+        const themeDropdown = document.getElementById("theme-dropdown");
+        if (
+          !e.target.closest(".theme-toggle") &&
+          themeDropdown.style.display === "block"
+        ) {
+          themeDropdown.style.display = "none";
+        }
+      });
+
+      // Font size controller
+      const html = document.documentElement;
+      const increaseBtn = document.getElementById("increase");
+      const decreaseBtn = document.getElementById("decrease");
+      const resetBtn = document.getElementById("reset");
+
+      function initFontSize() {
+        const savedSize = localStorage.getItem("fontSize");
+        if (savedSize) {
+          html.style.fontSize = savedSize + "px";
+          return parseInt(savedSize);
+        }
+        return 16;
+      }
+
+      let baseFontSize = initFontSize();
+      const minFontSize = 12;
+      const maxFontSize = 24;
+
+      function updateFontSize(size) {
+        baseFontSize = size;
+        html.style.fontSize = `${size}px`;
+        localStorage.setItem("fontSize", size);
+      }
+
+      if (increaseBtn)
+        increaseBtn.addEventListener("click", () => {
+          if (baseFontSize < maxFontSize) updateFontSize(baseFontSize + 2);
+        });
+
+      if (decreaseBtn)
+        decreaseBtn.addEventListener("click", () => {
+          if (baseFontSize > minFontSize) updateFontSize(baseFontSize - 2);
+        });
+
+      if (resetBtn)
+        resetBtn.addEventListener("click", () => {
+          updateFontSize(16);
+        });
+
+      const playSVG = `
+             <svg
+                      version="1.2"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+
+                    >
+                      <defs>
+                        <image
+                          id="img2"
+                          href="data:image/png;base64,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"
+                        />
+                      </defs>
+                      <style></style>
+                      <use href="#img2" x="36" y="53" />
+                    </svg>
+      `;
+
+      const pauseSVG = `
+      <svg viewBox="0 0 24 24"
+                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>/svg/ic-pause</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="ic-pause" fill="#A5A5A5"> <path d="M8,6.00684547 C8,5.45078007 8.44386482,5 9,5 C9.55228475,5 10,5.44994876 10,6.00684547 L10,17.9931545 C10,18.5492199 9.55613518,19 9,19 C8.44771525,19 8,18.5500512 8,17.9931545 L8,6.00684547 Z M14,6.00684547 C14,5.45078007 14.4438648,5 15,5 C15.5522847,5 16,5.44994876 16,6.00684547 L16,17.9931545 C16,18.5492199 15.5561352,19 15,19 C14.4477153,19 14,18.5500512 14,17.9931545 L14,6.00684547 Z" id="Combined-Shape"> </path> </g> </g> </g></svg>
+      `;
+
+      const speakSvgDiv = document.getElementById("speak-svg");
+      if (speakSvgDiv) speakSvgDiv.innerHTML = playSVG;
+      let currentAudio = null;
+      let isPlaying = false;
+
+      function playConsentAudio() {
+        const speakSvgDiv = document.getElementById("speak-svg");
+
+        if (isPlaying && currentAudio) {
+          currentAudio.pause();
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+          return;
+        }
+
+        if (currentAudio) {
+          currentAudio.pause();
+        }
+
+        let audioSrc = translations[currentLang]?.audio_file_url || "";
+
+        const audio = new Audio(audioSrc);
+        currentAudio = audio;
+
+        audio.addEventListener("play", () => {
+          speakSvgDiv.innerHTML = pauseSVG;
+          isPlaying = true;
+        });
+
+        audio.addEventListener("ended", () => {
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+        });
+
+        audio.addEventListener("pause", () => {
+          speakSvgDiv.innerHTML = playSVG;
+          isPlaying = false;
+        });
+
+        audio.play().catch((e) => {
+          console.error("Audio play failed:", e);
+          speakSvgDiv.innerHTML = playSVG;
+        });
+
+        audioPlaying = true;
+      }
+
+      if (speakSvgDiv) speakSvgDiv.addEventListener("click", playConsentAudio);
+
+      (function initFromTranslations(t) {
+        const data = t[currentLang];
+        if (!data) return;
+
+        // Set header/title/desc using existing DOM nodes
+        const titleEl = document.querySelector(".title");
+        const noticeEl = document.querySelector(".notice");
+        const descEl = document.getElementById("desc-text");
+
+        if (titleEl && data.main_title) titleEl.textContent = data.main_title;
+        if (noticeEl && data.consent_title)
+          noticeEl.textContent = data.consent_title;
+        if (descEl && data.main_sub_title)
+          descEl.textContent = data.main_sub_title;
+
+        // Build consent rows inside the existing consent-table root
+        const consentRoot = document.getElementById("consent-table-root");
+        if (!consentRoot) return;
+
+        // Remove all child rows except the header (the header is the first child)
+        const children = Array.from(consentRoot.children);
+        for (let i = children.length - 1; i >= 1; i--) {
+          consentRoot.removeChild(children[i]);
+        }
+
+        // Group data elements by purpose
+        const purposeGroups = {};
+
+        data.data_elements.forEach((element) => {
+          element.consents.forEach((consent) => {
+            const purposeId = consent.purpose_id;
+
+            if (!purposeGroups[purposeId]) {
+              purposeGroups[purposeId] = {
+                purpose_category: consent.purpose_category,
+                description: consent.description,
+                service_message: consent.service_message,
+                legal_message: consent.legal_message,
+                consent_expiry_period: consent.consent_expiry_period,
+                data_elements: [],
+              };
+            }
+
+            purposeGroups[purposeId].data_elements.push({
+              title: element.title,
+              de_id: element.de_id,
+            });
+          });
+        });
+
+        Object.keys(purposeGroups).forEach((purposeId) => {
+          const group = purposeGroups[purposeId];
+
+          const row = document.createElement("div");
+          row.className = "row";
+          row.setAttribute("data-purpose", purposeId);
+
+          const left = document.createElement("div");
+          const purposeDiv = document.createElement("div");
+          purposeDiv.className = "purpose";
+          purposeDiv.textContent = group.purpose_category || "Purpose";
+
+          const purposeSub = document.createElement("div");
+          purposeSub.className = "purpose-sub";
+          purposeSub.textContent =
+            group.description ||
+            group.service_message ||
+            group.legal_message ||
+            "";
+
+          const expiryInfo = document.createElement("div");
+          expiryInfo.className = "expiry-info";
+          const days = group.consent_expiry_period;
+          expiryInfo.innerHTML = `${
+            translations[currentLang]?.consent_duration_label || "Duration"
+          }: <strong>${days} days</strong>`;
+
+          left.appendChild(purposeDiv);
+          left.appendChild(purposeSub);
+          left.appendChild(expiryInfo);
+
+          const right = document.createElement("div");
+          right.className = "data-cats";
+
+          group.data_elements.forEach((element) => {
+            const chipWrapper = document.createElement("div");
+            chipWrapper.className = "chip-wrapper";
+
+            const chip = document.createElement("div");
+            chip.className = "chip";
+            chip.setAttribute("data-key", element.title);
+            chip.setAttribute("data-de-id", element.de_id);
+            chip.textContent = element.title;
+
+            // Check mandatory
+            const isServiceMandatory =
+              group.service_message && group.service_message.trim() !== "";
+            const isLegalMandatory =
+              group.legal_message && group.legal_message.trim() !== "";
+            const isMandatory = isServiceMandatory || isLegalMandatory;
+
+            if (isMandatory) {
+              chip.classList.add("selected");
+              chip.classList.add("disabled");
+
+              let tooltipMessage = "";
+              if (isServiceMandatory && isLegalMandatory) {
+                tooltipMessage = `Legal Mandatory: ${group.legal_message}\n\nService Mandatory: ${group.service_message}`;
+              } else if (isServiceMandatory) {
+                tooltipMessage = `Service Mandatory: ${group.service_message}`;
+              } else if (isLegalMandatory) {
+                tooltipMessage = `Legal Mandatory: ${group.legal_message}`;
+              }
+
+              const tooltip = document.createElement("span");
+              tooltip.className = "mandatory-tooltip";
+              tooltip.textContent = tooltipMessage;
+              chipWrapper.appendChild(tooltip);
+            }
+
+            chipWrapper.appendChild(chip);
+            right.appendChild(chipWrapper);
+          });
+
+          const iconSvg = document.createElement("div");
+          iconSvg.className = "data-element-icon";
+          iconSvg.innerHTML = `
+                    <svg viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <defs>
+                                <style>.cls-1{fill:none;stroke:#020202;stroke-miterlimit:10;stroke-width:1.056;}</style>
+                            </defs>
+                            <path class="cls-1" d="M17.07,20.61H9.79a2,2,0,0,1-2-2,2,2,0,0,1,2-2h1.87L5,9.86a2,2,0,0,1-.19-2.65,1.88,1.88,0,0,1,1.47-.68,1.84,1.84,0,0,1,1.35.55l4.06,4.06,4.08-3.06a1.91,1.91,0,0,1,2.5.18h0A17.18,17.18,0,0,1,22.42,15l.06.19"></path>
+                            <path class="cls-1" d="M10.63,10.12A4.73,4.73,0,0,0,11,8.17,4.78,4.78,0,1,0,6.26,13a4.67,4.67,0,0,0,1.55-.26"></path>
+                        </g>
+                    </svg>
+                `;
+          right.appendChild(iconSvg);
+
+          row.appendChild(left);
+          row.appendChild(right);
+          consentRoot.appendChild(row);
+        });
+
+        // Rights Section
+        const rightsSection = document.getElementById("rights-section");
+        if (rightsSection) {
+          rightsSection.innerHTML = `
+                <div class="rights-text">
+                  <h5>${data.dpr_title}</h5>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_11}</p>
+                  </div>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_12}</p>
+                  </div>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_13}</p>
+                  </div>
+                  <p class="rights-note">${data.dpr_statement}</p>
+                </div>
+                <img src="https://i.postimg.cc/J4k1SH68/Screenshot-2025-08-28-225155.png" class="rights-image" alt="DPDPA Authority" />
+            `;
+        }
+
+        // Wire up chip selection
+        document.addEventListener("click", (e) => {
+          const el = e.target;
+          if (
+            el &&
+            el.classList &&
+            el.classList.contains("chip") &&
+            !el.classList.contains("disabled")
+          ) {
+            el.classList.toggle("selected");
+          }
+        });
+      })(translations);
+
+      const langWrapper = document.getElementById("lang-wrapper");
+      const dropdown = document.getElementById("dropdown-menu");
+      if (langWrapper) {
+        langWrapper.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdown.style.display =
+            dropdown.style.display === "block" ? "none" : "block";
+        });
+      }
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("#lang-wrapper") && dropdown)
+          dropdown.style.display = "none";
+      });
+
+      function selectLanguage(code, label) {
+        const langSvg = document.getElementById("lang-svg");
+        if (langSvg) {
+          langSvg.setAttribute("data-lang", code);
+          const img = langSvg.querySelector("img");
+          if (img) {
+            img.alt = label || code;
+            img.title = label || code;
+          }
+        }
+        if (dropdown) dropdown.style.display = "none";
+
+        currentLang = code;
+        // Re-render content
+        // We need to expose initFromTranslations or just reload the page logic
+        // For simplicity, we can just reload the page with a query param or call the init function again if it was named
+        // But since initFromTranslations is IIFE, we should extract it.
+        // For now, let's just update the text content manually or reload
+        // Better: Extract render logic to a function
+        renderPage(code);
+      }
+
+      function renderPage(langCode) {
+        currentLang = langCode;
+        const data = translations[langCode];
+        if (!data) return;
+
+        // Update Text
+        const titleEl = document.querySelector(".title");
+        const noticeEl = document.querySelector(".notice");
+        const descEl = document.getElementById("desc-text");
+
+        if (titleEl && data.main_title) titleEl.textContent = data.main_title;
+        if (noticeEl && data.consent_title)
+          noticeEl.textContent = data.consent_title;
+        if (descEl && data.main_sub_title)
+          descEl.textContent = data.main_sub_title;
+
+        // Re-render table
+        const consentRoot = document.getElementById("consent-table-root");
+        if (consentRoot) {
+          // Clear existing rows
+          const children = Array.from(consentRoot.children);
+          for (let i = children.length - 1; i >= 1; i--) {
+            consentRoot.removeChild(children[i]);
+          }
+          // Re-run logic (copied from above for simplicity in this context, ideally refactored)
+          // ... (Logic is same as IIFE above, but we need to call it)
+          // To avoid duplication, let's just reload the page logic by calling a function
+          // But we can't easily do that without refactoring the IIFE.
+          // Let's just assume the user will select language and we update.
+
+          // RE-IMPLEMENTING RENDER LOGIC HERE FOR LANGUAGE SWITCH
+          const purposeGroups = {};
+          data.data_elements.forEach((element) => {
+            element.consents.forEach((consent) => {
+              const purposeId = consent.purpose_id;
+              if (!purposeGroups[purposeId]) {
+                purposeGroups[purposeId] = {
+                  purpose_category: consent.purpose_category,
+                  description: consent.description,
+                  service_message: consent.service_message,
+                  legal_message: consent.legal_message,
+                  consent_expiry_period: consent.consent_expiry_period,
+                  data_elements: [],
+                };
+              }
+              purposeGroups[purposeId].data_elements.push({
+                title: element.title,
+                de_id: element.de_id,
+              });
+            });
+          });
+
+          Object.keys(purposeGroups).forEach((purposeId) => {
+            const group = purposeGroups[purposeId];
+            const row = document.createElement("div");
+            row.className = "row";
+            row.setAttribute("data-purpose", purposeId);
+
+            const left = document.createElement("div");
+            const purposeDiv = document.createElement("div");
+            purposeDiv.className = "purpose";
+            purposeDiv.textContent = group.purpose_category || "Purpose";
+
+            const purposeSub = document.createElement("div");
+            purposeSub.className = "purpose-sub";
+            purposeSub.textContent =
+              group.description ||
+              group.service_message ||
+              group.legal_message ||
+              "";
+
+            const expiryInfo = document.createElement("div");
+            expiryInfo.className = "expiry-info";
+            expiryInfo.innerHTML = `${
+              translations[currentLang]?.consent_duration_label || "Duration"
+            }: <strong>${group.consent_expiry_period} ${
+              translations[currentLang]?.days_text || "days"
+            }</strong>`;
+
+            left.appendChild(purposeDiv);
+            left.appendChild(purposeSub);
+            left.appendChild(expiryInfo);
+
+            const right = document.createElement("div");
+            right.className = "data-cats";
+
+            group.data_elements.forEach((element) => {
+              const chipWrapper = document.createElement("div");
+              chipWrapper.className = "chip-wrapper";
+              const chip = document.createElement("div");
+              chip.className = "chip";
+              chip.setAttribute("data-key", element.title);
+              chip.setAttribute("data-de-id", element.de_id);
+              chip.textContent = element.title;
+
+              const isServiceMandatory =
+                group.service_message && group.service_message.trim() !== "";
+              const isLegalMandatory =
+                group.legal_message && group.legal_message.trim() !== "";
+              const isMandatory = isServiceMandatory || isLegalMandatory;
+
+              if (isMandatory) {
+                chip.classList.add("selected");
+                chip.classList.add("disabled");
+                let tooltipMessage = "";
+                if (isServiceMandatory && isLegalMandatory) {
+                  tooltipMessage = `Legal Mandatory: ${group.legal_message}\n\nService Mandatory: ${group.service_message}`;
+                } else if (isServiceMandatory) {
+                  tooltipMessage = `Service Mandatory: ${group.service_message}`;
+                } else if (isLegalMandatory) {
+                  tooltipMessage = `Legal Mandatory: ${group.legal_message}`;
+                }
+                const tooltip = document.createElement("span");
+                tooltip.className = "mandatory-tooltip";
+                tooltip.textContent = tooltipMessage;
+                chipWrapper.appendChild(tooltip);
+              }
+              chipWrapper.appendChild(chip);
+              right.appendChild(chipWrapper);
+            });
+
+            const iconSvg = document.createElement("div");
+            iconSvg.className = "data-element-icon";
+            iconSvg.innerHTML = `<svg viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><defs><style>.cls-1{fill:none;stroke:#020202;stroke-miterlimit:10;stroke-width:1.056;}</style></defs><path class="cls-1" d="M17.07,20.61H9.79a2,2,0,0,1-2-2,2,2,0,0,1,2-2h1.87L5,9.86a2,2,0,0,1-.19-2.65,1.88,1.88,0,0,1,1.47-.68,1.84,1.84,0,0,1,1.35.55l4.06,4.06,4.08-3.06a1.91,1.91,0,0,1,2.5.18h0A17.18,17.18,0,0,1,22.42,15l.06.19"></path><path class="cls-1" d="M10.63,10.12A4.73,4.73,0,0,0,11,8.17,4.78,4.78,0,1,0,6.26,13a4.67,4.67,0,0,0,1.55-.26"></path></g></svg>`;
+            right.appendChild(iconSvg);
+            row.appendChild(left);
+            row.appendChild(right);
+            consentRoot.appendChild(row);
+          });
+        }
+
+        // Update Rights
+        const rightsSection = document.getElementById("rights-section");
+        if (rightsSection) {
+          rightsSection.innerHTML = `
+                <div class="rights-text">
+                  <h5>${data.dpr_title}</h5>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_11}</p>
+                  </div>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_12}</p>
+                  </div>
+                  <div class="rights-item">
+                      <span>✔</span>
+                      <p>${data.dpr_rights.section_13}</p>
+                  </div>
+                  <p class="rights-note">${data.dpr_statement}</p>
+                </div>
+                <img src="https://i.postimg.cc/J4k1SH68/Screenshot-2025-08-28-225155.png" class="rights-image" alt="DPDPA Authority" />
+            `;
+        }
+      }
+
+      function getTokenFromURL() {
+        const url = window.location.href;
+        const tokenPart = url.split("/").pop();
+        return tokenPart.split("?")[0];
+      }
+      const token = getTokenFromURL();
+
+      async function submitConsent() {
+        if (!token) {
+          alert("Token not found!");
+          return;
+        }
+
+        const consentData = {};
+        // Iterate over all chips that are selected (including disabled/mandatory ones)
+        const rows = document.querySelectorAll("#consent-table-root .row");
+        rows.forEach((row) => {
+          const purposeId = row.getAttribute("data-purpose");
+          const selectedChips = row.querySelectorAll(".chip.selected");
+          selectedChips.forEach((chip) => {
+            const deId = chip.getAttribute("data-de-id");
+            if (!consentData[deId]) {
+              consentData[deId] = new Set();
+            }
+            consentData[deId].add(purposeId);
+          });
+        });
+
+        const dataElements = Object.entries(consentData).map(
+          ([de_id, purposes]) => ({
+            de_id,
+            consents: Array.from(purposes).map((purpose_id) => ({
+              purpose_id,
+            })),
+          })
+        );
+
+        const baseUrl = window.location.origin;
+        try {
+          const response = await fetch(`${baseUrl}/api/v1/n/submit-consent`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: token, data_elements: dataElements }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            if (
+              result.status === "OTP_REQUIRED" ||
+              result.otp_required === true
+            ) {
+              document.getElementById("otp-modal-overlay").style.display =
+                "flex";
+              document.getElementById("otp-message").textContent =
+                result.message || "OTP sent successfully.";
+              return;
+            }
+            handleSuccess(result);
+          } else {
+            console.error("Failed:", result);
+            alert("Failed to submit consent.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      async function verifyOtp() {
+        const otpInput = document.getElementById("otp-input");
+        const otpError = document.getElementById("otp-error");
+        const otp = otpInput.value.trim();
+        const baseUrl = window.location.origin;
+
+        if (!otp) {
+          otpError.textContent = "Please enter OTP";
+          otpError.style.display = "block";
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${baseUrl}/api/v1/n/verify-otp?token=${token}&otp=${otp}`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          const result = await response.json();
+
+          if (response.ok) {
+            document.getElementById("otp-modal-overlay").style.display = "none";
+            handleSuccess(result);
+          } else {
+            otpError.textContent =
+              result.detail || result.message || "Invalid OTP";
+            otpError.style.display = "block";
+          }
+        } catch (error) {
+          otpError.textContent = "Error verifying OTP";
+          otpError.style.display = "block";
+        }
+      }
+
+      function handleSuccess(result) {
+        agreementId = result.agreement_id;
+        if (window.opener) {
+          window.opener.postMessage(
+            {
+              auth_status: "200",
+              message: result.redirection_url,
+              consent_submitted: true,
+            },
+            "*"
+          );
+        }
+
+        const langData = translations[currentLang];
+        document.body.innerHTML = `
+            <div class="card" style="text-align: center;">
+                <div style="margin-bottom: 20px;">
+                    <div style="width: 60px; height: 60px; background: #dcfce7; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #16a34a; font-size: 30px;">✔</div>
+                </div>
+                <h2 style="color: #111827; margin-bottom: 10px;">${langData.success_message.title}</h2>
+                <p style="color: #6b7280; margin-bottom: 30px;">${langData.success_message.description}</p>
+                <p style="color: #9ca3af; font-size: 14px;">${langData.manage_consent_description}</p>
+            </div>
+        `;
+
+        setTimeout(() => {
+          if (result.redirection_url)
+            window.location.href = result.redirection_url;
+          else window.close();
+        }, 5000);
+      }
+
+      document
+        .getElementById("submitConsent")
+        .addEventListener("click", submitConsent);
+      document
+        .getElementById("rejectConsent")
+        .addEventListener("click", function () {
+          document.body.innerHTML = `
+            <div class="card" style="text-align: center;">
+                <h2 style="color: #dc2626; margin-bottom: 10px;">Consent Required</h2>
+                <p style="color: #6b7280;">Without consent, we cannot proceed.</p>
+            </div>
+         `;
+          setTimeout(() => window.close(), 3000);
+        });
+
+      document
+        .getElementById("otp-verify-btn")
+        .addEventListener("click", verifyOtp);
+      document
+        .getElementById("otp-cancel-btn")
+        .addEventListener("click", () => {
+          document.getElementById("otp-modal-overlay").style.display = "none";
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+all_routes = [
+    "/apps/assets",
+    "/apps/collection-point",
+    "/apps/consent-management",
+    "/apps/cookie-management",
+    "/apps/customer-portal",
+    "/apps/data-element",
+    "/apps/data-processor",
+    "/apps/dpar",
+    "/apps/get-started",
+    "/apps/grievances",
+    "/apps/incident-management",
+    "/apps/notice-management",
+    "/apps/organization-management",
+    "/apps/principal-management",
+    "/apps/purpose-management",
+    "/apps/support",
+]

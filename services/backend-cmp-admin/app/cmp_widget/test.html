@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Widget Test Page</title>
+  </head>
+  <body>
+    <h1>Testing my CMP Widget</h1>
+    <p>The cookie consent banner should appear at the bottom of the page.</p>
+    <script>
+      document.cookie = "_ga=abc123; path=/; Secure; SameSite=Lax";
+      document.cookie = "session_id22=abc123; path=/; Secure; SameSite=Lax";
+      document.cookie = "session_id2211=abc123; path=/; Secure; SameSite=Lax";
+      console.log("Essential cookies have been loaded.");
+    </script>
+    <script src='https://minio.catax.me/cookie-consent-scripts/68c7d6feaa64960605b201ed_.js'></script>
+  </body>
+</html>

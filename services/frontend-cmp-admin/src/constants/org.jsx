@@ -1,0 +1,16 @@
+export const designationOptions = [
+  "CTO/CEO/CPO",
+  "CLO/CCO",
+  "CISO",
+  "CDO",
+  "DPO",
+  "Data Privacy Manager",
+  "Data Governance Officer",
+  "Privacy Program Manager",
+  "Privacy Analyst",
+  "Compliance Analyst",
+  "Cybersecurity Auditor",
+  "Privacy Engineer",
+  "Legal Consultant",
+  "Technology Consultant",
+];

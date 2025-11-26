@@ -1,0 +1,39 @@
+{
+  "name": "frontend-cmp-admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "event-source-polyfill": "^1.0.31",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "next": "15.4.5",
+    "next-auth": "^4.24.11",
+    "react": "19.1.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-datepicker": "^8.4.0",
+    "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
+    "react-hot-toast": "^2.5.2",
+    "react-icons": "^5.5.0",
+    "react-select": "^5.10.2",
+    "react-syntax-highlighter": "^15.6.6",
+    "swagger-ui-dist": "^5.30.3",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.5",
+    "tailwindcss": "^4"
+  }
+}

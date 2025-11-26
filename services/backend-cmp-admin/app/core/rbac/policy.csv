@@ -1,0 +1,10 @@
+# Role → Route permissions
+p, 68ad5cfcb335439f76291146, /user/parental-consent, read, *
+p, 68ad5cfcb335439f76291146, /user/consent-governance/collection-point, read, *
+p, 68ad5cfcb335439f76291146, /user/cookie-management/banner, read, *
+p, 68ad5cfcb335439f76291146, /user/incident-management, read, *
+p, 68ad5cfcb335439f76291146, /user/trpm/vendors, read, *
+
+p, 68ad5cfdb335439f76291154, /user/cookie-management/banner, read, *
+p, 68ad5cfdb335439f76291154, /user/incident-management, read, *
+p, 68ad5cfdb335439f76291154, /user/trpm/vendors, read, *

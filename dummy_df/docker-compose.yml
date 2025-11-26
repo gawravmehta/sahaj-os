@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  df_service:
+    build:
+      context: .
+    container_name: df_service
+    environment:
+      - WEBHOOK_SECRET=325f3d6495d94c20967b95461b82169882f477f5e15204ec57420aac08626c75
+      - SERVICE_NAME=DF
+    ports:
+      - "8001:8000"
+
+  dpr1_service:
+    build:
+      context: .
+    container_name: dpr1_service
+    environment:
+      - WEBHOOK_SECRET=0cdc9a0c5051c19bf42fe7596251529ae2e8a1c032143df62770c495906f5a91
+      - SERVICE_NAME=DPR1
+    ports:
+      - "8002:8000"
+
+  dpr2_service:
+    build:
+      context: .
+    container_name: dpr2_service
+    environment:
+      - WEBHOOK_SECRET=841fe012b5a5a60c64192c3d40cc1b4b1dc30802cab22ef4897306d847491870
+      - SERVICE_NAME=DPR2
+    ports:
+      - "8003:8000"

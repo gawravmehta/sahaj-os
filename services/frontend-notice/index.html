@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notice</title>
+  </head>
+  <body>
+    <button id="test-button">Test Notice</button>
+    <div id="message"></div>
+  </body>
+  <script type="module">
+    import { invokeNotice } from "./concur-notice.js";
+
+    document.getElementById("test-button").addEventListener("click", () => {
+      invokeNotice({
+        // dp_id: "a8dd357a-48fd-4b71-bf7c-56ddafa2a26b",
+        cp_id: "6926aa11f9319a509aed1965",
+        dp_e: "abhishekkhare583@gmail.com",
+      });
+    });
+  </script>
+</html>

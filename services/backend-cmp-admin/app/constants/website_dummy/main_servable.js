@@ -1,0 +1,1141 @@
+(function () {
+  console.log("CMP script loaded ✅");
+
+  // --- Translation Data ---
+  const translations = {
+    en: {
+      description:
+        "Protean uses cookies to improve service reliability, website quality, and enable personalized features. These cookies may collect personal data for analytics, advertising, and functionality. By consenting to cookies, you agree to data processing as described in our Privacy Policy and Cookie Policy. You can withdraw consent and manage preferences in Cookie Settings.",
+      links: [
+        {
+          text: "Privacy Policy",
+          url: "https://proteantech.in/privacy-policy",
+        },
+        {
+          text: "Cookie Policy",
+          url: "https://proteantech.in/cookie-policy",
+        },
+      ],
+      bannerButtons: {
+        settings: "Cookie Settings",
+        essential: "Accept Only Essential",
+        acceptAll: "Accept All",
+      },
+      modalTitle: "Preference Center",
+      modalSectionTitle: "Manage Consent Preferences",
+      categories: {
+        essential: {
+          name: "Essential",
+          description:
+            "These cookies are essential in order to enable you to move around the site and use its features, such as accessing secure areas of the site. Without these cookies, services you have asked for cannot be provided.",
+          cookies: [
+            {
+              name: "👤 User Count",
+              description: "Helps track and comply with your cookie consent",
+              domain: "accenture.com",
+              expiry: "1 year",
+            },
+            {
+              name: "🍪 cc_cookie",
+              description: "Stores cookie consent preferences",
+              domain: "proteantech.in",
+              expiry: "1 year",
+            },
+          ],
+        },
+        performance: {
+          name: "Performance",
+          description:
+            "These cookies collect information about how visitors use a website, for instance which pages visitors go to most often, and if they get error messages from web pages.",
+          cookies: [
+            {
+              name: "👤 User Count",
+              description: "Helps track and comply with your cookie consent",
+              domain: "accenture.com",
+              expiry: "1 year",
+            },
+          ],
+        },
+        marketing: {
+          name: "Marketing",
+          description:
+            "These cookies are used to deliver adverts more relevant to you and your interests. They are also used to limit the number of times you see an advertisement.",
+          cookies: [
+            {
+              name: "👤 User Count",
+              description: "Helps track and comply with your cookie consent",
+              domain: "accenture.com",
+              expiry: "1 year",
+            },
+          ],
+        },
+        functional: {
+          name: "Functional",
+          description:
+            "These cookies allow the website to remember choices you make and provide enhanced, more personal features.",
+          cookies: [
+            {
+              name: "👤 User Count",
+              description: "Helps track and comply with your cookie consent",
+              domain: "accenture.com",
+              expiry: "1 year",
+            },
+          ],
+        },
+        analytics: {
+          name: "Analytics",
+          description:
+            "These cookies collect information that is used either in aggregate form to help us understand how our website is being used.",
+          cookies: [
+            {
+              name: "👤 User Count",
+              description: "Helps track and comply with your cookie consent",
+              domain: "accenture.com",
+              expiry: "1 year",
+            },
+          ],
+        },
+      },
+      modalButtons: {
+        rejectAll: "Reject All",
+        allowAll: "Allow All",
+        confirm: "Confirm My Choices",
+      },
+      poweredBy: "Powered by",
+    },
+    hi: {
+      description:
+        "प्रोटीन सेवा की विश्वसनीयता, वेबसाइट की गुणवत्ता और व्यक्तिगत सुविधाओं को सक्षम करने के लिए कुकीज़ का उपयोग करता है। ये कुकीज़ विश्लेषण, विज्ञापन और कार्यक्षमता के लिए व्यक्तिगत डेटा एकत्र कर सकती हैं। कुकीज़ की सहमति देकर, आप हमारी गोपनीयता नीति और कुकी नीति में वर्णित डेटा प्रोसेसिंग से सहमत होते हैं। आप कभी भी सहमति वापस ले सकते हैं और कुकी सेटिंग्स में प्राथमिकताएँ प्रबंधित कर सकते हैं।",
+      links: [
+        {
+          text: "गोपनीयता नीति",
+          url: "https://proteantech.in/privacy-policy",
+        },
+        { text: "कुकी नीति", url: "https://proteantech.in/cookie-policy" },
+      ],
+      bannerButtons: {
+        settings: "कुकी सेटिंग्स",
+        essential: "केवल आवश्यक स्वीकार करें",
+        acceptAll: "सभी स्वीकार करें",
+      },
+      modalTitle: "प्राथमिकता केंद्र",
+      modalSectionTitle: "सहमति प्राथमिकताएं प्रबंधित करें",
+      categories: {
+        essential: {
+          name: "आवश्यक",
+          description:
+            "ये कुकीज़ आपको साइट के चारों ओर घूमने और इसकी सुविधाओं का उपयोग करने में सक्षम बनाने के लिए आवश्यक हैं, जैसे कि साइट के सुरक्षित क्षेत्रों तक पहुंचना। इन कुकीज़ के बिना, आपके द्वारा मांगी गई सेवाएं प्रदान नहीं की जा सकतीं।",
+          cookies: [
+            {
+              name: "👤 उपयोगकर्ता गणना",
+              description:
+                "आपकी कुकी सहमति को ट्रैक करने और उसका पालन करने में मदद करता है",
+              domain: "accenture.com",
+              expiry: "1 साल",
+            },
+            {
+              name: "🍪 cc_cookie",
+              description: "कुकी सहमति प्राथमिकताएं संग्रहीत करता है",
+              domain: "proteantech.in",
+              expiry: "1 साल",
+            },
+          ],
+        },
+        performance: {
+          name: "प्रदर्शन",
+          description:
+            "ये कुकीज़ आगंतुकों के वेबसाइट का उपयोग कैसे करते हैं, उदाहरण के लिए, वे किन पृष्ठों पर सबसे अधिक जाते हैं, और क्या उन्हें वेब पृष्ठों से त्रुटि संदेश मिलते हैं, के बारे में जानकारी एकत्र करते हैं।",
+          cookies: [],
+        },
+        marketing: {
+          name: "विपणन",
+          description:
+            "इन कुकीज़ का उपयोग आपके और आपकी रुचियों के लिए अधिक प्रासंगिक विज्ञापन प्रदान करने के लिए किया जाता है। उनका उपयोग आपको एक विज्ञापन कितनी बार दिखाई देता है, इसे सीमित करने के लिए भी किया जाता है।",
+          cookies: [],
+        },
+        functional: {
+          name: "कार्यात्मक",
+          description:
+            "ये कुकीज़ वेबसाइट को आपके द्वारा किए गए विकल्पों को याद रखने और उन्नत, अधिक व्यक्तिगत सुविधाएँ प्रदान करने की अनुमति देते हैं।",
+          cookies: [],
+        },
+        analytics: {
+          name: "विश्लेषण",
+          description:
+            "ये कुकीज़ ऐसी जानकारी एकत्र करते हैं जिसका उपयोग हमारी वेबसाइट का उपयोग कैसे किया जा रहा है, यह समझने में हमारी मदद करने के लिए कुल रूप में किया जाता है।",
+          cookies: [],
+        },
+      },
+      modalButtons: {
+        rejectAll: "सभी अस्वीकार करें",
+        allowAll: "सभी की अनुमति दें",
+        confirm: "मेरी पसंद की पुष्टि करें",
+      },
+      poweredBy: "द्वारा संचालित",
+    },
+  };
+
+  // --- Root + Shadow DOM ---
+  const cmpRoot = document.createElement("div");
+  document.body.appendChild(cmpRoot);
+  const shadowRoot = cmpRoot.attachShadow({ mode: "open" });
+
+  // --- HTML + CSS Content ---
+  const htmlContent = `
+    <style>
+      :host {
+        all: initial;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      .cookie-banner {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        border-top: 1px solid #e0e6eb;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+      }
+      .cookie-banner.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .banner-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+      }
+      .banner-header .logo-icon {
+        height: 40px;
+        cursor: pointer;
+      }
+      .banner-divider {
+        height: 2px;
+        background-color: #e0e6eb;
+      }
+      .cookie-content {
+        color: #212121;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 12px 0;
+      }
+      .banner-body {
+        padding: 10px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .banner-body .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 10px 0;
+      }
+      .banner-body .btn {
+        padding: 4px 8px;
+        border-radius: 0px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+      }
+      .btn-secondary {
+        background-color: white;
+        color: #212121;
+        border: 1px solid #ccc;
+      }
+      .btn-secondary:hover {
+        background-color: #f5f5f5;
+      }
+      .btn-primary {
+        background-color: white;
+        color: #388e3c;
+        border: 1px solid #388e3c;
+      }
+      .btn-primary:hover {
+        background-color: #f1f8e9;
+      }
+      .btn-accept-all {
+        background-color: #218838;
+        color: white;
+        border: 1px solid #218838;
+      }
+      .btn-accept-all:hover {
+        background-color: #1f6e30;
+        border-color: #1f6e30;
+      }
+      .preference-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .preference-modal.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      .modal-content {
+        background-color: #ffffff;
+        width: 100%;
+        max-width: 600px;
+        max-height: 90vh;
+        border-radius: 4px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .modal-header {
+        border-bottom: 1px solid #e0e6eb;
+        background-color: white;
+      }
+      .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #e0e6eb;
+        padding: 0px 20px;
+        position: relative;
+      }
+      .header-bottom {
+        padding: 10px 20px;
+      }
+      .flipkart-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .modal-header .logo-icon {
+        height: 50px;
+        cursor: pointer;
+      }
+      .logo-text {
+        font-size: 20px;
+        font-weight: 500;
+        color: #2874f0;
+        font-style: italic;
+      }
+      .language-selector {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border: 1px solid #e0e6eb;
+        border-radius: 4px;
+        background-color: white;
+        cursor: pointer;
+        font-size: 12px;
+        color: #555;
+      }
+      .language-dropdown {
+        display: none;
+        position: absolute;
+        top: 0px;
+        right: 0;
+        background: white;
+        border: 1px solid #e0e6eb;
+        border-radius: 4px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 5px 0;
+        z-index: 10;
+        min-width: 100px;
+        max-height: 100px;
+        overflow: auto;
+      }
+      .language-dropdown.show {
+        display: block;
+      }
+      .language-option {
+        padding: 8px 14px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-align: left;
+      }
+      .language-option:hover {
+        background-color: #f5f5f5;
+      }
+      .dropdown-arrow {
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid #555;
+        transition: transform 0.3s;
+      }
+      .language-selector.open .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+      .preference-title {
+        font-size: 20px;
+        font-weight: 500;
+        color: #212121;
+        margin-bottom: 12px;
+      }
+      .preference-description {
+        color: #212121;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+      }
+      .cookie-policy-link {
+        color: #2874f0;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .cookie-policy-link:hover {
+        text-decoration: underline;
+      }
+      .modal-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .consent-section-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #212121;
+        padding: 10px 20px;
+        border-bottom: 1px solid #e0e6eb;
+      }
+      .consent-categories {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+      .category-list {
+        flex: 0 0 160px;
+        border-right: 1px solid #e0e6eb;
+        background-color: #f9fcff;
+        padding-left: 12px;
+        overflow-y: auto;
+      }
+      .category-item {
+        padding: 12px 0;
+        font-size: 14px;
+        color: #212121;
+        cursor: pointer;
+        border-left: 3px solid transparent;
+        padding-left: 12px;
+        margin-left: -12px;
+        transition: all 0.2s ease;
+      }
+      .category-item:hover {
+        color: #28a745;
+      }
+      .category-item.active {
+        border-left: 4px solid #28a745;
+        color: #212121;
+        background-color: white;
+        font-weight: 500;
+      }
+      .category-details {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px 20px;
+      }
+      .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .category-name {
+        font-size: 16px;
+        font-weight: 500;
+        color: #212121;
+      }
+      .toggle-switch {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background-color: #e0e6eb;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .toggle-switch.active {
+        background-color: #28a745;
+      }
+      .toggle-switch.disabled {
+        background-color: #28a745 !important;
+        cursor: not-allowed;
+      }
+      .toggle-switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .toggle-switch.active::after {
+        transform: translateX(20px);
+      }
+      .category-description {
+        font-size: 13px;
+        color: #212121;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      .cookie-details {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+      .cookie-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+      .cookie-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #212121;
+      }
+      .expand-icon {
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #878787;
+        transition: transform 0.2s ease;
+      }
+      .expand-icon.expanded {
+        transform: rotate(180deg);
+      }
+      .cookie-info {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #e0e6eb;
+        display: none;
+      }
+      .cookie-info.expanded {
+        display: block;
+      }
+      .cookie-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #878787;
+      }
+      .modal-footer {
+        padding: 10px 20px;
+        border-top: 1px solid #e0e6eb;
+        background-color: white;
+        flex-shrink: 0;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-footer .button-group {
+        display: flex;
+        gap: 8px;
+      }
+      .modal-footer .btn {
+        padding: 8px 16px;
+        border: 1px solid #e0e6eb;
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+      .btn-reject {
+        background-color: white;
+        color: #212121;
+        border-color: #e0e6eb;
+      }
+      .btn-reject:hover {
+        background-color: #f8f9fa;
+      }
+      .btn-allow {
+        background-color: white;
+        color: #388e3c;
+        border-color: #388e3c;
+      }
+      .btn-allow:hover {
+        background-color: #f1f8e9;
+      }
+      .btn-confirm {
+        background-color: #28a745;
+        color: white;
+        border-color: #28a745;
+      }
+      .btn-confirm:hover {
+        background-color: #218838;
+      }
+      .powered-by {
+        font-size: 11px;
+        color: #878787;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .concur-logo {
+        height: 12px;
+        opacity: 0.7;
+      }
+      .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #555;
+        padding: 5px;
+        line-height: 1;
+        transition: color 0.2s ease;
+      }
+      .close-button:hover {
+        color: #212121;
+      }
+      #open-preferences-btn {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: #2874f0;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 4px;
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        display: none;
+        transition: background-color 0.2s ease;
+      }
+      #open-preferences-btn:hover {
+        background-color: #1a5bb5;
+      }
+      @media (max-width: 768px) {
+        .banner-header {
+          flex-direction: row;
+          gap: 8px;
+          align-items: center;
+        }
+        .cookie-content {
+          font-size: 12px;
+        }
+        .banner-body .button-group {
+          flex-direction: column;
+          gap: 6px;
+          width: 100%;
+        }
+        .banner-body .btn {
+          width: 100%;
+          text-align: center;
+          padding: 10px 16px;
+          font-size: 14px;
+        }
+        .preference-modal {
+          padding: 0;
+          align-items: stretch;
+        }
+        .modal-content {
+          max-height: 100vh;
+          border-radius: 0;
+        }
+        .header-top {
+          margin-bottom: 16px;
+        }
+        .logo-text {
+          font-size: 18px;
+        }
+        .preference-title {
+          font-size: 18px;
+        }
+        .modal-body {
+          flex: 1;
+          overflow-y: auto;
+          flex-direction: column;
+        }
+        .consent-categories {
+          flex-direction: column;
+          height: auto;
+          overflow: visible;
+        }
+        .category-list {
+          flex: none;
+          border-right: none;
+          padding-right: 0;
+          margin-bottom: 0;
+          display: flex;
+          overflow-x: auto;
+          gap: 16px;
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .category-list::-webkit-scrollbar {
+          display: none;
+        }
+        .category-item {
+          white-space: nowrap;
+          padding: 8px 0;
+          border-left: none;
+          border-bottom: 2px solid transparent;
+          padding-left: 0;
+          margin-left: 0;
+          min-width: fit-content;
+        }
+        .category-item.active {
+          border-left: none;
+          border-bottom-color: #218838;
+          background-color: transparent;
+        }
+        .category-details {
+          padding-left: 20px;
+          border-top: none;
+        }
+        .modal-footer {
+          padding: 16px;
+          height: auto;
+          flex-shrink: 0;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 12px;
+        }
+        .modal-footer .button-group {
+          width: 100%;
+          flex-direction: column;
+        }
+        .modal-footer .btn {
+          width: 100%;
+          text-align: center;
+          padding: 12px 16px;
+          font-size: 14px;
+        }
+        .small-scr-btn {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        #open-preferences-btn {
+          bottom: 10px;
+          left: 10px;
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+      }
+      @media (min-width: 769px) {
+        .banner-body {
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+          padding: 10px 20px;
+          gap: 20px;
+        }
+        .banner-body .cookie-content {
+          flex: 1;
+        }
+      }
+      @media (max-width: 480px) {
+        .header-top {
+          flex-direction: row;
+          gap: 12px;
+          align-items: center;
+        }
+        .category-header {
+          flex-direction: flex;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+    </style>
+    <div class="cookie-banner" id="cookie-banner">
+      <div class="banner-header">
+        <img
+          src="https://www.boardinfinity.com/blog/content/images/2024/09/Flipkart-Logo.png"
+          alt="Flipkart Logo"
+          class="logo-icon"
+        />
+        <div class="language-selector" id="language-selector-banner">
+          🌐 <span id="selected-language-banner">English</span>
+          <div class="dropdown-arrow"></div>
+          <div class="language-dropdown" id="language-dropdown-banner">
+            <div class="language-option" data-lang="en">English</div>
+            <div class="language-option" data-lang="hi">हिन्दी</div>
+            <div class="language-option" data-lang="ta">தமிழ்</div>
+            <div class="language-option" data-lang="te">తెలుగు</div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-divider"></div>
+      <div class="banner-body">
+        <div class="cookie-content" id="cookie-content"></div>
+        <div class="button-group">
+          <button class="btn btn-secondary" id="cookie-settings-btn"></button>
+          <button class="btn btn-primary" id="accept-essential-btn"></button>
+          <button class="btn btn-accept-all" id="accept-all-btn"></button>
+        </div>
+      </div>
+    </div>
+    <div class="preference-modal" id="preference-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="header-top">
+            <img
+              src="https://www.boardinfinity.com/blog/content/images/2024/09/Flipkart-Logo.png"
+              alt="Flipkart Logo"
+              class="logo-icon"
+            />
+            <div class="language-selector" id="language-selector-modal">
+              <span>🌐</span>
+              <span id="selected-language-modal">English</span>
+              <div class="dropdown-arrow"></div>
+              <div class="language-dropdown" id="language-dropdown-modal">
+                <div class="language-option" data-lang="en">English</div>
+                <div class="language-option" data-lang="hi">हिन्दी</div>
+                <div class="language-option" data-lang="ta">தமிழ்</div>
+                <div class="language-option" data-lang="te">తెలుగు</div>
+              </div>
+            </div>
+            <button class="close-button" id="close-modal-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-x"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="header-bottom">
+            <h1 class="preference-title" id="preference-title"></h1>
+            <div
+              class="preference-description"
+              id="preference-description"
+            ></div>
+          </div>
+        </div>
+        <h2 class="consent-section-title" id="consent-section-title"></h2>
+        <div class="modal-body">
+          <div class="consent-categories">
+            <div class="category-list">
+              <div class="category-item active" data-category="essential"></div>
+              <div class="category-item" data-category="performance"></div>
+              <div class="category-item" data-category="marketing"></div>
+              <div class="category-item" data-category="functional"></div>
+              <div class="category-item" data-category="analytics"></div>
+            </div>
+            <div class="category-details" id="category-details"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="footer-content">
+            <div class="powered-by">
+              <span id="powered-by-text">Powered by</span>
+              <svg class="concur-logo" viewBox="0 0 60 12" fill="currentColor">
+                <path
+                  d="M0 6c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm8-2c0-1.1-.9-2-2-2s-2 .9-2 2 .9 2 2 2 2-.9 2-2z"
+                />
+                <text x="14" y="8" font-size="8" font-weight="600">concur</text>
+              </svg>
+            </div>
+            <div class="button-group">
+              <div class="small-scr-btn">
+                <button class="btn btn-reject" onclick="rejectAll()"></button>
+                <button class="btn btn-allow" onclick="allowAll()"></button>
+              </div>
+              <button
+                class="btn btn-confirm"
+                onclick="confirmChoices()"
+              ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="open-preferences-btn">Cookie Settings</button>
+  `;
+  shadowRoot.innerHTML = htmlContent;
+
+  // --- Utilities ---
+  function $(selector) {
+    return shadowRoot.querySelector(selector);
+  }
+  function $$(selector) {
+    return shadowRoot.querySelectorAll(selector);
+  }
+
+  // --- Helper Functions ---
+  function renderCategoryDetails(lang, category) {
+    const data = translations[lang].categories[category];
+    if (!data) return;
+
+    let cookieDetailsHtml = "";
+    if (data.cookies && data.cookies.length > 0) {
+      data.cookies.forEach((cookie) => {
+        cookieDetailsHtml += `
+          <div class="cookie-details">
+            <div class="cookie-header" data-toggle="true">
+              <div class="cookie-name">${cookie.name}</div>
+              <div class="expand-icon"></div>
+            </div>
+            <div class="cookie-info">
+              <div style="margin-bottom: 8px; font-size: 12px; color: #212121;">${cookie.description}</div>
+              <div class="cookie-meta"><span>${cookie.domain}</span><span>${cookie.expiry}</span></div>
+            </div>
+          </div>`;
+      });
+    } else {
+      cookieDetailsHtml = `<p style="font-size: 13px; color: #878787;">No specific cookies listed for this category.</p>`;
+    }
+
+    $("#category-details").innerHTML = `
+      <div class="category-content" data-content="${category}">
+        <div class="category-header">
+          <div class="category-name">${data.name}</div>
+          <div class="toggle-switch ${
+            category === "essential" ? "active disabled" : ""
+          }" data-toggle-switch="true"></div>
+        </div>
+        <div class="category-description">${data.description}</div>
+        ${cookieDetailsHtml}
+      </div>`;
+  }
+
+  function setLanguage(lang) {
+    localStorage.setItem("selectedLanguage", lang);
+    const langData = translations[lang];
+
+    const createLinkedText = (text, links) => {
+      let html = text;
+      links.forEach((link) => {
+        const regex = new RegExp(`(${link.text})`, "g");
+        html = html.replace(
+          regex,
+          `<a href="${link.url}" target="_blank" class="cookie-policy-link">$1</a>`
+        );
+      });
+      return html;
+    };
+
+    const langText =
+      lang === "en"
+        ? "English"
+        : lang === "hi"
+        ? "हिन्दी"
+        : lang === "ta"
+        ? "தமிழ்"
+        : "తెలుగు";
+    $("#selected-language-banner").textContent = langText;
+    $("#selected-language-modal").textContent = langText;
+    $("#open-preferences-btn").textContent = langData.bannerButtons.settings;
+
+    $("#cookie-content").innerHTML = createLinkedText(
+      langData.description,
+      langData.links
+    );
+    $("#cookie-settings-btn").textContent = langData.bannerButtons.settings;
+    $("#accept-essential-btn").textContent = langData.bannerButtons.essential;
+    $("#accept-all-btn").textContent = langData.bannerButtons.acceptAll;
+
+    $("#preference-title").textContent = langData.modalTitle;
+    $("#preference-description").innerHTML = createLinkedText(
+      langData.description,
+      langData.links
+    );
+    $("#consent-section-title").textContent = langData.modalSectionTitle;
+    $(".btn-reject").textContent = langData.modalButtons.rejectAll;
+    $(".btn-allow").textContent = langData.modalButtons.allowAll;
+    $(".btn-confirm").textContent = langData.modalButtons.confirm;
+    $("#powered-by-text").textContent = langData.poweredBy;
+
+    $$(".category-item").forEach((item) => {
+      const categoryKey = item.dataset.category;
+      item.textContent = langData.categories[categoryKey].name;
+    });
+
+    const activeCategory =
+      $(".category-item.active")?.dataset.category || "essential";
+    renderCategoryDetails(lang, activeCategory);
+  }
+
+  function toggleSwitch(element) {
+    if (element.classList.contains("disabled")) return;
+    element.classList.toggle("active");
+  }
+
+  function toggleCookieInfo(element) {
+    const cookieInfo = element.nextElementSibling;
+    const expandIcon = element.querySelector(".expand-icon");
+    cookieInfo.classList.toggle("expanded");
+    expandIcon.classList.toggle("expanded");
+  }
+
+  function hideBanner() {
+    $("#cookie-banner").classList.remove("show");
+    setTimeout(() => {
+      $("#cookie-banner").style.display = "none";
+      $("#open-preferences-btn").style.display = "block";
+    }, 400);
+  }
+
+  function showBanner() {
+    $("#cookie-banner").style.display = "block";
+    setTimeout(() => {
+      $("#cookie-banner").classList.add("show");
+    }, 10);
+    $("#open-preferences-btn").style.display = "none";
+  }
+
+  function closePreferenceModal() {
+    $("#preference-modal").classList.remove("show");
+    if (localStorage.getItem("cookieConsent")) {
+      $("#open-preferences-btn").style.display = "block";
+    }
+  }
+
+  // --- Event Listeners ---
+  $("#accept-all-btn").addEventListener("click", () => {
+    localStorage.setItem("cookieConsent", "all");
+    hideBanner();
+  });
+
+  $("#accept-essential-btn").addEventListener("click", () => {
+    localStorage.setItem("cookieConsent", "essential");
+    hideBanner();
+  });
+
+  $("#cookie-settings-btn").addEventListener("click", () => {
+    hideBanner();
+    $("#preference-modal").classList.add("show");
+  });
+
+  $("#close-modal-btn").addEventListener("click", closePreferenceModal);
+
+  $("#open-preferences-btn").addEventListener("click", () => {
+    $("#preference-modal").classList.add("show");
+    $("#open-preferences-btn").style.display = "none";
+  });
+
+  $("#language-selector-banner").addEventListener("click", (e) => {
+    e.stopPropagation();
+    $("#language-selector-banner").classList.toggle("open");
+    $("#language-dropdown-banner").classList.toggle("show");
+    $("#language-dropdown-modal").classList.remove("show");
+    $("#language-selector-modal").classList.remove("open");
+  });
+
+  $("#language-selector-modal").addEventListener("click", (e) => {
+    e.stopPropagation();
+    $("#language-selector-modal").classList.toggle("open");
+    $("#language-dropdown-modal").classList.toggle("show");
+    $("#language-dropdown-banner").classList.remove("show");
+    $("#language-selector-banner").classList.remove("open");
+  });
+
+  shadowRoot.addEventListener("click", function (event) {
+    if (event.target.closest(".language-selector")) return;
+    $("#language-dropdown-banner").classList.remove("show");
+    $("#language-selector-banner").classList.remove("open");
+    $("#language-dropdown-modal").classList.remove("show");
+    $("#language-selector-modal").classList.remove("open");
+  });
+
+  $$(".language-option").forEach((option) => {
+    option.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setLanguage(this.dataset.lang);
+      $("#language-dropdown-banner").classList.remove("show");
+      $("#language-selector-banner").classList.remove("open");
+      $("#language-dropdown-modal").classList.remove("show");
+      $("#language-selector-modal").classList.remove("open");
+    });
+  });
+
+  $$(".category-item").forEach((item) => {
+    item.addEventListener("click", function () {
+      $$(".category-item").forEach((i) => i.classList.remove("active"));
+      this.classList.add("active");
+      const lang = localStorage.getItem("selectedLanguage") || "en";
+      renderCategoryDetails(lang, this.dataset.category);
+    });
+  });
+
+  $("#category-details").addEventListener("click", (e) => {
+    const toggleHeader = e.target.closest(".cookie-header");
+    if (toggleHeader) {
+      toggleCookieInfo(toggleHeader);
+      return;
+    }
+    const toggleSwitchEl = e.target.closest(".toggle-switch");
+    if (toggleSwitchEl) {
+      toggleSwitch(toggleSwitchEl);
+    }
+  });
+
+  $(".btn-reject").addEventListener("click", () => {
+    $$(".toggle-switch:not(.disabled)").forEach((toggle) => {
+      toggle.classList.remove("active");
+    });
+    localStorage.setItem("cookieConsent", "custom");
+    closePreferenceModal();
+  });
+
+  $(".btn-allow").addEventListener("click", () => {
+    $$(".toggle-switch:not(.disabled)").forEach((toggle) => {
+      toggle.classList.add("active");
+    });
+    localStorage.setItem("cookieConsent", "custom");
+    closePreferenceModal();
+  });
+
+  $(".btn-confirm").addEventListener("click", () => {
+    localStorage.setItem("cookieConsent", "custom");
+    closePreferenceModal();
+  });
+
+  // --- Init ---
+  const savedLang = localStorage.getItem("selectedLanguage") || "en";
+  setLanguage(savedLang);
+
+  if (!localStorage.getItem("cookieConsent")) {
+    showBanner();
+  } else {
+    hideBanner();
+  }
+})();
