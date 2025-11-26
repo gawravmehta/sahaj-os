@@ -8,6 +8,22 @@
 
 **SAHAJ** is a comprehensive **Consent Management and Privacy Compliance Platform** built to align with the **Digital Personal Data Protection Act, 2023 (DPDPA)**. It empowers Data Fiduciaries to manage personal data, obtain and track consent, enforce privacy policies, and ensure compliance with Indian data protection regulations.
 
+## Tech Stack
+
+The SAHAJ platform utilizes the following key technologies:
+
+*   **Databases:** PostgreSQL, KeyDB (Redis compatible), FerretDb
+*   **Search/Analytics/Logs:** OpenSearch
+*   **Messaging/Queuing:** RabbitMQ
+*   **Backend Frameworks:** FastAPI
+*   **Frontend Frameworks:** Next.js
+*   **Logging/Observability:** Fluent Bit
+*   **Data Elemenets & Purposes:** Data Veda
+*   **Web Server/Reverse Proxy:** Nginx
+*   **SSL/TLS Management:** Certbot
+*   **Authentication/Authorization:** RBAC (Role-Based Access Control)
+*   **Object Storage:** MinIO
+
 ## Deployment Guide
 
 For deployment instructions and configuration details, please refer to the official guide:  
