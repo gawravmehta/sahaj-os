@@ -52,7 +52,7 @@ These test instances demonstrate the key consent and preference management funct
 Work in Progress
 
 ## Training Videos
-Work in Progress
+To learn more about, visit the [online documentation here.](https://drive.google.com/drive/folders/1kS8X6bt8VgP8iXqdq4FYnChVGGlG8OKa)
 
 ##  Hosted Documentation
 
