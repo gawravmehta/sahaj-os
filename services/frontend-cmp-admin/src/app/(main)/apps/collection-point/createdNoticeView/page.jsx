@@ -130,7 +130,7 @@ const Page = () => {
         toast.success("Collection point saved as draft");
       }
 
-      router.push("/apps/collection-point");
+      router.push(`/apps/collection-point/integration-guide?cp_id=${cpId}`);
     } catch (error) {
       const errData = error?.data?.detail;
       if (errData) {
