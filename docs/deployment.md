@@ -14,16 +14,55 @@ SAHAJ provides unified command-line workflows and helper scripts to simplify ins
 
 Before deploying SAHAJ from source, make sure your system satisfies the following:
 
-- Unix-like operating system (Linux or macOS), or Windows with a compatible shell (e.g. WSL, bash, sh)  
-- Shell (bash or sh) available  
-- Docker (and optionally Docker Compose) installed — if you plan to use containerized deployment  
-- A clone of the SAHAJ source repository, including the `scripts/` directory  
-- (Optional but recommended) A Python virtual environment for running backend code locally  
+### System Requirements
 
-```bash
-python3 -m venv env
-source env/bin/activate   # On Windows: env\Scripts\activate  
-```
+1.  **Python 3.11+**
+    *   Python 3.11.0 or higher is required
+    *   Must have `python3-venv` package installed for virtual environment support
+    *   Must have `pip` installed for package management
+    *   Installation commands (for Debian/Ubuntu):
+        ```bash
+        sudo apt install python3-venv
+        sudo apt install python3-pip
+        ```
+
+2.  **Node.js 22+**
+    *   Node.js version 22 or higher is required
+    *   The `node` command must be available in PATH
+
+3.  **Docker Compose**
+    *   Either Docker Compose v2 (`docker compose`) or v1 (`docker-compose`) must be installed
+    *   Docker must be running and accessible
+
+4.  **Nginx**
+    *   `nginx` must be installed on the system
+    *   Installation command (Debian/Ubuntu):
+        ```bash
+        sudo apt update && sudo apt install -y nginx
+        ```
+
+5.  **Certbot (for SSL certificates)**
+    *   `certbot` must be installed for issuing SSL certificates
+    *   Recommended installation via snap:
+        ```bash
+        sudo snap install core && sudo snap refresh core
+        sudo snap install --classic certbot
+        sudo ln -s /snap/bin/certbot /usr/bin/certbot
+        ```
+    *   Port 80 and 443 should be accessible for Let's Encrypt validation
+
+### Cloudflare DNS Configuration
+
+If you are managing SSL certificates yourself (not using Cloudflare proxy):
+
+*   Type: `A`    Name: `api-cmp`              Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `api-customer`         Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `api-notice-worker`    Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `api-cookie-consent`   Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `cmp`                  Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `customer`             Content: `your.ip`    Proxy: `DNS only`
+
+Note: If you don't want to handle certbot, you can keep the proxy to `proxied` (orange cloud in Cloudflare).
 
 ---
 
