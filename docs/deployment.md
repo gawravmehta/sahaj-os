@@ -51,6 +51,17 @@ Before deploying SAHAJ from source, make sure your system satisfies the followin
         ```
     *   Port 80 and 443 should be accessible for Let's Encrypt validation
 
+6.  **OpenSSL (Strongly Recommended)**
+    *   `openssl` command-line tool for generating ECDSA keypair
+    *   Used to generate:
+        *   Private key (SECP256R1/prime256v1)
+        *   Public key (derived from private key)
+        *   Signing key ID
+    *   Installation command:
+        ```bash
+        sudo apt install openssl
+        ```
+
 ### Cloudflare DNS Configuration
 
 If you are managing SSL certificates yourself (not using Cloudflare proxy):
