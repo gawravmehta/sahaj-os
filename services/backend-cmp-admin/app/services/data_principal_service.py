@@ -386,7 +386,7 @@ class DataPrincipalService:
                     "last_activity": row["last_activity"],
                     "consent_count": row["consent_count"],
                     "consent_status": row["consent_status"],
-                    "df_id": row["df_id"],
+                    "df_id": row.get("df_id", None),
                 }
             )
 

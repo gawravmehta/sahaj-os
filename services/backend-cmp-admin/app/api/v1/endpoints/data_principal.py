@@ -89,13 +89,13 @@ async def get_all_data_principals(
     return await service.get_all_data_principals(
         page,
         limit,
+        current_user,
         dp_country,
         dp_preferred_lang,
         is_legacy,
         consent_status,
         added_with,
         search,
-        current_user,
     )
 
 

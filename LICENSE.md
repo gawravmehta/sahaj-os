@@ -11,7 +11,7 @@ This License governs the use, reproduction, modification, and distribution of SA
 
 This License Agreement (“Agreement”) is entered into between:
 
-**Licensor:** [Your Organization Name], a company incorporated under the Companies Act, 2013 of India, having its registered office at E-13, Devendra Nagar, Raipur, Chhattisgarh, India (“Licensor”).  
+**Licensor:** Relive Technologies, a company incorporated under the Companies Act, 2013 of India, having its registered office at E-13, Devendra Nagar, Raipur, Chhattisgarh, India (“Licensor”).  
 
 **Licensee:** Any individual or entity (“Licensee”) downloading, installing, or otherwise using the SAHAJ software (“Software”).
 

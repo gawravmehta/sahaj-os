@@ -1,6 +1,7 @@
 "use client";
 
 import ErrorPopup from "@/components/features/collectionPoint/ErrorPopup";
+import IntegrationGuide from "@/components/features/collectionPoint/IntegrationGuide";
 import DataTable from "@/components/shared/data-table/DataTable";
 import DeleteModal from "@/components/shared/modals/DeleteModal";
 import Button from "@/components/ui/Button";
@@ -293,11 +294,12 @@ const Page = ({ params }) => {
                 <TabsTrigger value="notice" variant="secondary">
                   Notice
                 </TabsTrigger>
-
+                <TabsTrigger value="integration" variant="secondary">
+                  Integration
+                </TabsTrigger>
                 <TabsTrigger value="consents" variant="secondary">
                   Consents
                 </TabsTrigger>
-
                 <TabsTrigger value="audit" variant="secondary">
                   Audit
                 </TabsTrigger>
@@ -455,6 +457,9 @@ const Page = ({ params }) => {
                 )}
               </div>
             </div>
+          </TabsContent>
+          <TabsContent value="integration">
+            <IntegrationGuide cpId={cpId} hasHeader={false} />
           </TabsContent>
 
           <TabsContent value="consents">
