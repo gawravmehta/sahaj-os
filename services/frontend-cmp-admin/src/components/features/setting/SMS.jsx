@@ -112,7 +112,7 @@ const SMS = ({ formData, setFormData, edit, setEdit, handleSave, saving }) => {
             )}
           </div>
 
-          <div>
+          {/* <div>
             {edit === "sms" ? (
               <InputField
                 label="API Key"
@@ -126,7 +126,7 @@ const SMS = ({ formData, setFormData, edit, setEdit, handleSave, saving }) => {
                 <p className="text-sm">••••••••</p>
               </>
             )}
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -228,7 +228,7 @@ const SMS = ({ formData, setFormData, edit, setEdit, handleSave, saving }) => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           {edit === "sms" ? (
             <SelectInput
               label="Region"
@@ -247,7 +247,7 @@ const SMS = ({ formData, setFormData, edit, setEdit, handleSave, saving }) => {
               <p className="text-sm">{credentials?.region}</p>
             </>
           )}
-        </div>
+        </div> */}
 
         <div>
           {edit === "sms" ? (

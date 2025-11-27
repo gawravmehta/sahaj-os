@@ -8,7 +8,7 @@ async def send_sms_notification(phone_number, token, df_register_collection, sms
 
     sms_credentials = df_details.get("communication", {}).get("sms", {}).get("credentials", {})
 
-    user_name = df_details.get("org_info", {}).get("name", "Some Company")
+    user_name = df_details.get("org_info", {}).get("name", "Data Fiduciary")
     consent_link = f"{settings.CMP_NOTICE_WORKER_URL}/{sms_credentials.get('sender_id')}?{token}"
 
     sms_content = df_details.get("communication", {}).get("sms", {}).get("templates", [])

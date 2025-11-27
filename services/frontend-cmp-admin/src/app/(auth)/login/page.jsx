@@ -37,35 +37,39 @@ export default function LoginPage() {
         data: { email, password },
       });
 
+      const isSecure = window.location.protocol === "https:";
+
       Cookies.set("access_token", data.access_token, {
-        secure: true,
+        secure: isSecure,
         sameSite: "Strict",
       });
       Cookies.set("is_invited_user", data.is_invited_user ? "true" : "false", {
-        secure: true,
+        secure: isSecure,
         sameSite: "Strict",
-      });      
+      });
 
       if (data?.is_password_reseted == false) {
         Cookies.set("isNotPasswordSet", "true", {
-          secure: true,
+          secure: isSecure,
           sameSite: "Strict",
         });
         Cookies.set("isNotOrgSetup", "true", {
-          secure: true,
+          secure: isSecure,
           sameSite: "Strict",
         });
         router.push(`/reset-password`);
         toast.success("Please reset your password.");
-      } else if (data?.is_org_configured === false && data?.is_invited_user === false) {
+      } else if (
+        data?.is_org_configured === false &&
+        data?.is_invited_user === false
+      ) {
         Cookies.set("isNotOrgSetup", "true", {
-          secure: true,
+          secure: isSecure,
           sameSite: "Strict",
         });
         router.push("/org-setup");
         toast.success("Please complete your organization setup.");
-      }
-       else {
+      } else {
         router.push("/apps");
         toast.success("Login successful!");
       }
