@@ -15,10 +15,10 @@ mongo_counter_client: Optional[AsyncIOMotorClient] = None
 pg_pool: Optional[asyncpg.Pool] = None
 s3_client: Minio = None
 
-
-REDIS_PASSWORD = None
-REDIS_USERNAME = None
-REDIS_MAX_CONNECTIONS = 200
+REDIS_NODES = [{"host": settings.REDIS_HOST, "port": settings.REDIS_PORT}]
+REDIS_PASSWORD = settings.REDIS_PASSWORD
+REDIS_USERNAME = settings.REDIS_USERNAME
+REDIS_MAX_CONNECTIONS = settings.REDIS_MAX_CONNECTIONS
 
 redis_client: Optional[redis.Redis] = None
 
@@ -49,7 +49,7 @@ async def connect_with_polling() -> Optional[redis.Redis]:
     global redis_client
     retries = 0
     while True:
-        for node in settings.REDIS_STARTUP_NODES:
+        for node in REDIS_NODES:
             app_logger.info(f"Attempting to connect to KeyDB node {node['host']}:{node['port']}...")
             client = await create_redis_connection(node)
             if client:
@@ -66,7 +66,7 @@ async def connect_to_mongo():
     """Initializes Motor (async MongoDB) clients."""
     global mongo_master_client, mongo_counter_client
     app_logger.info("Connecting to MongoDB instances (Motor)...")
-    mongo_master_client = AsyncIOMotorClient(settings.MONGO_MASTER_URI)
+    mongo_master_client = AsyncIOMotorClient(settings.MONGO_URI)
 
     try:
         await mongo_master_client.admin.command("ping")
@@ -82,7 +82,7 @@ def get_mongo_master_db():
     if mongo_master_client is None:
         app_logger.error("MongoDB master client not initialized. Call connect_to_mongo() during startup.")
         raise RuntimeError("MongoDB master client not initialized.")
-    return mongo_master_client[settings.MONGO_MASTER_DB_NAME]
+    return mongo_master_client[settings.DB_NAME_CONCUR_MASTER]
 
 
 def get_df_keys_collection():
@@ -99,9 +99,9 @@ def connect_to_s3():
     app_logger.info("Connecting to MinIO S3...")
     try:
         s3_client = Minio(
-            settings.S3_ENDPOINT,
-            access_key=settings.S3_ACCESS_KEY,
-            secret_key=settings.S3_SECRET_KEY,
+            settings.S3_URL,
+            access_key=settings.MINIO_ROOT_USER,
+            secret_key=settings.MINIO_ROOT_PASSWORD,
             secure=settings.S3_SECURE,
         )
 
@@ -126,7 +126,7 @@ def get_redis():
     return redis_client
 
 
-DATABASE_URL = settings.POSTGRESS_URL
+DATABASE_URL = settings.POSTGRES_DATABASE_URL
 
 
 async def get_postgres_pool() -> asyncpg.Pool:

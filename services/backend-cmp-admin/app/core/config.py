@@ -18,17 +18,20 @@ class Settings(BaseSettings):
 
     DATA_VEDA_URL: str = "http://data-veda:8080"
 
-    INITIAL_ADMIN_EMAIL: str = "admin@example.com"
+    SUPERADMIN_EMAIL: str
+    TEMPORARY_PASSWORD: str
+    DF_ID: str
 
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 480
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
     POSTGRES_DATABASE_URL: str
 
-    S3_ACCESS_KEY: str
-    S3_SECRET_KEY: str
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
     S3_URL: str
+    S3_SECURE: bool = False
 
     NOTICE_WORKER_BUCKET: str = "notice-worker-dev"
     PROCESSED_FILES_BUCKET: str = "processed-files-dev-1"
@@ -54,8 +57,7 @@ class Settings(BaseSettings):
 
     OPENSEARCH_HOST: str
     OPENSEARCH_PORT: int = 9200
-    OPENSEARCH_USER: str
-    OPENSEARCH_PASS: str
+    OPENSEARCH_USERNAME: str
 
     PUBLIC_KEY_PEM: str
 

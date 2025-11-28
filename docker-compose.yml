@@ -1,0 +1,21 @@
+# Docker Compose base configuration for Sahaj OS 
+
+networks:
+  concur-cfc-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1500
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+volumes:
+  postgres_data:
+  es_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
+  rabbitmq_data:
+  rabbitmq_logs:
+  opensearch-data:

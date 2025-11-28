@@ -1,49 +1,148 @@
-version: "3"
+x-common-env: &common-env
+  ENVIRONMENT: ${ENVIRONMENT}
+  SERVICE_NAME: ${SERVICE_NAME}
+  CMP_ADMIN_BACKEND_URL: ${CMP_ADMIN_BACKEND_URL}
+  CMP_ADMIN_FRONTEND_URL: ${CMP_ADMIN_FRONTEND_URL}
+  CMP_NOTICE_WORKER_URL: ${CMP_NOTICE_WORKER_URL}
+  COOKIE_CONSENT_URL: ${COOKIE_CONSENT_URL}
+  MONGO_URI: ${MONGO_URI}
+  DB_NAME_CONCUR_MASTER: ${DB_NAME_CONCUR_MASTER}
+  DB_NAME_COOKIE_MANAGEMENT: ${DB_NAME_COOKIE_MANAGEMENT}
+  DB_NAME_CONCUR_LOGS: ${DB_NAME_CONCUR_LOGS}
+  DATA_VEDA_URL: ${DATA_VEDA_URL}
+  SUPERADMIN_EMAIL: ${SUPERADMIN_EMAIL}
+  TEMPORARY_PASSWORD: ${TEMPORARY_PASSWORD}
+  DF_ID: ${DF_ID}
+  SECRET_KEY: ${SECRET_KEY}
+  ALGORITHM: ${ALGORITHM}
+  ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES}
+  POSTGRES_DATABASE_URL: ${POSTGRES_DATABASE_URL}
+  MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  S3_URL: ${S3_URL}
+  S3_SECURE: ${S3_SECURE}
+  NOTICE_WORKER_BUCKET: ${NOTICE_WORKER_BUCKET}
+  PROCESSED_FILES_BUCKET: ${PROCESSED_FILES_BUCKET}
+  UNPROCESSED_FILES_BUCKET: ${UNPROCESSED_FILES_BUCKET}
+  UNPROCESSED_VERIFICATION_FILES_BUCKET: ${UNPROCESSED_VERIFICATION_FILES_BUCKET}
+  FAILED_RECORDS_BUCKET: ${FAILED_RECORDS_BUCKET}
+  FAILED_RECORDS_BUCKET_EXTERNAL: ${FAILED_RECORDS_BUCKET_EXTERNAL}
+  TRAINING_NUGGETS_BUCKET: ${TRAINING_NUGGETS_BUCKET}
+  KYC_DOCUMENTS_BUCKET: ${KYC_DOCUMENTS_BUCKET}
+  DPAR_BULK_UPLOAD_BUCKET: ${DPAR_BULK_UPLOAD_BUCKET}
+  COOKIE_CONSENT_BUCKET: ${COOKIE_CONSENT_BUCKET}
+  RABBITMQ_HOST: ${RABBITMQ_HOST}
+  RABBITMQ_PORT: ${RABBITMQ_PORT}
+  RABBITMQ_MANAGEMENT_PORT: ${RABBITMQ_MANAGEMENT_PORT}
+  RABBITMQ_USER: ${RABBITMQ_USER}
+  RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  RABBITMQ_VHOST_NAME: ${RABBITMQ_VHOST_NAME}
+  RABBITMQ_POOL_SIZE: ${RABBITMQ_POOL_SIZE}
+  WEBHOOK_MAX_RETRIES: ${WEBHOOK_MAX_RETRIES}
+  WEBHOOK_RETRY_TTL_MS: ${WEBHOOK_RETRY_TTL_MS}
+  OPENSEARCH_HOST: ${OPENSEARCH_HOST}
+  OPENSEARCH_PORT: ${OPENSEARCH_PORT}
+  OPENSEARCH_USERNAME: ${OPENSEARCH_USERNAME}
+  PUBLIC_KEY_PEM: ${PUBLIC_KEY_PEM}
+
+x-common-depends: &common-depends
+  app-base:
+    condition: service_started
+  data-veda:
+    condition: service_started
+  rabbitmq:
+    condition: service_healthy
+  ferretdb:
+    condition: service_healthy
+  minio:
+    condition: service_started
+
+x-base-service: &base-service
+  image: backend-cmp-admin:latest
+  environment: *common-env
+  networks:
+    - concur-cfc-network
+
+x-consumer-service: &consumer-service
+  <<: *base-service
+  depends_on:
+    backend-cmp-admin:
+      condition: service_started
+    <<: *common-depends
+
 services:
-  api:
-    build: .
-    command: uvicorn app.main:app --host 0.0.0.0 --port 3300 --reload --timeout-keep-alive 300
-    ports:
-      - "3300:3300"
+  app-base:
+    build:
+      context: ./services/backend-cmp-admin
+    image: backend-cmp-admin:latest
 
   data-veda:
     image: 4646krisna/data-veda
     container_name: data-veda
     ports:
       - "8081:8080"
+    networks:
+      - concur-cfc-network
+
+  backend-cmp-admin:
+    <<: *base-service
+    command: uvicorn app.main:app --host 0.0.0.0 --port 3330 --timeout-keep-alive 300
+    ports:
+      - "3330:3330"
+    depends_on: *common-depends
 
   consumer-dp-processing:
-    build: .
+    <<: *consumer-service
     command: python -m app.worker.dp_processing_consumer
-    depends_on:
-      - api
 
   consumer-dp-external-processing:
-    build: .
+    <<: *consumer-service
     command: python -m app.worker.dp_external_processing_consumer
-    depends_on:
-      - api
 
   consumer-failed-records:
-    build: .
-    command: python -m app.worker.failed_records
-    depends_on:
-      - api
+    <<: *consumer-service
+    command: python -m app.worker.failed_records_consumer
 
   consumer-notice-notification:
-    build: .
+    <<: *consumer-service
     command: python -m app.worker.notice_notification_consumer
-    depends_on:
-      - api
 
   consumer-send-email:
-    build: .
+    <<: *consumer-service
     command: python -m app.worker.send_email_consumer
-    depends_on:
-      - api
 
   consumer-consent-validation-internal:
-    build: .
+    <<: *consumer-service
     command: python -m app.worker.consent_validation_internal_consumer
-    depends_on:
-      - api
+
+  consent-event-consumer:
+    <<: *consumer-service
+    command: python -m app.worker.consent_event_consumer
+
+  consent-expiry-consumer:
+    <<: *consumer-service
+    command: python -m app.worker.consent_expiry_consumer
+
+  consent-expiry-scheduler:
+    <<: *consumer-service
+    command: python -m app.worker.consent_expiry_scheduler
+
+  consumer-consent-validation-external:
+    <<: *consumer-service
+    command: python -m app.worker.consent_validation_external_consumer
+
+  cookie-scan-consumer:
+    <<: *consumer-service
+    command: python -m app.worker.cookie_scan_consumer
+
+  data-expiry-consumer:
+    <<: *consumer-service
+    command: python -m app.worker.data_expiry_consumer
+
+  data-expiry-scheduler:
+    <<: *consumer-service
+    command: python -m app.worker.data_expiry_scheduler
+
+  webhook-consumer:
+    <<: *consumer-service
+    command: python -m app.worker.webhook_consumer

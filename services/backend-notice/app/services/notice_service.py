@@ -14,7 +14,7 @@ logger = get_logger("service.notice_service")
 
 s3_client = get_s3_client()
 SECRET_KEY = settings.SECRET_KEY
-S3_BUCKET = settings.S3_BUCKET_NAME
+S3_BUCKET = settings.NOTICE_WORKER_BUCKET
 
 
 async def retrieve_notice_html(token: str, request: Request):

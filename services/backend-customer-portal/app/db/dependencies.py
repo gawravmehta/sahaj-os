@@ -17,14 +17,14 @@ async def get_db_client(request: Request) -> AsyncIOMotorClient:
 async def get_concur_master_db(
     client: AsyncIOMotorClient = Depends(get_db_client),
 ) -> AsyncIOMotorDatabase:
-    return client[settings.MONGO_MASTER_DB_NAME]
+    return client[settings.DB_NAME_CONCUR_MASTER]
 
 
 def get_concur_master_db_direct(app) -> AsyncIOMotorDatabase:
     client: AsyncIOMotorClient = getattr(app.state, "motor_client", None)
     if client is None:
         raise RuntimeError("MongoDB client is not initialized.")
-    return client[settings.MONGO_MASTER_DB_NAME]
+    return client[settings.DB_NAME_CONCUR_MASTER]
 
 
 async def get_dpar_requests_collection(

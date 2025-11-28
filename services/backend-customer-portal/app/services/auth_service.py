@@ -102,7 +102,7 @@ async def handle_otp_verification(email, mobile, df_id, otp_input):
         "is_existing": otp_record["is_existing"],
     }
 
-    token = create_jwt_token(jwt_payload, settings.JWT_EXPIRY_MINUTES)
+    token = create_jwt_token(jwt_payload, settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     return {"success": True, "access_token": token, "token_type": "bearer"}
 
 

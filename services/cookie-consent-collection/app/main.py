@@ -26,14 +26,14 @@ class MongoDB:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    MongoDB.client = AsyncIOMotorClient(settings.MONGO_URL, serverSelectionTimeoutMS=5000)
+    MongoDB.client = AsyncIOMotorClient(settings.MONGO_URI, serverSelectionTimeoutMS=5000)
     setup_logging()
     try:
         await MongoDB.client.admin.command("ping")
-        app_logger.info(f"Connected to MongoDB successfully at: {settings.MONGO_URL}")
+        app_logger.info(f"Connected to MongoDB successfully at: {settings.MONGO_URI}")
     except ConnectionFailure as e:
-        app_logger.critical(f"Could not connect to MongoDB at {settings.MONGO_URL}. {e}")
-    MongoDB.database = MongoDB.client[settings.DATABASE_NAME]
+        app_logger.critical(f"Could not connect to MongoDB at {settings.MONGO_URI}. {e}")
+    MongoDB.database = MongoDB.client[settings.DB_NAME_COOKIE_MANAGEMENT]
     yield
     if MongoDB.client:
         MongoDB.client.close()
@@ -74,8 +74,8 @@ async def submit_consent(payload: ConsentPayload, request: Request):
     ip_address = request.headers.get("x-forwarded-for", get_remote_address(request)).split(",")[0].strip()
     unique_key = payload.user_id if payload.user_id else ip_address
 
-    audit_collection = MongoDB.database[settings.COLLECTIONS_RECORDS]
-    current_collection = MongoDB.database[settings.COLLECTION_COUNT]
+    audit_collection = MongoDB.database["consent_audit_records"]
+    current_collection = MongoDB.database["user_preferences_current"]
 
     filter_query = {"website_id": payload.website_id, "unique_key": unique_key}
     existing_record = await current_collection.find_one(filter_query)

@@ -11,32 +11,32 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "dev"
     SERVICE_NAME: str = "backend-customer-portal"
 
-    FRONTEND_CUSTOMER_PORTAL: str
-    BACKEND_CMP_ADMIN_URL: str
+    CUSTOMER_PORTAL_FRONTEND_URL: str
+    CMP_ADMIN_BACKEND_URL: str
+
     POSTGRES_DATABASE_URL: str
 
-    SECRET_KEY: str
-
-    REDIS_STARTUP_NODES: List[Dict[str, Any]]
+    REDIS_HOST: str
+    REDIS_PORT: int
     REDIS_PASSWORD: str
     REDIS_USERNAME: str
     REDIS_MAX_CONNECTIONS: int = 200
     REDIS_MAX_CONNECTIONS_PER_NODE: int = 50
 
-    MONGO_MASTER_URI: str
-    MONGO_MASTER_DB_NAME: str
-
+    MONGO_URI: str
+    DB_NAME_CONCUR_MASTER: str
     DB_NAME_CONCUR_LOGS: str
 
-    JWT_SECRET_KEY: str
-    JWT_EXPIRY_MINUTES: int = 1440
+    SECRET_KEY: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
     OTP_EXPIRY_SECONDS: int = 300
 
-    S3_ENDPOINT: str
-    S3_ACCESS_KEY: str
-    S3_SECRET_KEY: str
-    S3_BUCKET_NAME: str
+    S3_URL: str
+    MINIO_ROOT_USER: str
+    MINIO_ROOT_PASSWORD: str
     S3_SECURE: bool = False
+    CUSTOMER_PORTAL_BUCKET: str
+    KYC_DOCUMENTS_BUCKET: str
 
     RABBITMQ_HOST: str
     RABBITMQ_PORT: int = 5672
@@ -45,8 +45,6 @@ class Settings(BaseSettings):
     RABBITMQ_PASSWORD: str
     RABBITMQ_VHOST_NAME: str
     RABBITMQ_POOL_SIZE: int = 5
-
-    KYC_DOCUMENTS_BUCKET: str
 
     class Config:
         case_sensitive = True

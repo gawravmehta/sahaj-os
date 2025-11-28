@@ -31,7 +31,7 @@ class GrievanceService:
 
         if payload.email:
             dp_email_token = "".join(secrets.choice(token_chars) for _ in range(16))
-            verification_link = f"{settings.FRONTEND_CUSTOMER_PORTAL}/verify/e-{dp_email_token}"
+            verification_link = f"{settings.CUSTOMER_PORTAL_FRONTEND_URL}/verify/e-{dp_email_token}"
 
             app_logger.info(f"Verification link: {verification_link}")
             credentials = await get_email_credentials(df_id, self.df_register_collection)
