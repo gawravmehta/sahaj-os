@@ -9,9 +9,8 @@ import Tag from "@/components/ui/Tag";
 import { usePermissions } from "@/contexts/PermissionContext";
 import { apiCall } from "@/hooks/apiCall";
 import { getErrorMessage } from "@/utils/errorHandler";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { FiPlus } from "react-icons/fi";
 
@@ -21,23 +20,66 @@ const Page = () => {
   const [detailBar, setDetailBar] = useState(false);
   const [loading, setLoading] = useState(false);
   const [highlight, setHighlight] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchMoreLoading, setIsFetchMoreLoading] = useState(false);
+  const loaderRef = useRef(null);
 
   const { canWrite } = usePermissions();
   const router = useRouter();
 
   useEffect(() => {
-    getAssets();
-  }, []);
+    fetchAssets(page);
+  }, [page]);
 
-  const getAssets = async () => {
-    setLoading(true);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          hasMore &&
+          !loading &&
+          !isFetchMoreLoading
+        ) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [hasMore, loading, isFetchMoreLoading]);
+
+  const fetchAssets = async (currentPage) => {
+    if (currentPage === 1) {
+      setLoading(true);
+    } else {
+      setIsFetchMoreLoading(true);
+    }
     try {
-      const response = await apiCall(`/assets/get-all-assets`);
-      setAssets(response.assets);
-      setLoading(false);
+      const response = await apiCall(
+        `/assets/get-all-assets?current_page=${currentPage}&data_per_page=20`
+      );
+      const newAssets = response.assets || [];
+      if (currentPage === 1) {
+        setAssets(newAssets);
+      } else {
+        setAssets((prev) => [...prev, ...newAssets]);
+      }
+      setHasMore(response.current_page < response.total_pages);
     } catch (error) {
       toast.error(getErrorMessage(error));
+    } finally {
       setLoading(false);
+      setIsFetchMoreLoading(false);
     }
   };
 
@@ -95,76 +137,85 @@ const Page = () => {
               ) : assets?.length === 0 ? (
                 <NoDataFound />
               ) : (
-                <div
-                  className={`grid gap-5 ${
-                    detailBar
-                      ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
-                      : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
-                  }`}
-                >
-                  {assets.map((templatesAssets) => (
-                    <div
-                      key={templatesAssets.asset_id}
-                      onClick={() => {
-                        if (templatesAssets.asset_status !== "archived") {
-                          handleOneAsset(templatesAssets.asset_id);
-                        } else {
-                          setDetailBar(false);
-                        }
-                      }}
-                      className={`flex cursor-pointer flex-col justify-center gap-2 border border-primary border-opacity-0 ${
-                        highlight === templatesAssets.asset_id
-                          ? "border-primary border-opacity-100"
-                          : "border-[#CBD5E1]"
-                      } px-4 py-3 shadow-md transition-all hover:border-opacity-100 hover:shadow-none`}
-                    >
-                      <div className="flex w-full justify-between">
-                        <div className="h-10">
-                          <img
-                            src={templatesAssets.image || ""}
-                            alt="img"
-                            height={1000}
-                            width={1000}
-                            quality={100}
-                            className="h-full w-full object-contain opacity-85"
+                <>
+                  <div
+                    className={`grid gap-5 ${
+                      detailBar
+                        ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                        : "grid-cols-1 sm:grid-cols-2 md:grid-cols-4"
+                    }`}
+                  >
+                    {assets.map((templatesAssets) => (
+                      <div
+                        key={templatesAssets.asset_id}
+                        onClick={() => {
+                          if (templatesAssets.asset_status !== "archived") {
+                            handleOneAsset(templatesAssets.asset_id);
+                          } else {
+                            setDetailBar(false);
+                          }
+                        }}
+                        className={`flex cursor-pointer flex-col justify-center gap-2 border border-primary border-opacity-0 ${
+                          highlight === templatesAssets.asset_id
+                            ? "border-primary border-opacity-100"
+                            : "border-[#CBD5E1]"
+                        } px-4 py-3 shadow-md transition-all hover:border-opacity-100 hover:shadow-none`}
+                      >
+                        <div className="flex w-full justify-between">
+                          <div className="h-10">
+                            <img
+                              src={templatesAssets.image || ""}
+                              alt="img"
+                              height={1000}
+                              width={1000}
+                              quality={100}
+                              className="h-full w-full object-contain opacity-85"
+                            />
+                          </div>
+
+                          <Tag
+                            variant={
+                              templatesAssets.asset_status == "published"
+                                ? "active"
+                                : templatesAssets.asset_status == "archived"
+                                ? "inactive"
+                                : "draft"
+                            }
+                            label={templatesAssets.asset_status}
+                            className="h-6 text-xs capitalize"
                           />
                         </div>
-
-                        <Tag
-                          variant={
-                            templatesAssets.asset_status == "published"
-                              ? "active"
-                              : templatesAssets.asset_status == "archived"
-                              ? "inactive"
-                              : "draft"
-                          }
-                          label={templatesAssets.asset_status}
-                          className="h-6 text-xs capitalize"
-                        />
-                      </div>
-                      <span className="">
-                        <div className="mt-1 font-normal capitalize text-primary">
-                          {templatesAssets.asset_name
+                        <span className="">
+                          <div className="mt-1 font-normal capitalize text-primary">
+                            {templatesAssets.asset_name
+                              .split(" ")
+                              .slice(0, 10)
+                              .join(" ") +
+                              (templatesAssets.description.split(" ").length >
+                              14
+                                ? "..."
+                                : "")}
+                          </div>
+                        </span>
+                        <p className="h-16 text-xs text-subHeading">
+                          {templatesAssets.description
                             .split(" ")
-                            .slice(0, 10)
+                            .slice(0, 18)
                             .join(" ") +
-                            (templatesAssets.description.split(" ").length > 14
+                            (templatesAssets.description.split(" ").length > 10
                               ? "..."
                               : "")}
-                        </div>
-                      </span>
-                      <p className="h-16 text-xs text-subHeading">
-                        {templatesAssets.description
-                          .split(" ")
-                          .slice(0, 18)
-                          .join(" ") +
-                          (templatesAssets.description.split(" ").length > 10
-                            ? "..."
-                            : "")}
-                      </p>
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  {isFetchMoreLoading && (
+                    <div className="flex justify-center p-4">
+                      <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>
                     </div>
-                  ))}
-                </div>
+                  )}
+                  <div ref={loaderRef} className="h-10 w-full" />
+                </>
               )}
             </div>
           </div>
