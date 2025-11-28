@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BsArrowRight } from "react-icons/bs";
 import { LuCopy } from "react-icons/lu";
+import { HiDownload } from "react-icons/hi";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -27,10 +28,11 @@ const IntegrationGuide = ({ cpId, hasHeader = true }) => {
   ];
 
   const configCode = `export const CONFIG = {
-  DF_ID: "9f091721-24fc-4f70-9770-c2e9f5623573",
-  DF_KEY: "Gd0KlIaNXVCdU2Sy",
-  DF_SECRET: "zkp?x!8T6riEY3tgFgbSp?hnxh20uNUnp25pr$&?2Qo33l!CDL14FeuNVLpzfPvE",
-  CMP_CUSTOMER_FRONTEND_URL: "http://localhost:3001",
+  DF_ID: "your_df_id",
+  DF_KEY: "your_df_key",
+  DF_SECRET: "your_df_secret",
+  CMP_CUSTOMER_FRONTEND_URL: "your_cmp_customer_frontend_url",
+  NOTICE_WORKER_URL: "your_notice_worker_url",
 };`;
 
   const codeSamples = {
@@ -192,6 +194,15 @@ class _ConsentScreenState extends State<ConsentScreen> {
     }
   };
 
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/assets/other/concur-notice.js";
+    link.download = "concur-notice.js";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const getSyntaxLanguage = (lang) => {
     if (lang === "React" || lang === "React Native") return "jsx";
     if (lang === "Angular") return "typescript";
@@ -269,12 +280,19 @@ class _ConsentScreenState extends State<ConsentScreen> {
 
             <div className="mt-6 space-y-4 text-sm text-[#4f4f4f]">
               <div>
-                <p className="mb-2">
+                <p className="mb-2 flex items-center gap-2">
                   <strong>1. Download the SDK:</strong> Download the{" "}
                   <code className="bg-gray-100 px-1 py-0.5 rounded text-[#175FC9]">
                     concur-notice.js
                   </code>{" "}
-                  file and place it in your project.
+                  file and place it in your project.{" "}
+                  <Button
+                    onClick={handleDownload}
+                    title="Download concur-notice.js"
+                  >
+                    <HiDownload className="h-4 w-4" />
+                    Download
+                  </Button>
                 </p>
               </div>
 

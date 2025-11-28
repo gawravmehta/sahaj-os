@@ -275,7 +275,7 @@ const WebhookManagementPage = () => {
             setRowsPerPageState={setRowsPerPageState}
             getRowRoute={(row) =>
               row?.webhook_id
-                ? `/webhook-management/details/${row?.webhook_id}`
+                ? `/apps/webhook-management/details/${row?.webhook_id}`
                 : null
             }
             illustrationText="No Web hooks Available"
