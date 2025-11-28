@@ -61,7 +61,7 @@ export const appModules = [
     description:
       "Manage cookie preferences and ensure compliance with data privacy regulations for a seamless browsing experience.",
     image_logo: "/assets/apps-icons/cookie-consent.png",
-    route: "/apps/consent-management",
+    route: "/apps/cookie-management",
   },
   {
     _id: "10",

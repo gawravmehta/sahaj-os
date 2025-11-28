@@ -78,7 +78,7 @@ class WidgetService:
         logger.info(
             f"Fetching DF info for df_id={user['df_id']}", extra={"user_id": user.get("id"), "df_id": user.get("df_id"), "asset_id": asset_id}
         )
-        df_info = await self.df_service.get_details(df_id=user["df_id"])
+        df_info = await self.df_service.get_details(df_id=user["df_id"], user=user)
         df_info = df_info["org_info"]
 
         cookies_data: Dict[str, list] = {}
@@ -163,7 +163,12 @@ class WidgetService:
             content_type = mimetypes.guess_type(local_path)[0] or "text/js"
             logger.info(
                 f"Uploading to S3 bucket {settings.COOKIE_CONSENT_BUCKET} as {filename} (content_type={content_type})",
-                extra={"widget_name": widget_name, "bucket": settings.COOKIE_CONSENT_BUCKET, "filename": filename, "content_type": content_type},
+                extra={
+                    "widget_name": widget_name,
+                    "bucket": settings.COOKIE_CONSENT_BUCKET,
+                    "upload_filename": filename,
+                    "content_type": content_type,
+                },
             )
 
             s3_service.fput_object(
