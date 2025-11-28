@@ -1,0 +1,58 @@
+==== Starting frontend-customer-portal - Fri Nov 28 10:47:06 UTC 2025 ====
+[frontend-customer-portal] frontend: npm install + npm run dev
+
+up to date, audited 399 packages in 1s
+
+142 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> frontend-customer-portal@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+   ▲ Next.js 15.4.5
+   - Local:        http://localhost:3001
+   - Network:      http://216.48.183.9:3001
+
+ ✓ Starting...
+ ✓ Ready in 1122ms
+[?25h
+==== Starting frontend-customer-portal - Fri Nov 28 10:58:58 UTC 2025 ====
+[frontend-customer-portal] frontend: npm install + npm run dev
+
+up to date, audited 399 packages in 1s
+
+142 packages are looking for funding
+  run `npm fund` for details
+
+2 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues, run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> frontend-customer-portal@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+   ▲ Next.js 15.4.5
+   - Local:        http://localhost:3001
+   - Network:      http://216.48.183.9:3001
+
+ ✓ Starting...
+ ✓ Ready in 1248ms
+[?25h

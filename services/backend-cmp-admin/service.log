@@ -1,0 +1,284 @@
+==== Starting backend-cmp-admin - Fri Nov 28 10:47:00 UTC 2025 ====
+Requirement already satisfied: pip in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (25.3)
+Requirement already satisfied: aio-pika==9.5.7 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 1)) (9.5.7)
+Requirement already satisfied: aiormq==6.9.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 2)) (6.9.0)
+Requirement already satisfied: alembic==1.16.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 3)) (1.16.4)
+Requirement already satisfied: annotated-types==0.7.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 4)) (0.7.0)
+Requirement already satisfied: anyio==4.9.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 5)) (4.9.0)
+Requirement already satisfied: argon2-cffi==25.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 6)) (25.1.0)
+Requirement already satisfied: argon2-cffi-bindings==25.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 7)) (25.1.0)
+Requirement already satisfied: asyncpg==0.30.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 8)) (0.30.0)
+Requirement already satisfied: attrs==25.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 9)) (25.3.0)
+Requirement already satisfied: bcrypt==4.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 10)) (4.3.0)
+Requirement already satisfied: casbin==1.43.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 11)) (1.43.0)
+Requirement already satisfied: casbin_pymongo_adapter==1.6.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 12)) (1.6.0)
+Requirement already satisfied: certifi==2025.8.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 13)) (2025.8.3)
+Requirement already satisfied: cffi==1.17.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 14)) (1.17.1)
+Requirement already satisfied: charset-normalizer==3.4.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 15)) (3.4.3)
+Requirement already satisfied: click==8.2.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 16)) (8.2.1)
+Requirement already satisfied: colorama==0.4.6 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 17)) (0.4.6)
+Requirement already satisfied: cryptography==45.0.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 18)) (45.0.5)
+Requirement already satisfied: Deprecated==1.2.18 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 19)) (1.2.18)
+Requirement already satisfied: dnspython==2.7.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 20)) (2.7.0)
+Requirement already satisfied: ecdsa==0.19.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 21)) (0.19.1)
+Requirement already satisfied: email_validator==2.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 22)) (2.2.0)
+Requirement already satisfied: et_xmlfile==2.0.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 23)) (2.0.0)
+Requirement already satisfied: Events==0.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 24)) (0.5)
+Requirement already satisfied: fastapi==0.116.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 25)) (0.116.1)
+Requirement already satisfied: greenlet==3.2.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 26)) (3.2.4)
+Requirement already satisfied: grpcio==1.76.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 27)) (1.76.0)
+Requirement already satisfied: h11==0.16.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 28)) (0.16.0)
+Requirement already satisfied: httpcore==1.0.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 29)) (1.0.9)
+Requirement already satisfied: httptools==0.6.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 30)) (0.6.4)
+Requirement already satisfied: httpx==0.28.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 31)) (0.28.1)
+Requirement already satisfied: idna==3.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 32)) (3.10)
+Requirement already satisfied: limits==5.4.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 33)) (5.4.0)
+Requirement already satisfied: Mako==1.3.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 34)) (1.3.10)
+Requirement already satisfied: MarkupSafe==3.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 35)) (3.0.2)
+Requirement already satisfied: minio==7.2.16 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 36)) (7.2.16)
+Requirement already satisfied: motor==3.7.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 37)) (3.7.1)
+Requirement already satisfied: multidict==6.6.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 38)) (6.6.4)
+Requirement already satisfied: numpy==2.3.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 39)) (2.3.3)
+Requirement already satisfied: openpyxl==3.1.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 40)) (3.1.5)
+Requirement already satisfied: opensearch-protobufs==0.19.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 41)) (0.19.0)
+Requirement already satisfied: opensearch-py==3.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 42)) (3.1.0)
+Requirement already satisfied: outcome==1.3.0.post0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 43)) (1.3.0.post0)
+Requirement already satisfied: packaging==25.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 44)) (25.0)
+Requirement already satisfied: pamqp==3.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 45)) (3.3.0)
+Requirement already satisfied: pandas==2.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 46)) (2.3.2)
+Requirement already satisfied: passlib==1.7.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 47)) (1.7.4)
+Requirement already satisfied: pika==1.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 48)) (1.3.2)
+Requirement already satisfied: propcache==0.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 49)) (0.3.2)
+Requirement already satisfied: protobuf==6.33.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 50)) (6.33.1)
+Requirement already satisfied: psycopg2-binary==2.9.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 51)) (2.9.10)
+Requirement already satisfied: pyasn1==0.6.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 52)) (0.6.1)
+Requirement already satisfied: pycasbin==2.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 53)) (2.2.0)
+Requirement already satisfied: pycparser==2.22 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 54)) (2.22)
+Requirement already satisfied: pycryptodome==3.23.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 55)) (3.23.0)
+Requirement already satisfied: pydantic==2.11.7 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 56)) (2.11.7)
+Requirement already satisfied: pydantic-settings==2.10.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 57)) (2.10.1)
+Requirement already satisfied: pydantic_core==2.33.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 58)) (2.33.2)
+Requirement already satisfied: pymongo==4.13.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 59)) (4.13.2)
+Requirement already satisfied: PySocks==1.7.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 60)) (1.7.1)
+Requirement already satisfied: python-dateutil==2.9.0.post0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 61)) (2.9.0.post0)
+Requirement already satisfied: python-dotenv==1.1.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 62)) (1.1.1)
+Requirement already satisfied: python-jose==3.5.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 63)) (3.5.0)
+Requirement already satisfied: python-multipart==0.0.20 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 64)) (0.0.20)
+Requirement already satisfied: pytz==2025.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 65)) (2025.2)
+Requirement already satisfied: PyYAML==6.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 66)) (6.0.2)
+Requirement already satisfied: requests==2.32.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 67)) (2.32.5)
+Requirement already satisfied: rsa==4.9.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 68)) (4.9.1)
+Requirement already satisfied: selenium==4.35.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 69)) (4.35.0)
+Requirement already satisfied: simpleeval==1.0.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 70)) (1.0.3)
+Requirement already satisfied: six==1.17.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 71)) (1.17.0)
+Requirement already satisfied: slowapi==0.1.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 72)) (0.1.9)
+Requirement already satisfied: sniffio==1.3.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 73)) (1.3.1)
+Requirement already satisfied: sortedcontainers==2.4.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 74)) (2.4.0)
+Requirement already satisfied: SQLAlchemy==2.0.43 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 75)) (2.0.43)
+Requirement already satisfied: sse-starlette==3.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 76)) (3.0.2)
+Requirement already satisfied: starlette==0.47.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 77)) (0.47.2)
+Requirement already satisfied: trio==0.30.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 78)) (0.30.0)
+Requirement already satisfied: trio-websocket==0.12.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 79)) (0.12.2)
+Requirement already satisfied: typing-inspection==0.4.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 80)) (0.4.1)
+Requirement already satisfied: typing_extensions==4.14.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 81)) (4.14.1)
+Requirement already satisfied: tzdata==2025.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 82)) (2025.2)
+Requirement already satisfied: urllib3==2.5.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 83)) (2.5.0)
+Requirement already satisfied: uvicorn==0.35.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 84)) (0.35.0)
+Requirement already satisfied: watchfiles==1.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 85)) (1.1.0)
+Requirement already satisfied: websocket-client==1.8.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 86)) (1.8.0)
+Requirement already satisfied: websockets==15.0.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 87)) (15.0.1)
+Requirement already satisfied: wrapt==1.17.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 88)) (1.17.2)
+Requirement already satisfied: wsproto==1.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 89)) (1.2.0)
+Requirement already satisfied: xlsxwriter==3.2.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 90)) (3.2.9)
+Requirement already satisfied: yarl==1.20.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 91)) (1.20.1)
+[backend-cmp-admin] Starting uvicorn on port 9900
+INFO:     Will watch for changes in these directories: ['/home/sahaj/sahaj-os/services/backend-cmp-admin']
+INFO:     Uvicorn running on http://0.0.0.0:9900 (Press CTRL+C to quit)
+INFO:     Started reloader process [2067021] using WatchFiles
+INFO:     Started server process [2067033]
+INFO:     Waiting for application startup.
+2025-11-28 10:47:03,242 - INFO - backend-cmp-admin - Logging initialized
+2025-11-28 10:47:03,242 - INFO - backend-cmp-admin - Application startup initiated.
+2025-11-28 10:47:03,242 - INFO - backend-cmp-admin - Connecting to MongoDB...
+2025-11-28 10:47:03,256 - INFO - backend-cmp-admin - MongoDB connection established and verified.
+2025-11-28 10:47:03,378 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/sahaj/sahaj-os/services/backend-cmp-admin/.venv/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-11-28 10:47:03,767 - INFO - backend-cmp-admin - Seeding default RBAC policies...
+2025-11-28 10:47:03,777 - INFO - backend-cmp-admin - PostgreSQL tables created successfully!
+2025-11-28 10:47:03,783 - INFO - backend-cmp-admin - Keys added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:47:03,812 - INFO - backend-cmp-admin - Departments checked/added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:47:03,849 - INFO - backend-cmp-admin - Roles checked/added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:47:03,850 - CRITICAL - backend-cmp-admin - Initial Admin Created. Email: shiekh111aq@gmail.com, Password: Iskimaaki12$kichut
+2025-11-28 10:47:03,960 - INFO - HTTP Request: PUT http://127.0.0.1:15672/api/vhosts/sahaj_dev "HTTP/1.1 201 Created"
+2025-11-28 10:47:03,960 - INFO - backend-cmp-admin - VHost 'sahaj_dev' created successfully.
+2025-11-28 10:47:03,961 - INFO - backend-cmp-admin - Initializing RabbitMQ pool with 5 connections...
+2025-11-28 10:47:03,984 - INFO - backend-cmp-admin - RabbitMQ pool initialized successfully!
+2025-11-28 10:47:04,020 - INFO - HTTP Request: PUT http://127.0.0.1:15672/api/permissions/sahaj_dev/mqtt_2sw67azl "HTTP/1.1 204 No Content"
+2025-11-28 10:47:04,020 - INFO - backend-cmp-admin - Permissions set for user 'mqtt_2sw67azl' on vhost 'sahaj_dev'.
+2025-11-28 10:47:04,021 - INFO - backend-cmp-admin - Declaring exchanges...
+2025-11-28 10:47:04,074 - INFO - backend-cmp-admin - All 10 exchanges declared.
+2025-11-28 10:47:04,074 - INFO - backend-cmp-admin - Declaring specific queues and bindings...
+2025-11-28 10:47:04,114 - INFO - backend-cmp-admin - Webhook queues and bindings declared.
+2025-11-28 10:47:04,147 - INFO - backend-cmp-admin - Consent event queues and bindings declared.
+2025-11-28 10:47:04,167 - INFO - backend-cmp-admin - Consent expiry queues and bindings declared.
+2025-11-28 10:47:04,196 - INFO - backend-cmp-admin - Data expiry queues and bindings declared.
+2025-11-28 10:47:04,230 - INFO - backend-cmp-admin - Consent processing queues and bindings declared.
+2025-11-28 10:47:04,266 - INFO - backend-cmp-admin - Declared 10 generic queues.
+2025-11-28 10:47:04,267 - INFO - backend-cmp-admin - Application startup complete.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-11-28 10:58:20,142 - INFO - backend-cmp-admin - Application shutdown initiated.
+2025-11-28 10:58:20,143 - INFO - backend-cmp-admin - MongoDB connection closed.
+2025-11-28 10:58:20,143 - INFO - backend-cmp-admin - Closing all connections in the pool...
+2025-11-28 10:58:20,146 - INFO - backend-cmp-admin - RabbitMQ connections closed!
+2025-11-28 10:58:20,146 - INFO - backend-cmp-admin - Application shutdown complete.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2067033]
+INFO:     Stopping reloader process [2067021]
+==== Starting backend-cmp-admin - Fri Nov 28 10:58:52 UTC 2025 ====
+Requirement already satisfied: pip in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (25.3)
+Requirement already satisfied: aio-pika==9.5.7 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 1)) (9.5.7)
+Requirement already satisfied: aiormq==6.9.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 2)) (6.9.0)
+Requirement already satisfied: alembic==1.16.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 3)) (1.16.4)
+Requirement already satisfied: annotated-types==0.7.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 4)) (0.7.0)
+Requirement already satisfied: anyio==4.9.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 5)) (4.9.0)
+Requirement already satisfied: argon2-cffi==25.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 6)) (25.1.0)
+Requirement already satisfied: argon2-cffi-bindings==25.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 7)) (25.1.0)
+Requirement already satisfied: asyncpg==0.30.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 8)) (0.30.0)
+Requirement already satisfied: attrs==25.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 9)) (25.3.0)
+Requirement already satisfied: bcrypt==4.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 10)) (4.3.0)
+Requirement already satisfied: casbin==1.43.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 11)) (1.43.0)
+Requirement already satisfied: casbin_pymongo_adapter==1.6.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 12)) (1.6.0)
+Requirement already satisfied: certifi==2025.8.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 13)) (2025.8.3)
+Requirement already satisfied: cffi==1.17.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 14)) (1.17.1)
+Requirement already satisfied: charset-normalizer==3.4.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 15)) (3.4.3)
+Requirement already satisfied: click==8.2.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 16)) (8.2.1)
+Requirement already satisfied: colorama==0.4.6 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 17)) (0.4.6)
+Requirement already satisfied: cryptography==45.0.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 18)) (45.0.5)
+Requirement already satisfied: Deprecated==1.2.18 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 19)) (1.2.18)
+Requirement already satisfied: dnspython==2.7.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 20)) (2.7.0)
+Requirement already satisfied: ecdsa==0.19.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 21)) (0.19.1)
+Requirement already satisfied: email_validator==2.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 22)) (2.2.0)
+Requirement already satisfied: et_xmlfile==2.0.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 23)) (2.0.0)
+Requirement already satisfied: Events==0.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 24)) (0.5)
+Requirement already satisfied: fastapi==0.116.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 25)) (0.116.1)
+Requirement already satisfied: greenlet==3.2.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 26)) (3.2.4)
+Requirement already satisfied: grpcio==1.76.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 27)) (1.76.0)
+Requirement already satisfied: h11==0.16.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 28)) (0.16.0)
+Requirement already satisfied: httpcore==1.0.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 29)) (1.0.9)
+Requirement already satisfied: httptools==0.6.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 30)) (0.6.4)
+Requirement already satisfied: httpx==0.28.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 31)) (0.28.1)
+Requirement already satisfied: idna==3.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 32)) (3.10)
+Requirement already satisfied: limits==5.4.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 33)) (5.4.0)
+Requirement already satisfied: Mako==1.3.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 34)) (1.3.10)
+Requirement already satisfied: MarkupSafe==3.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 35)) (3.0.2)
+Requirement already satisfied: minio==7.2.16 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 36)) (7.2.16)
+Requirement already satisfied: motor==3.7.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 37)) (3.7.1)
+Requirement already satisfied: multidict==6.6.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 38)) (6.6.4)
+Requirement already satisfied: numpy==2.3.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 39)) (2.3.3)
+Requirement already satisfied: openpyxl==3.1.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 40)) (3.1.5)
+Requirement already satisfied: opensearch-protobufs==0.19.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 41)) (0.19.0)
+Requirement already satisfied: opensearch-py==3.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 42)) (3.1.0)
+Requirement already satisfied: outcome==1.3.0.post0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 43)) (1.3.0.post0)
+Requirement already satisfied: packaging==25.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 44)) (25.0)
+Requirement already satisfied: pamqp==3.3.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 45)) (3.3.0)
+Requirement already satisfied: pandas==2.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 46)) (2.3.2)
+Requirement already satisfied: passlib==1.7.4 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 47)) (1.7.4)
+Requirement already satisfied: pika==1.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 48)) (1.3.2)
+Requirement already satisfied: propcache==0.3.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 49)) (0.3.2)
+Requirement already satisfied: protobuf==6.33.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 50)) (6.33.1)
+Requirement already satisfied: psycopg2-binary==2.9.10 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 51)) (2.9.10)
+Requirement already satisfied: pyasn1==0.6.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 52)) (0.6.1)
+Requirement already satisfied: pycasbin==2.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 53)) (2.2.0)
+Requirement already satisfied: pycparser==2.22 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 54)) (2.22)
+Requirement already satisfied: pycryptodome==3.23.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 55)) (3.23.0)
+Requirement already satisfied: pydantic==2.11.7 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 56)) (2.11.7)
+Requirement already satisfied: pydantic-settings==2.10.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 57)) (2.10.1)
+Requirement already satisfied: pydantic_core==2.33.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 58)) (2.33.2)
+Requirement already satisfied: pymongo==4.13.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 59)) (4.13.2)
+Requirement already satisfied: PySocks==1.7.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 60)) (1.7.1)
+Requirement already satisfied: python-dateutil==2.9.0.post0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 61)) (2.9.0.post0)
+Requirement already satisfied: python-dotenv==1.1.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 62)) (1.1.1)
+Requirement already satisfied: python-jose==3.5.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 63)) (3.5.0)
+Requirement already satisfied: python-multipart==0.0.20 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 64)) (0.0.20)
+Requirement already satisfied: pytz==2025.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 65)) (2025.2)
+Requirement already satisfied: PyYAML==6.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 66)) (6.0.2)
+Requirement already satisfied: requests==2.32.5 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 67)) (2.32.5)
+Requirement already satisfied: rsa==4.9.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 68)) (4.9.1)
+Requirement already satisfied: selenium==4.35.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 69)) (4.35.0)
+Requirement already satisfied: simpleeval==1.0.3 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 70)) (1.0.3)
+Requirement already satisfied: six==1.17.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 71)) (1.17.0)
+Requirement already satisfied: slowapi==0.1.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 72)) (0.1.9)
+Requirement already satisfied: sniffio==1.3.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 73)) (1.3.1)
+Requirement already satisfied: sortedcontainers==2.4.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 74)) (2.4.0)
+Requirement already satisfied: SQLAlchemy==2.0.43 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 75)) (2.0.43)
+Requirement already satisfied: sse-starlette==3.0.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 76)) (3.0.2)
+Requirement already satisfied: starlette==0.47.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 77)) (0.47.2)
+Requirement already satisfied: trio==0.30.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 78)) (0.30.0)
+Requirement already satisfied: trio-websocket==0.12.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 79)) (0.12.2)
+Requirement already satisfied: typing-inspection==0.4.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 80)) (0.4.1)
+Requirement already satisfied: typing_extensions==4.14.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 81)) (4.14.1)
+Requirement already satisfied: tzdata==2025.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 82)) (2025.2)
+Requirement already satisfied: urllib3==2.5.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 83)) (2.5.0)
+Requirement already satisfied: uvicorn==0.35.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 84)) (0.35.0)
+Requirement already satisfied: watchfiles==1.1.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 85)) (1.1.0)
+Requirement already satisfied: websocket-client==1.8.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 86)) (1.8.0)
+Requirement already satisfied: websockets==15.0.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 87)) (15.0.1)
+Requirement already satisfied: wrapt==1.17.2 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 88)) (1.17.2)
+Requirement already satisfied: wsproto==1.2.0 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 89)) (1.2.0)
+Requirement already satisfied: xlsxwriter==3.2.9 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 90)) (3.2.9)
+Requirement already satisfied: yarl==1.20.1 in ./backend-cmp-admin/.venv/lib/python3.12/site-packages (from -r /home/sahaj/sahaj-os/services/backend-cmp-admin/requirements.txt (line 91)) (1.20.1)
+[backend-cmp-admin] Starting uvicorn on port 9900
+INFO:     Will watch for changes in these directories: ['/home/sahaj/sahaj-os/services/backend-cmp-admin']
+INFO:     Uvicorn running on http://0.0.0.0:9900 (Press CTRL+C to quit)
+INFO:     Started reloader process [2091086] using WatchFiles
+INFO:     Started server process [2091097]
+INFO:     Waiting for application startup.
+2025-11-28 10:58:56,131 - INFO - backend-cmp-admin - Logging initialized
+2025-11-28 10:58:56,132 - INFO - backend-cmp-admin - Application startup initiated.
+2025-11-28 10:58:56,132 - INFO - backend-cmp-admin - Connecting to MongoDB...
+2025-11-28 10:58:56,144 - INFO - backend-cmp-admin - MongoDB connection established and verified.
+2025-11-28 10:58:56,261 - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/home/sahaj/sahaj-os/services/backend-cmp-admin/.venv/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2025-11-28 10:58:56,681 - INFO - backend-cmp-admin - Seeding default RBAC policies...
+2025-11-28 10:58:56,692 - INFO - backend-cmp-admin - PostgreSQL tables created successfully!
+2025-11-28 10:58:56,699 - INFO - backend-cmp-admin - Keys added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:58:56,731 - INFO - backend-cmp-admin - Departments checked/added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:58:56,776 - INFO - backend-cmp-admin - Roles checked/added for 01f8a970-5bba-47e7-986e-ba1691486b31
+2025-11-28 10:58:56,776 - CRITICAL - backend-cmp-admin - Initial Admin Created. Email: shiekh111aq@gmail.com, Password: Iskimaaki12$kichut
+2025-11-28 10:58:56,934 - INFO - HTTP Request: PUT http://127.0.0.1:15672/api/vhosts/sahaj_dev "HTTP/1.1 201 Created"
+2025-11-28 10:58:56,936 - INFO - backend-cmp-admin - VHost 'sahaj_dev' created successfully.
+2025-11-28 10:58:56,937 - INFO - backend-cmp-admin - Initializing RabbitMQ pool with 5 connections...
+2025-11-28 10:58:56,971 - INFO - backend-cmp-admin - RabbitMQ pool initialized successfully!
+2025-11-28 10:58:56,993 - INFO - HTTP Request: PUT http://127.0.0.1:15672/api/permissions/sahaj_dev/mqtt_urgrk2dx "HTTP/1.1 204 No Content"
+2025-11-28 10:58:56,993 - INFO - backend-cmp-admin - Permissions set for user 'mqtt_urgrk2dx' on vhost 'sahaj_dev'.
+2025-11-28 10:58:56,993 - INFO - backend-cmp-admin - Declaring exchanges...
+2025-11-28 10:58:56,999 - INFO - backend-cmp-admin - All 10 exchanges declared.
+2025-11-28 10:58:56,999 - INFO - backend-cmp-admin - Declaring specific queues and bindings...
+2025-11-28 10:58:57,019 - INFO - backend-cmp-admin - Webhook queues and bindings declared.
+2025-11-28 10:58:57,038 - INFO - backend-cmp-admin - Consent event queues and bindings declared.
+2025-11-28 10:58:57,050 - INFO - backend-cmp-admin - Consent expiry queues and bindings declared.
+2025-11-28 10:58:57,064 - INFO - backend-cmp-admin - Data expiry queues and bindings declared.
+2025-11-28 10:58:57,095 - INFO - backend-cmp-admin - Consent processing queues and bindings declared.
+2025-11-28 10:58:57,132 - INFO - backend-cmp-admin - Declared 10 generic queues.
+2025-11-28 10:58:57,132 - INFO - backend-cmp-admin - Application startup complete.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-11-28 11:00:33,189 - INFO - backend-cmp-admin - Application shutdown initiated.
+2025-11-28 11:00:33,190 - INFO - backend-cmp-admin - MongoDB connection closed.
+2025-11-28 11:00:33,190 - INFO - backend-cmp-admin - Closing all connections in the pool...
+2025-11-28 11:00:33,193 - INFO - backend-cmp-admin - RabbitMQ connections closed!
+2025-11-28 11:00:33,196 - INFO - backend-cmp-admin - Application shutdown complete.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2091097]
+INFO:     Stopping reloader process [2091086]

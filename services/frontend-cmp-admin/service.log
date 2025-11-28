@@ -1,0 +1,56 @@
+==== Starting frontend-cmp-admin - Fri Nov 28 10:47:04 UTC 2025 ====
+[frontend-cmp-admin] frontend: npm install + npm run dev
+
+up to date, audited 446 packages in 1s
+
+163 packages are looking for funding
+  run `npm fund` for details
+
+5 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> frontend-cmp-admin@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.4.5
+   - Local:        http://localhost:3000
+   - Network:      http://216.48.183.9:3000
+
+ ✓ Starting...
+ ✓ Ready in 1261ms
+[?25h
+==== Starting frontend-cmp-admin - Fri Nov 28 10:58:57 UTC 2025 ====
+[frontend-cmp-admin] frontend: npm install + npm run dev
+
+up to date, audited 446 packages in 1s
+
+163 packages are looking for funding
+  run `npm fund` for details
+
+5 moderate severity vulnerabilities
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> frontend-cmp-admin@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.4.5
+   - Local:        http://localhost:3000
+   - Network:      http://216.48.183.9:3000
+
+ ✓ Starting...
+ ✓ Ready in 1355ms
+[?25h

@@ -14,15 +14,10 @@ mongo_counter_client: AsyncIOMotorClient = None
 s3_client: Minio = None
 
 
-NODES = [
-    {"host": "164.52.205.97", "port": 6379},
-    {"host": "164.52.205.97", "port": 6380},
-    {"host": "164.52.205.97", "port": 6381},
-]
-
-REDIS_PASSWORD = None
-REDIS_USERNAME = None
-REDIS_MAX_CONNECTIONS = 200
+NODES = [{"host": settings.REDIS_HOST, "port": settings.REDIS_PORT}]
+REDIS_PASSWORD = settings.REDIS_PASSWORD
+REDIS_USERNAME = settings.REDIS_USERNAME
+REDIS_MAX_CONNECTIONS = settings.REDIS_MAX_CONNECTIONS
 
 
 pg_pool: Optional[asyncpg.Pool] = None
@@ -77,7 +72,7 @@ def get_redis() -> Optional[redis.Redis]:
 
 
 async def connect_to_mongo(app: FastAPI):
-    app.state.motor_client = AsyncIOMotorClient(settings.MONGO_MASTER_URI, tz_aware=True)
+    app.state.motor_client = AsyncIOMotorClient(settings.MONGO_URI, tz_aware=True)
     await app.state.motor_client.admin.command("ping")
 
 
@@ -107,9 +102,9 @@ def connect_to_s3():
     global s3_client
     app_logger.info("Connecting to MinIO S3...")
     s3_client = Minio(
-        settings.S3_ENDPOINT,
-        access_key=settings.S3_ACCESS_KEY,
-        secret_key=settings.S3_SECRET_KEY,
+        settings.S3_URL,
+        access_key=settings.MINIO_ROOT_USER,
+        secret_key=settings.MINIO_ROOT_PASSWORD,
         secure=settings.S3_SECURE,
     )
     app_logger.info("Connected to MinIO S3.")

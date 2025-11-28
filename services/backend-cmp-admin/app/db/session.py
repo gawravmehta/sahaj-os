@@ -45,9 +45,9 @@ async def close_postgres_pool():
 def get_s3_client() -> Minio:
     return Minio(
         settings.S3_URL,
-        access_key=settings.S3_ACCESS_KEY,
-        secret_key=settings.S3_SECRET_KEY,
-        secure=True,
+        access_key=settings.MINIO_ROOT_USER,
+        secret_key=settings.MINIO_ROOT_PASSWORD,
+        secure=settings.S3_SECURE,
     )
 
 

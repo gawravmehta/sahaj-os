@@ -16,7 +16,7 @@ async def fetch_consent_time(current_user: dict = Depends(get_current_user)):
     dp_id = current_user["dp_id"]
     df_id = current_user["df_id"]
 
-    audit_url = f"{settings.BACKEND_CMP_ADMIN_URL}/api/v1/consent_audit/consent-timeline/{dp_id}/audit"
+    audit_url = f"{settings.CMP_ADMIN_BACKEND_URL}/api/v1/consent_audit/consent-timeline/{dp_id}/audit"
 
     headers = {"accept": "application/json"}
     params = {"df_id": df_id}

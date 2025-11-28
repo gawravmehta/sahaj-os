@@ -1,0 +1,71 @@
+# Falco and Falco Sidekick services
+
+services:
+  # Falco Stack
+  falco:
+    image: falcosecurity/falco:latest
+    privileged: true
+    pid: host
+    networks:
+      - concur-cfc-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev:/host/dev
+      - /proc:/host/proc:ro
+      - /boot:/host/boot:ro
+      - /lib/modules:/host/lib/modules:ro
+      - /usr:/host/usr:ro
+      - ./infrastructure/deployment-configs/falco/falco-socket:/run/falco
+      - ./infrastructure/deployment-configs/falco/falco-config/falco_rules.local.yaml:/etc/falco/falco_rules.local.yaml:ro
+    command: >
+      falco
+      -o json_output=true
+      -o stdout_output.enabled=true
+      -o grpc.enabled=true
+      -o grpc.bind_address=unix:///run/falco/falco.sock
+      -o grpc.threadiness=4
+      -o grpc_output.enabled=true
+      -o http_output.enabled=true
+      -o http_output.url=http://falcosidekick:2801
+    healthcheck:
+      test: ["CMD-SHELL", "test -S /run/falco/falco.sock"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+    restart: unless-stopped
+
+  falco-exporter:
+    image: falcosecurity/falco-exporter:latest
+    networks:
+      - concur-cfc-network
+    ports:
+      - "9376:9376"
+    volumes:
+      - ./infrastructure/deployment-configs/falco/falco-socket:/run/falco
+    environment:
+      - FALCO_GRPC_UNIX_SOCKET=/run/falco/falco.sock
+    depends_on:
+      falco:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Falco Sidekick
+  falcosidekick:
+    image: falcosecurity/falcosidekick:latest
+    container_name: falcosidekick
+    networks:
+      - concur-cfc-network
+    ports:
+      - "2801:2801"
+    environment:
+      - DEBUG=true
+      - OPENSEARCH_HOSTPORT=http://opensearch-node:9200
+      - OPENSEARCH_INDEX=epbf-monitoring-events
+      - OPENSEARCH_USERNAME=${OPENSEARCH_USERNAME}
+      - OPENSEARCH_PASSWORD=${TEMPORARY_PASSWORD}
+      - ALERTMANAGER_HOSTPORT=http://alertmanager:9093
+      - ALERTMANAGER_ENDPOINT=/api/v2/alerts
+    depends_on:
+      - falco
+      - opensearch-node
+    restart: unless-stopped

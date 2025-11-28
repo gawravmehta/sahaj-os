@@ -223,7 +223,7 @@ class AuthenticationService:
         )
 
         issued_at = datetime.now()
-        expiry_time = issued_at + timedelta(hours=settings.ACCESS_TOKEN_EXPIRE_HOURS)
+        expiry_time = issued_at + timedelta(hours=settings.NOTICE_ACCESS_TOKEN_EXPIRE_HOURS)
         request_id = str(uuid.uuid4())
 
         payload = {
@@ -241,7 +241,7 @@ class AuthenticationService:
         redis_session_key = f"session:{df_id}:{dp_id}:{request_id}"
         await self.redis.setex(
             redis_session_key,
-            int(timedelta(hours=settings.ACCESS_TOKEN_EXPIRE_HOURS).total_seconds()),
+            int(timedelta(hours=settings.NOTICE_ACCESS_TOKEN_EXPIRE_HOURS).total_seconds()),
             token,
         )
 

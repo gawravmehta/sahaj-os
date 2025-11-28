@@ -1,0 +1,68 @@
+x-notice-env: &notice-environment
+  ENVIRONMENT: ${ENVIRONMENT}
+  SERVICE_NAME: ${SERVICE_NAME}
+  SECRET_KEY: ${SECRET_KEY}
+  NOTICE_ACCESS_TOKEN_EXPIRE_HOURS: ${NOTICE_ACCESS_TOKEN_EXPIRE_HOURS}
+  REDIS_HOST: ${REDIS_HOST}
+  REDIS_PORT: ${REDIS_PORT}
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_USERNAME: ${REDIS_USERNAME}
+  REDIS_MAX_CONNECTIONS: ${REDIS_MAX_CONNECTIONS}
+  REDIS_MAX_CONNECTIONS_PER_NODE: ${REDIS_MAX_CONNECTIONS_PER_NODE}
+  MONGO_URI: ${MONGO_URI}
+  DB_NAME_CONCUR_MASTER: ${DB_NAME_CONCUR_MASTER}
+  POSTGRES_DATABASE_URL: ${POSTGRES_DATABASE_URL}
+  S3_URL: ${S3_URL}
+  MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+  MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  NOTICE_WORKER_BUCKET: ${NOTICE_WORKER_BUCKET}
+  S3_SECURE: ${S3_SECURE}
+  SMS_SENDER_ID: ${SMS_SENDER_ID}
+  RABBITMQ_HOST: ${RABBITMQ_HOST}
+  RABBITMQ_PORT: ${RABBITMQ_PORT}
+  RABBITMQ_MANAGEMENT_PORT: ${RABBITMQ_MANAGEMENT_PORT}
+  RABBITMQ_USER: ${RABBITMQ_USER}
+  RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  RABBITMQ_VHOST_NAME: ${RABBITMQ_VHOST_NAME}
+  RABBITMQ_POOL_SIZE: ${RABBITMQ_POOL_SIZE}
+  PUBLIC_KEY_PEM: ${PUBLIC_KEY_PEM}
+  PRIVATE_KEY_PEM: ${PRIVATE_KEY_PEM}
+  SIGNING_KEY_ID: ${SIGNING_KEY_ID}
+
+x-notice-depends: &notice-dependencies
+  rabbitmq:
+    condition: service_healthy
+  ferretdb:
+    condition: service_healthy
+  keydb:
+    condition: service_started
+
+x-notice-base-service: &notice-service-template
+  image: backend-notice-base:latest
+  environment: *notice-environment
+  networks:
+  - concur-cfc-network
+  depends_on: *notice-dependencies
+
+x-notice-consumer-service: &notice-consumer-template
+  <<: *notice-service-template
+  depends_on:
+    backend-notice:
+      condition: service_started
+    <<: *notice-dependencies
+
+services:
+  notice-base:
+    build:
+      context: ./services/backend-notice
+    image: backend-notice-base:latest
+
+  backend-notice:
+    <<: *notice-service-template
+    command: uvicorn app.main:app --host 0.0.0.0 --port 3332 --reload --timeout-keep-alive 300
+    ports:
+    - "3332:3332"
+
+  consent-processing-consumer:
+    <<: *notice-consumer-template
+    command: python -m app.worker.consent_processing_consumer

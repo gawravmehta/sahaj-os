@@ -1,0 +1,7 @@
+{
+    "main_domain": "",  // only domain with a single period e.g., example.com ; no www. or subdomains ; no https:// or http://
+    "superadmin_email": "", // e.g., admin@example.com
+    "temporary_password": "", // this will change when you log-in, It will also be used for external Services UI (e.g., OpenSearch Dashboards)
+    // 
+    "df_id": "" // a random unique identifier for you, preferably a UUID (e.g., 123e4567-e89b-12d3-a456-426614174000)
+}

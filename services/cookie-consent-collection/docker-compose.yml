@@ -1,0 +1,14 @@
+version: "3"
+services:
+  cookie-consent-collection:
+    build: 
+      context: ./services/cookie-consent-collection
+    image: cookie-consent-collection:latest
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT}
+      - SERVICE_NAME=${SERVICE_NAME}
+      - MONGO_URI=${MONGO_URI}
+      - DB_NAME_COOKIE_MANAGEMENT=${DB_NAME_COOKIE_MANAGEMENT}
+      - RATE_LIMIT_DEFAULT=${RATE_LIMIT_DEFAULT}
+    networks:
+      - concur-cfc-network

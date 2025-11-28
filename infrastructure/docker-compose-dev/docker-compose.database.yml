@@ -1,0 +1,110 @@
+# Postgres, KeyDB, RabbitMQ, and FerretDB services
+
+services:
+  # PostgreSQL with FerretDB
+  postgres16:
+    image: ghcr.io/ferretdb/postgres-documentdb:17-0.105.0-ferretdb-2.4.0
+    container_name: postgres16
+    hostname: postgres16
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      concur-cfc-network:
+        aliases:
+          - postgres16
+          - postgres
+    command: >
+      postgres
+      -c log_min_messages=warning
+      -c log_min_error_statement=error
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ferretdb -d postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+  # FerretDB
+  ferretdb:
+    image: ghcr.io/ferretdb/ferretdb:2.4.0
+    container_name: ferretdb
+    hostname: ferretdb
+    ports:
+      - 27017:27017
+    depends_on:
+      postgres16:
+        condition: service_healthy
+    environment:
+      - FERRETDB_POSTGRESQL_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres16:5432/postgres?sslmode=disable
+      - FERRETDB_AUTH=true
+      - FERRETDB_USER=${POSTGRES_USER}
+      - FERRETDB_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      concur-cfc-network:
+    healthcheck:
+      test: ["CMD", "/ferretdb", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # KeyDB
+  keydb:
+    image: eqalpha/keydb
+    container_name: keydb
+    ports:
+      - "6333:6333"
+      - "16333:16333"
+    volumes:
+      - ./infrastructure/deployment-configs/keydb/keydb.conf:/etc/keydb/keydb.conf
+      - ./infrastructure/deployment-configs/keydb/data:/var/lib/keydb
+    environment:
+      - REDIS_MASTER_PASSWORD=${REDIS_MASTER_PASSWORD}
+      - REDIS_USERNAME=${REDIS_USERNAME}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: >
+      sh -c "
+        echo 'requirepass ${REDIS_MASTER_PASSWORD}' > /etc/keydb/keydb-dynamic.conf &&
+        echo 'masterauth ${REDIS_MASTER_PASSWORD}' >> /etc/keydb/keydb-dynamic.conf &&
+        echo 'user default on >${REDIS_MASTER_PASSWORD} ~* +@all' >> /etc/keydb/keydb-dynamic.conf &&
+        echo 'user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* +@all' >> /etc/keydb/keydb-dynamic.conf &&
+        keydb-server /etc/keydb/keydb.conf
+      "
+    restart: unless-stopped
+    networks:
+      - concur-cfc-network
+
+  rabbitmq:
+    build: ./infrastructure/deployment-configs/rabbitmq/
+    image: rabbitmq-custom-plugin:latest
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "5671:5671"
+      - "4369:4369"
+      - "25672:25672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - RABBITMQ_DEFAULT_VHOST=production
+      - RABBITMQ_ERLANG_COOKIE=${ERLANG_COOKIE}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+      - ./infrastructure/deployment-configs/rabbitmq/ssl:/etc/rabbitmq/ssl
+      - ./infrastructure/deployment-configs/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    networks:
+      - concur-cfc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
