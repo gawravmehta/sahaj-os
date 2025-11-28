@@ -28,7 +28,7 @@ export default function CookieIframePreview({ scriptUrl }) {
       try {
         Object.defineProperty(document, 'cookie', {
           get() { return ''; },
-          set()
+          set() {},
           configurable: true
         });
         
@@ -45,7 +45,7 @@ export default function CookieIframePreview({ scriptUrl }) {
 
   return (
     <iframe
-      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
+      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin"
       referrerPolicy="no-referrer"
       srcDoc={srcDoc}
       width={"100%"}
