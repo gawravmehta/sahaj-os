@@ -2,6 +2,6 @@
     "main_domain": "",  // only domain with a single period e.g., example.com ; no www. or subdomains ; no https:// or http://
     "superadmin_email": "", // e.g., admin@example.com
     "temporary_password": "", // this will change when you log-in, It will also be used for external Services UI (e.g., OpenSearch Dashboards)
-    // 
+    // a minimum 8 character password and must contain at least one uppercase letter, one lowercase letter, one digit, and one special character that is strong or else OpenSearch will fail. 
     "df_id": "" // a random unique identifier for you, preferably a UUID (e.g., 123e4567-e89b-12d3-a456-426614174000)
 }
