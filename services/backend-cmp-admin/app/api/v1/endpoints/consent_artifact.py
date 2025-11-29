@@ -28,7 +28,7 @@ async def get_all_consent_artifact(
     cp_names_query: Optional[List[str]] = Query(None),
     purposes_query: Optional[List[str]] = Query(None),
     data_elements_query: Optional[List[str]] = Query(None),
-    sort_order: Optional[str] = Query("desc", regex="^(asc|desc)$"),
+    sort_order: Optional[str] = Query("desc", pattern="^(asc|desc)$"),
     start_date: Optional[str] = Query(None),
     end_date: Optional[str] = Query(None),
     current_user: dict = Depends(get_current_user),

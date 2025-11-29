@@ -27,7 +27,7 @@ async def get_all_verification_logs(
     request: Request,
     page: int = 1,
     limit: int = 10,
-    sort_order: Optional[str] = Query("desc", regex="^(asc|desc)$"),
+    sort_order: Optional[str] = Query("desc", pattern="^(asc|desc)$"),
     search: Optional[str] = None,
     internal_external: Optional[str] = None,
     status: Optional[str] = None,
@@ -56,7 +56,7 @@ async def get_all_verification_logs(
 @router.get("/download-verification-logs")
 async def download_verification_logs(
     request: Request,
-    sort_order: Optional[str] = Query("desc", regex="^(asc|desc)$"),
+    sort_order: Optional[str] = Query("desc", pattern="^(asc|desc)$"),
     search: Optional[str] = None,
     internal_external: Optional[str] = None,
     status: Optional[str] = None,
@@ -104,7 +104,7 @@ async def download_verified_file(
     file_name: str,
     request: Request,
     current_user: dict = Depends(get_current_user),
-    download_type: Optional[Literal["csv", "json"]] = Query("csv", regex="^(csv|json)$"),
+    download_type: Optional[Literal["csv", "json"]] = Query("csv", pattern="^(csv|json)$"),
     service: ConsentValidationService = Depends(get_consent_validation_service),
 ):
     return await service.download_verified_file(file_name, current_user, download_type)

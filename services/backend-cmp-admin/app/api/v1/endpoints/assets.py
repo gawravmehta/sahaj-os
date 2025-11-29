@@ -90,7 +90,7 @@ async def create_asset_endpoint(
     """
     try:
         created_asset = await service.create_asset(asset_data.model_dump(), current_user)
-        logger.info(f"Asset '{created_asset.name}' (ID: {created_asset.id}) created by user {current_user.get('email')}.")
+        logger.info(f"Asset '{created_asset.get('asset_name')}' (ID: {created_asset.get('id')}) created by user {current_user.get('email')}.")
         return created_asset
     except HTTPException as e:
         logger.error(f"HTTPException while creating asset for user {current_user.get('email')}: {e.detail}")
@@ -102,7 +102,7 @@ async def create_asset_endpoint(
 
 @router.patch(
     "/update-asset/{asset_id}",
-    response_model=AssetInDB,
+    response_model=AssetResponse,
     summary="Update an existing Asset",
 )
 async def update_asset_endpoint(

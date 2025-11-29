@@ -14,9 +14,11 @@ class AssetCrud:
 
     async def create_asset(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new asset."""
-        result = await self.assets_master_collection.insert_one(data)
-        data["_id"] = str(result.inserted_id)
-        return data
+        # Create a copy of the data to prevent modifying the input dictionary in place during the insert operation.
+        data_to_insert = data.copy()
+        result = await self.assets_master_collection.insert_one(data_to_insert)
+        data_to_insert["_id"] = str(result.inserted_id)
+        return data_to_insert
 
     async def get_asset(self, asset_id: str, df_id: str) -> Optional[Dict[str, Any]]:
         """Fetch a single asset by ID and DF ID in draft or published state."""
@@ -83,19 +85,26 @@ class AssetCrud:
 
         query = {
             "df_id": df_id,
-            "asset_status": {"$in": ["draft", "published"]}
+            "asset_status": {"$in": ["draft", "published"]},
         }
 
         cursor = self.assets_master_collection.find(
             query,
-            {"meta_cookies": 1, "_id": 0}
+            {"meta_cookies": 1, "_id": 0},
         )
 
         total = 0
 
         async for doc in cursor:
             meta = doc.get("meta_cookies")
-            if meta and isinstance(meta, dict):
-                total += meta.get("cookies_count", 0)
+
+            if not isinstance(meta, dict):
+                continue
+
+            count = meta.get("cookies_count")
+
+            # Only sum valid integers
+            if isinstance(count, int):
+                total += count
 
         return total
