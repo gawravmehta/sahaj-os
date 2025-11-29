@@ -182,9 +182,23 @@ def test_get_all_assets_success(mock_service):
     assert res.json()["assets"][0]["asset_id"] == "a1"
 
 
+def test_get_all_asset_http_exception(mock_service):
+    mock_service.get_all_assets.side_effect = HTTPException(status_code=400, detail="bad")
+
+    res = client.get(f"{BASE_URL}/get-all-assets")  # ✔ FIXED
+    assert res.status_code == 400
+
+
 def test_get_all_assets_invalid_query():
     res = client.get(f"{BASE_URL}/get-all-assets?current_page=0")
     assert res.status_code == 422
+
+
+def test_get_all_asset_internal_error(mock_service):
+    mock_service.get_all_assets.side_effect = Exception("boom")
+
+    res = client.get(f"{BASE_URL}/get-all-assets")
+    assert res.status_code == 500
 
 
 # ---------------- TEST GET ASSET ---------------- #
