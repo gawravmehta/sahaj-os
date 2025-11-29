@@ -135,7 +135,7 @@ async def consent_ack(
             logger.warning(f"Missing signature header from DF for DP {payload.dp_id}.")
             raise HTTPException(status_code=401, detail="Missing X-DF-Signature header")
 
-        cmp_webhook_secret_details = await df_keys_collection.find_one({"df_id": payload.df_id})
+        cmp_webhook_secret_details = await df_keys_collection.find_one({})
         CMP_WEBHOOK_SECRET = cmp_webhook_secret_details.get("cmp_webhook_secret")
 
         if not verify_signature(raw_body, x_df_signature, CMP_WEBHOOK_SECRET):
