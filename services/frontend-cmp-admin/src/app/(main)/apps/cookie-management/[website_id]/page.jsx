@@ -1,5 +1,6 @@
 "use client";
 import CookieIframe from "@/components/features/cookieManagement/CookieFrame";
+import CookieIntegration from "@/components/features/cookieManagement/CookieIntegration";
 import DataTable from "@/components/shared/data-table/DataTable";
 import Button from "@/components/ui/Button";
 import Header from "@/components/ui/Header";
@@ -58,8 +59,22 @@ const Page = () => {
     try {
       const response = await apiCall(`/assets/get-asset/${websiteId}`);
       setAssetDetails(response);
+      return response;
     } catch (error) {}
   };
+
+  useEffect(() => {
+    let interval;
+    if (assetDetails?.meta_cookies?.scan_status === "running") {
+      interval = setInterval(async () => {
+        const response = await getOneAsset();
+        if (response?.meta_cookies?.scan_status === "completed") {
+          getCookies();
+        }
+      }, 5000);
+    }
+    return () => clearInterval(interval);
+  }, [assetDetails?.meta_cookies?.scan_status, websiteId]);
 
   const handleScanCookies = async () => {
     try {
@@ -222,6 +237,9 @@ const Page = () => {
               <TabsTrigger value="banner" variant="secondary">
                 Banner
               </TabsTrigger>
+              <TabsTrigger value="integration" variant="secondary">
+                Integration
+              </TabsTrigger>
             </TabsList>
           </div>
         </div>
@@ -322,6 +340,11 @@ const Page = () => {
               </div>
             )}
           </div>
+        </TabsContent>
+        <TabsContent value="integration">
+          <CookieIntegration
+            scriptUrl={assetDetails?.meta_cookies?.script_url}
+          />
         </TabsContent>
       </Tabs>
     </>
