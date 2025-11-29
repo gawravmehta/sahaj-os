@@ -33,8 +33,8 @@ const Page = () => {
     { id: "my_profile", label: "My Profile" },
     { id: "organization", label: "Organization" },
     { id: "smtp", label: "SMTP" },
-    { id: "sms", label: "SMS" },
-    { id: "in_app", label: "In App" },
+    // { id: "sms", label: "SMS" },
+    // { id: "in_app", label: "In App" },
     { id: "ai", label: "AI" },
     { id: "secrets", label: "Secrets" },
   ];
@@ -43,8 +43,8 @@ const Page = () => {
     my_profile: Profile,
     organization: Organization,
     smtp: SmtpForm,
-    sms: SMS,
-    in_app: InApp,
+    // sms: SMS,
+    // in_app: InApp,
     ai: AI,
     secrets: Secrets,
   };
