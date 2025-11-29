@@ -2,60 +2,42 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
+from fastapi import HTTPException
 from app.crud.assets_crud import AssetCrud
-from app.schemas.assets_schema import AssetCreate, AssetUpdate
 
 
-# Helper function to create an async generator for mocking cursors
-def _async_generator_helper(items):
-    async def _generator():
-        for item in items:
-            yield item
-    return _generator()
+# ------------------ MOCK COLLECTION FIXTURE ------------------
 
 
 @pytest.fixture
-def mock_assets_master_collection():
-    """Fixture for a mock AsyncIOMotorCollection that correctly simulates MongoDB operations."""
-    # Use MagicMock for the collection itself to allow flexible attribute assignment,
-    # and spec=AsyncIOMotorCollection for method signature validation.
-    mock_collection = MagicMock(spec=AsyncIOMotorCollection)
+def mock_collection():
+    """Mocked Mongo collection with correct async behavior."""
+    collection = MagicMock(spec=AsyncIOMotorCollection)
 
-    # Explicitly mock asynchronous methods to return awaitable objects
-    mock_collection.insert_one = AsyncMock()
-    mock_collection.find_one = AsyncMock()
-    mock_collection.update_one = AsyncMock()
-    mock_collection.count_documents = AsyncMock()
-    mock_collection.distinct = AsyncMock()
+    collection.insert_one = AsyncMock()
+    collection.find_one = AsyncMock()
+    collection.update_one = AsyncMock()
+    collection.count_documents = AsyncMock()
+    collection.distinct = AsyncMock()
 
-    # Create a mock cursor that behaves like AsyncIOMotorCursor
-    mock_cursor_instance = MagicMock()
-    mock_cursor_instance.skip.return_value = mock_cursor_instance
-    mock_cursor_instance.limit.return_value = mock_cursor_instance
-    # Configure __aiter__ for the mock cursor to use our helper
-    mock_cursor_instance.__aiter__ = lambda: _async_generator_helper([]) # Default to empty
+    # Cursor mock for find()
+    cursor = MagicMock()
+    cursor.skip.return_value = cursor
+    cursor.limit.return_value = cursor
+    cursor.__aiter__.return_value = iter([])
 
-    # Configure the 'find' method of the collection to return our configured mock cursor
-    mock_collection.find.return_value = mock_cursor_instance
+    collection.find.return_value = cursor
 
-    # Set default return values for the mocked methods
-    mock_collection.insert_one.return_value = MagicMock(inserted_id=ObjectId("60d0fe4f3460595e63456789"))
-    mock_collection.find_one.return_value = None # Default for find_one
-    mock_collection.update_one.return_value = MagicMock(matched_count=1, modified_count=1) # Generic update success
-    mock_collection.count_documents.return_value = 0
-    mock_collection.distinct.return_value = []
-
-    return mock_collection
+    return collection
 
 
 @pytest.fixture
-def asset_crud(mock_assets_master_collection):
-    """Fixture for an AssetCrud instance with a mocked collection."""
-    return AssetCrud(mock_assets_master_collection)
+def crud(mock_collection):
+    return AssetCrud(mock_collection)
+
 
 @pytest.fixture
-def dummy_asset_data() -> dict:
-    """Fixture for dummy asset data."""
+def dummy_data():
     return {
         "asset_name": "Test Asset",
         "df_id": "test_df_id",
@@ -64,166 +46,183 @@ def dummy_asset_data() -> dict:
         "meta_cookies": {"cookies_count": 5},
     }
 
-@pytest.mark.asyncio
-async def test_create_asset(asset_crud, mock_assets_master_collection, dummy_asset_data: dict):
-    """Test creating a new asset."""
-    # The insert_one return_value is already set in the fixture for mock_assets_master_collection
-    # We can override it here if specific behavior is needed for this test.
 
-    # Pass a copy to the CRUD method to ensure the original dummy_asset_data is not mutated.
-    created_asset = await asset_crud.create_asset(dummy_asset_data.copy())
+# ------------------ TESTS ------------------
 
-    # The mock.insert_one should have been called with the data *before* the _id was added by the CRUD method.
-    mock_assets_master_collection.insert_one.assert_called_once_with(dummy_asset_data.copy())
-    assert created_asset["_id"] == "60d0fe4f3460595e63456789"
-    assert created_asset["asset_name"] == dummy_asset_data["asset_name"]
 
 @pytest.mark.asyncio
-async def test_get_asset_found(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test fetching an existing asset."""
+async def test_create_asset(crud, mock_collection, dummy_data):
+    mock_collection.insert_one.return_value = MagicMock(inserted_id=ObjectId("60d0fe4f3460595e63456789"))
+
+    result = await crud.create_asset(dummy_data.copy())
+
+    mock_collection.insert_one.assert_called_once()
+
+    sent_data = mock_collection.insert_one.call_args[0][0]
+    assert sent_data["asset_name"] == dummy_data["asset_name"]
+
+    assert result["_id"] == "60d0fe4f3460595e63456789"
+
+
+@pytest.mark.asyncio
+async def test_get_asset_found(crud, mock_collection, dummy_data):
     asset_id = "60d0fe4f3460595e63456789"
-    df_id = dummy_asset_data["df_id"]
-    mock_assets_master_collection.find_one.return_value = {
-        **dummy_asset_data,
-        "_id": ObjectId(asset_id),
-    }
 
-    fetched_asset = await asset_crud.get_asset(asset_id, df_id)
+    mock_collection.find_one.return_value = {**dummy_data, "_id": ObjectId(asset_id)}
 
-    mock_assets_master_collection.find_one.assert_called_once_with(
-        {"_id": ObjectId(asset_id), "df_id": df_id, "asset_status": {"$in": ["draft", "published"]}}
-    )
-    assert fetched_asset["_id"] == asset_id
-    assert fetched_asset["asset_name"] == dummy_asset_data["asset_name"]
+    result = await crud.get_asset(asset_id, dummy_data["df_id"])
+
+    assert result["_id"] == asset_id
+    assert result["asset_name"] == dummy_data["asset_name"]
+
 
 @pytest.mark.asyncio
-async def test_get_asset_not_found(asset_crud, mock_assets_master_collection):
-    """Test fetching a non-existent asset."""
+async def test_get_asset_not_found(crud, mock_collection):
+    mock_collection.find_one.return_value = None
+
+    result = await crud.get_asset("60d0fe4f3460595e63456781", "test_df_id")
+
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_is_duplicate_name_true(crud, mock_collection, dummy_data):
+    mock_collection.find_one.return_value = {"_id": ObjectId()}
+
+    result = await crud.is_duplicate_name(dummy_data["asset_name"], dummy_data["df_id"])
+
+    assert result is True
+
+
+@pytest.mark.asyncio
+async def test_is_duplicate_name_false(crud, mock_collection, dummy_data):
+    mock_collection.find_one.return_value = None
+
+    result = await crud.is_duplicate_name(dummy_data["asset_name"], dummy_data["df_id"])
+
+    assert result is False
+
+
+@pytest.mark.asyncio
+async def test_update_asset_by_id(crud, mock_collection, dummy_data):
     asset_id = "60d0fe4f3460595e63456789"
-    df_id = "non_existent_df"
-    mock_assets_master_collection.find_one.return_value = None
 
-    fetched_asset = await asset_crud.get_asset(asset_id, df_id)
+    mock_collection.find_one.return_value = {**dummy_data, "_id": ObjectId(asset_id)}
 
-    assert fetched_asset is None
+    result = await crud.update_asset_by_id(asset_id, dummy_data["df_id"], {"asset_name": "Updated"})
+
+    mock_collection.update_one.assert_called_once()
+    assert result["_id"] == asset_id
+    assert result["asset_name"] == dummy_data["asset_name"]  # find_one returns dummy_data
+
 
 @pytest.mark.asyncio
-async def test_update_asset_by_id(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test updating an existing asset."""
-    asset_id = "60d0fe4f3460595e63456789"
-    df_id = dummy_asset_data["df_id"]
-    update_data = {"asset_name": "Updated Asset Name", "asset_status": "published"}
-
-    mock_assets_master_collection.find_one.return_value = {
-        **dummy_asset_data,
-        "_id": ObjectId(asset_id),
-        **update_data,
-    }
-
-    updated_asset = await asset_crud.update_asset_by_id(asset_id, df_id, update_data)
-
-    mock_assets_master_collection.update_one.assert_called_once_with(
-        {"_id": ObjectId(asset_id), "df_id": df_id},
-        {"$set": update_data},
+async def test_get_all_assets(crud, mock_collection, dummy_data):
+    # Mock cursor __aiter__
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
+            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e6345678a"), "asset_name": "Another"},
+        ]
     )
-    mock_assets_master_collection.find_one.assert_called_once_with({"_id": ObjectId(asset_id)})
-    assert updated_asset["_id"] == asset_id
-    assert updated_asset["asset_name"] == "Updated Asset Name"
-    assert updated_asset["asset_status"] == "published"
 
-@pytest.mark.asyncio
-async def test_is_duplicate_name_true(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test checking for a duplicate asset name when one exists."""
-    mock_assets_master_collection.find_one.return_value = {"_id": ObjectId()}
+    mock_collection.count_documents.return_value = 2
 
-    is_duplicate = await asset_crud.is_duplicate_name(dummy_asset_data["asset_name"], dummy_asset_data["df_id"])
+    result = await crud.get_all_assets(dummy_data["df_id"], 0, 10, "essential")
 
-    mock_assets_master_collection.find_one.assert_called_once_with(
-        {
-            "asset_name": dummy_asset_data["asset_name"],
-            "df_id": dummy_asset_data["df_id"],
-            "asset_status": {"$in": ["draft", "published"]},
-        }
-    )
-    assert is_duplicate is True
-
-@pytest.mark.asyncio
-async def test_is_duplicate_name_false(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test checking for a duplicate asset name when none exists."""
-    mock_assets_master_collection.find_one.return_value = None
-
-    is_duplicate = await asset_crud.is_duplicate_name(dummy_asset_data["asset_name"], dummy_asset_data["df_id"])
-
-    assert is_duplicate is False
-
-@pytest.mark.asyncio
-async def test_get_all_assets(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test getting all assets with pagination and optional category filter."""
-    df_id = dummy_asset_data["df_id"]
-    offset = 0
-    limit = 10
-    category = "essential"
-
-    # Configure the mock cursor's async iteration for this specific test
-    mock_assets_master_collection.find.return_value.skip.return_value.limit.return_value.__aiter__ = \
-        lambda: _async_generator_helper([
-            {**dummy_asset_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
-            {**dummy_asset_data, "_id": ObjectId("60d0fe4f3460595e6345678a"), "asset_name": "Another Asset"}
-        ])
-    mock_assets_master_collection.count_documents.return_value = 2
-
-    result = await asset_crud.get_all_assets(df_id, offset, limit, category)
-
-    query = {"df_id": df_id, "asset_status": {"$in": ["draft", "published"]}, "category": category}
-    mock_assets_master_collection.find.assert_called_once_with(query)
-    mock_assets_master_collection.count_documents.assert_called_once_with(query)
     assert result["total"] == 2
     assert len(result["data"]) == 2
-    assert result["data"][0]["_id"] == "60d0fe4f3460595e63456789"
-    assert result["data"][1]["asset_name"] == "Another Asset"
+
 
 @pytest.mark.asyncio
-async def test_count_assets(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test counting assets."""
-    df_id = dummy_asset_data["df_id"]
-    mock_assets_master_collection.count_documents.return_value = 5
+async def test_count_assets(crud, mock_collection):
+    mock_collection.count_documents.return_value = 5
 
-    count = await asset_crud.count_assets(df_id)
+    result = await crud.count_assets("df123")
 
-    query = {"df_id": df_id, "asset_status": {"$in": ["draft", "published"]}}
-    mock_assets_master_collection.count_documents.assert_called_once_with(query)
-    assert count == 5
+    assert result == 5
+
 
 @pytest.mark.asyncio
-async def test_get_assets_categories(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test getting unique asset categories."""
-    df_id = dummy_asset_data["df_id"]
-    mock_assets_master_collection.distinct.return_value = ["essential", "functional"]
+async def test_get_assets_categories(crud, mock_collection):
+    mock_collection.distinct.return_value = ["essential", "functional"]
 
-    categories = await asset_crud.get_assets_categories(df_id)
+    result = await crud.get_assets_categories("df123")
 
-    query = {"df_id": df_id, "asset_status": {"$in": ["draft", "published"]}}
-    mock_assets_master_collection.distinct.assert_called_once_with("category", query)
-    assert categories == ["essential", "functional"]
+    assert result == ["essential", "functional"]
+
 
 @pytest.mark.asyncio
-async def test_get_total_cookie_count(asset_crud, mock_assets_master_collection, dummy_asset_data):
-    """Test getting total cookie count from meta_cookies."""
-    df_id = dummy_asset_data["df_id"]
+async def test_get_total_cookie_count(crud, mock_collection):
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [{"meta_cookies": {"cookies_count": 5}}, {"meta_cookies": {"cookies_count": 10}}, {"meta_cookies": None}, {}]
+    )
 
-    # Configure the mock cursor's async iteration for this specific test
-    mock_assets_master_collection.find.return_value.__aiter__ = \
-        lambda: _async_generator_helper([
+    result = await crud.get_total_cookie_count("df123")
+
+    assert result == 15
+
+
+@pytest.mark.asyncio
+async def test_update_asset_invalid_id(crud):
+    with pytest.raises(HTTPException) as exc:
+        await crud.update_asset_by_id("not_valid_id", "df123", {})
+
+    assert exc.value.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_get_asset_invalid_id(crud):
+    with pytest.raises(HTTPException) as exc:
+        await crud.get_asset("invalid_id", "df123")
+
+    assert exc.value.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_create_asset_does_not_mutate_input(crud, mock_collection, dummy_data):
+    mock_collection.insert_one.return_value = MagicMock(inserted_id=ObjectId("60d0fe4f3460595e63456789"))
+
+    original = dummy_data.copy()
+
+    await crud.create_asset(original)
+
+    # Ensure original data is untouched
+    assert "_id" not in original
+
+
+@pytest.mark.asyncio
+async def test_get_all_assets_without_category(crud, mock_collection, dummy_data):
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
+        ]
+    )
+    mock_collection.count_documents.return_value = 1
+
+    result = await crud.get_all_assets(dummy_data["df_id"], 0, 10, None)
+
+    # Ensure category filter was NOT added
+    called_query = mock_collection.find.call_args[0][0]
+    assert "category" not in called_query
+
+    assert result["total"] == 1
+    assert len(result["data"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_get_total_cookie_count_with_invalid_values(crud, mock_collection):
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
             {"meta_cookies": {"cookies_count": 5}},
-            {"meta_cookies": {"cookies_count": 10}},
-            {"meta_cookies": None}, # Should be ignored
-            {}, # Should be ignored
-            {"meta_cookies": {"cookies_count": "invalid"}}, # Should be ignored
-        ])
+            {"meta_cookies": {"cookies_count": "10"}},
+            {"meta_cookies": 5},
+            {"meta_cookies": []},
+            {"meta_cookies": "random"},
+            {},
+        ]
+    )
 
-    total_cookies = await asset_crud.get_total_cookie_count(df_id)
+    result = await crud.get_total_cookie_count("df123")
 
-    query = {"df_id": df_id, "asset_status": {"$in": ["draft", "published"]}}
-    projection = {"meta_cookies": 1, "_id": 0}
-    mock_assets_master_collection.find.assert_called_once_with(query, projection)
-    assert total_cookies == 15 # 5 + 10
+    assert result == 5

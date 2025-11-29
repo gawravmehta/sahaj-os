@@ -85,19 +85,26 @@ class AssetCrud:
 
         query = {
             "df_id": df_id,
-            "asset_status": {"$in": ["draft", "published"]}
+            "asset_status": {"$in": ["draft", "published"]},
         }
 
         cursor = self.assets_master_collection.find(
             query,
-            {"meta_cookies": 1, "_id": 0}
+            {"meta_cookies": 1, "_id": 0},
         )
 
         total = 0
 
         async for doc in cursor:
             meta = doc.get("meta_cookies")
-            if meta and isinstance(meta, dict):
-                total += meta.get("cookies_count", 0)
+
+            if not isinstance(meta, dict):
+                continue
+
+            count = meta.get("cookies_count")
+
+            # Only sum valid integers
+            if isinstance(count, int):
+                total += count
 
         return total
