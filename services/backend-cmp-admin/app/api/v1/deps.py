@@ -53,6 +53,7 @@ from app.db.dependencies import (
     get_webhook_events_crud,
     get_webhooks_collection,
     get_incident_management_collection,
+    get_df_keys_collection,
 )
 from app.crud.user_crud import UserCRUD
 from app.db.session import get_postgres_pool
@@ -197,8 +198,9 @@ def get_data_fiduciary_service(
     crud: DataFiduciaryCRUD = Depends(get_df_crud),
     business_logs_collection: str = Depends(get_business_logs_collection),
     user_collection: AsyncIOMotorCollection = Depends(get_user_collection),
+    df_keys_collection: AsyncIOMotorCollection = Depends(get_df_keys_collection),
 ) -> DataFiduciaryService:
-    return DataFiduciaryService(crud, business_logs_collection, user_collection)
+    return DataFiduciaryService(crud, business_logs_collection, user_collection, df_keys_collection)
 
 
 async def get_cp_service(

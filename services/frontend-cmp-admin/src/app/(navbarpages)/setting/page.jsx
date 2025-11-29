@@ -5,6 +5,7 @@ import AI from "@/components/features/setting/AI";
 import InApp from "@/components/features/setting/InApp";
 import Organization from "@/components/features/setting/Organization";
 import Profile from "@/components/features/setting/Profile";
+import Secrets from "@/components/features/setting/Secrets";
 import SMS from "@/components/features/setting/SMS";
 import SmtpForm from "@/components/features/setting/SmtpForm";
 import Webhook from "@/components/features/setting/Webhook";
@@ -26,6 +27,7 @@ const Page = () => {
   const [originalData, setOriginalData] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [secretData, setSecretData] = useState(null);
   const { setOrgName } = useOrg();
   const tabs = [
     { id: "my_profile", label: "My Profile" },
@@ -34,6 +36,7 @@ const Page = () => {
     { id: "sms", label: "SMS" },
     { id: "in_app", label: "In App" },
     { id: "ai", label: "AI" },
+    { id: "secrets", label: "Secrets" },
   ];
 
   const tabComponents = {
@@ -43,16 +46,18 @@ const Page = () => {
     sms: SMS,
     in_app: InApp,
     ai: AI,
+    secrets: Secrets,
   };
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const response = await apiCall("/data-fiduciary/data-fiduciary-details");
-      setFormData(response || null);
-      setOriginalData(response || null);
-      const orgName = response?.org_info?.name || "";
+      setFormData(response?.df || null);
+      setOriginalData(response?.df || null);
+      const orgName = response?.df?.org_info?.name || "";
       setOrgName(orgName);
+      setSecretData(response?.df_keys || null);
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
@@ -136,6 +141,7 @@ const Page = () => {
                   fetchData={fetchData}
                   setModalOpen={setModalOpen}
                   modalOpen={modalOpen}
+                  secretData={secretData}
                 />
               </TabsContent>
             ))}
