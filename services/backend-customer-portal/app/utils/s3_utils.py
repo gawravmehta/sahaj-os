@@ -47,7 +47,7 @@ def upload_file_to_s3(file: UploadFile, s3_client: Minio) -> str:
             content_type=file.content_type,
         )
 
-        file_url = f"http://{settings.S3_ENDPOINT}/{settings.KYC_DOCUMENTS_BUCKET}/{unique_filename}"
+        file_url = f"http://{settings.S3_URL}/{settings.KYC_DOCUMENTS_BUCKET}/{unique_filename}"
         return file_url
 
     except S3Error as e:

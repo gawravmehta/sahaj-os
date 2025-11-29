@@ -1,0 +1,27 @@
+# MinIO and Data Veda services
+
+services:
+  # MinIO
+  minio:
+    image: minio/minio
+    container_name: minio
+    volumes:
+      - minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    networks:
+      - concur-cfc-network
+
+  # Data Veda (CONCUR's data directory service)
+  data-veda:
+    image: 4646krisna/data-veda
+    container_name: data-veda
+    environment:
+      - PORT=9080
+    ports:
+      - "9080:9080" # Optional for host access

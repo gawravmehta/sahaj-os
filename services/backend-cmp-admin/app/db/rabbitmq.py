@@ -1,6 +1,7 @@
 import aio_pika
 import asyncio
 import httpx
+import time
 from typing import Tuple, Optional
 from app.core.config import settings
 from app.core.logger import app_logger
@@ -13,6 +14,8 @@ RABBITMQ_PASSWORD = settings.RABBITMQ_PASSWORD
 RABBITMQ_VHOST = settings.RABBITMQ_VHOST_NAME
 RABBIT_API_URL = f"http://{RABBITMQ_HOST}:{RABBITMQ_MANAGEMENT_PORT}/api"
 POOL_SIZE = settings.RABBITMQ_POOL_SIZE
+RABBIT_MQ_RETRY_DELAY = 60
+RABBIT_MQ_RETRY_LIMIT = 10
 
 QUEUES = [
     "data_element_translation",
@@ -64,23 +67,24 @@ class AsyncRabbitMQConnectionPool:
 
     async def _create_connection(self) -> Tuple[aio_pika.RobustConnection, aio_pika.Channel]:
         """Creates a new aio-pika connection and channel."""
-        try:
-
-            connection = await aio_pika.connect_robust(
-                host=RABBITMQ_HOST,
-                port=RABBITMQ_PORT,
-                login=RABBITMQ_USER,
-                password=RABBITMQ_PASSWORD,
-                virtualhost=RABBITMQ_VHOST,
-            )
-            channel = await connection.channel()
-
-            await channel.set_qos(prefetch_count=20)
-            return connection, channel
-        except aio_pika.exceptions.CONNECTION_EXCEPTIONS as e:
-            app_logger.error(f"Failed to connect to RabbitMQ: {e}")
-            raise
-
+        retry_times = 0
+        while retry_times <= RABBIT_MQ_RETRY_LIMIT:
+            try:
+                connection = await aio_pika.connect_robust(
+                    host=RABBITMQ_HOST,
+                    port=RABBITMQ_PORT,
+                    login=RABBITMQ_USER,
+                    password=RABBITMQ_PASSWORD,
+                    virtualhost=RABBITMQ_VHOST,
+                )
+                channel = await connection.channel()
+                await channel.set_qos(prefetch_count=20)
+                return connection, channel
+            except aio_pika.exceptions.CONNECTION_EXCEPTIONS as e:
+                retry_times += 1
+                app_logger.error(f"Failed to connect to RabbitMQ: {e} - Retry {retry_times}/{RABBIT_MQ_RETRY_LIMIT}")
+                time.sleep(RABBIT_MQ_RETRY_DELAY)
+                
     async def init_pool(self):
         """Initializes the connection pool by populating it with connections."""
         if self._initialized:

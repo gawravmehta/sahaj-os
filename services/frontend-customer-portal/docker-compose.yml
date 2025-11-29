@@ -1,0 +1,10 @@
+version: "3"
+services:
+  frontend-customer-portal:
+    build: 
+      context: ./services/frontend-customer-portal
+    image: frontend-customer-portal:latest
+    ports:
+      - "3001:3001"
+    networks:
+      - concur-cfc-network

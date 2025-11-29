@@ -67,13 +67,13 @@ Before deploying SAHAJ from source, make sure your system satisfies the followin
 If you are managing SSL certificates yourself (not using Cloudflare proxy):
 
 *   Type: `A`    Name: `api-cmp`              Content: `your.ip`    Proxy: `DNS only`
-*   Type: `A`    Name: `api-customer`         Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `api-dpar`             Content: `your.ip`    Proxy: `DNS only`
 *   Type: `A`    Name: `api-notice-worker`    Content: `your.ip`    Proxy: `DNS only`
 *   Type: `A`    Name: `api-cookie-consent`   Content: `your.ip`    Proxy: `DNS only`
 *   Type: `A`    Name: `cmp`                  Content: `your.ip`    Proxy: `DNS only`
-*   Type: `A`    Name: `customer`             Content: `your.ip`    Proxy: `DNS only`
+*   Type: `A`    Name: `dpar`                 Content: `your.ip`    Proxy: `DNS only`
 
-Note: If you don't want to handle certbot, you can keep the proxy to `proxied` (orange cloud in Cloudflare).
+Note: If you don't want to handle certbot, you can keep the proxy to `Proxied` (orange cloud in Cloudflare).
 
 ---
 
@@ -86,6 +86,46 @@ find . -name "*.sh" -type f -exec chmod +x {} \;
 ```
 
 This ensures you can run the scripts directly (e.g. `./scripts/init-rundev.sh`), rather than needing to prefix with `bash`.
+
+---
+
+## 📁 Create `config.json`
+
+A `config.json` is required at the **root** of the project.
+Start by copying the example file:
+
+```bash
+cp config.json.example config.json
+```
+
+Then fill in the values:
+
+```json
+{
+  "main_domain": "example.com",
+  "superadmin_email": "admin@example.com",
+  "temporary_password": "Str0ng!Pass1!",
+  "df_id": "123e4567-e89b-12d3-a456-426614174000"
+}
+```
+
+**Field meanings:**
+
+* **main_domain**: your base domain (no `www`, no subdomains, no http/https).
+* **superadmin_email**: admin login email.
+* **temporary_password** *(important)*:
+  * Must be **strong** or OpenSearch will fail. 
+  * Requirements:
+    * at least **8 characters**
+    * **1 uppercase**
+    * **1 lowercase**
+    * **1 digit**
+    * **1 special character**
+  * Example: `Str0ng@Pass1!`
+  * You will change this after your first login.
+* **df_id**: unique ID (UUID recommended).
+
+
 
 ---
 
@@ -148,7 +188,7 @@ For container-based deployment — building Docker images, deploying containers,
 * Remove all built images (complete clean-up):
 
   ```bash
-  ./scripts/clean-built-images.sh
+  ./scripts/clean-built-images.sh --yes
   ```
 
 ---
@@ -182,7 +222,7 @@ find . -name "*.sh" -type f -exec chmod +x {} \;
 ./scripts/stop-deployed.sh
 
 # To clean up all built images (free disk space / reset build cache):
-./scripts/clean-built-images.sh
+./scripts/clean-built-images.sh --yes
 ```
 
 ---

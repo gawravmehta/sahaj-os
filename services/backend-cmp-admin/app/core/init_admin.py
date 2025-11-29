@@ -224,7 +224,7 @@ async def create_initial_admin(client: AsyncIOMotorClient):
         app_logger.info("Initial admin already exists, skipping creation.")
         return
 
-    df_id = str(uuid.uuid4())
+    df_id = settings.DF_ID
 
     df_doc = {
         "df_id": df_id,
@@ -233,8 +233,7 @@ async def create_initial_admin(client: AsyncIOMotorClient):
 
     await df_register_collection.insert_one(df_doc)
 
-    temp_password = str(uuid.uuid4())[:10]
-    hashed_password = pwd_context.hash(temp_password)
+    hashed_password = pwd_context.hash(settings.TEMPORARY_PASSWORD)
 
     system_role = await roles_collection.insert_one(
         {
@@ -264,7 +263,7 @@ async def create_initial_admin(client: AsyncIOMotorClient):
 
     inserted_admin = await users_collection.insert_one(
         {
-            "email": settings.INITIAL_ADMIN_EMAIL,
+            "email": settings.SUPERADMIN_EMAIL,
             "password": hashed_password,
             "df_id": df_id,
             "user_roles": [SYSTEM_ADMIN_ROLE_ID],
@@ -278,4 +277,4 @@ async def create_initial_admin(client: AsyncIOMotorClient):
 
     await df_init
 
-    app_logger.critical(f"Initial Admin Created. Email: {settings.INITIAL_ADMIN_EMAIL}, Password: {temp_password}")
+    app_logger.critical(f"Initial Admin Created. Email: {settings.SUPERADMIN_EMAIL}, Password: {settings.TEMPORARY_PASSWORD}")

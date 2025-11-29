@@ -1,0 +1,32 @@
+# falco-config/falco_rules.local.yaml
+# --- user macro to suppress pg_isready sensitive-file alerts ---
+- macro: user_read_sensitive_file_containers
+  condition: >
+    (
+      (container.name = postgres16 and proc.name = pg_isready and fd.name = "/etc/shadow")
+      or
+      (proc.name = pg_isready and fd.name = "/etc/shadow")
+    )
+
+# ---------------------------
+# Custom rules added by user
+# ---------------------------
+
+# Rule B: Detect file changes under Elasticsearch data/log path by non-elasticsearch processes
+- rule: Detect External Modifications To Elasticsearch Data
+  desc: Detect file writes / creates / deletes / renames under ES data/log dirs when NOT performed by the Elasticsearch process
+  condition: >
+    (evt.type in (open, openat, creat, unlink, rename)) and
+    (
+      fd.name startswith "/usr/share/elasticsearch/data"
+      or fd.name startswith "/var/lib/elasticsearch"
+      or fd.name startswith "/usr/share/elasticsearch/logs"
+    ) and
+    not (
+      container.name = "elasticsearch"
+      or proc.cmdline contains "elasticsearch"
+      or proc.name contains "java"
+    )
+  output: "User=%user.name (uid=%user.uid) proc=%proc.name pid=%proc.pid cmdline='%proc.cmdline' modified_file=%fd.name container=%container.name evt=%evt.type"
+  priority: WARNING
+  tags: [custom, files, es]
