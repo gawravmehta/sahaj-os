@@ -7,13 +7,21 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from app.core.config import settings
 from app.utils.business_logger import log_business_event
 from typing import Dict, Any
+from app.utils.common import convert_objectid_to_str
 
 
 class DataFiduciaryService:
-    def __init__(self, crud: DataFiduciaryCRUD, business_logs_collection: str, user_collection: AsyncIOMotorCollection):
+    def __init__(
+        self,
+        crud: DataFiduciaryCRUD,
+        business_logs_collection: str,
+        user_collection: AsyncIOMotorCollection,
+        df_keys_collection: AsyncIOMotorCollection,
+    ):
         self.crud = crud
         self.business_logs_collection = business_logs_collection
         self.user_collection = user_collection
+        self.df_keys_collection = df_keys_collection
 
     def _flatten_dict(self, d: dict, parent_key: str = "", sep: str = ".") -> dict:
         items = []
@@ -69,7 +77,7 @@ class DataFiduciaryService:
         updated = await self.crud.update_data_fiduciary(df_id, update_ops)
 
         if user_basic_info:
-            admin_email = settings.SUPERADMIN_EMAIL
+            admin_email = settings.INITIAL_ADMIN_EMAIL
             user_update_doc = jsonable_encoder(user_basic_info, exclude_unset=True)
 
             user_update_doc["is_org_configured"] = True
@@ -108,7 +116,8 @@ class DataFiduciaryService:
     async def get_details(self, df_id: str, user: Dict[str, Any]):
         user_email = user.get("email") or user.get("id") or "system"
         df = await self.crud.get_data_fiduciary(df_id)
-        if not df:
+        df_keys = await self.df_keys_collection.find_one({"df_id": df_id})
+        if not df or not df_keys:
             await log_business_event(
                 event_type="GET_DATA_FIDUCIARY_DETAILS_FAILED",
                 user_email=user_email,
@@ -126,7 +135,7 @@ class DataFiduciaryService:
             message=f"Data Fiduciary details fetched successfully for DF ID '{df_id}'.",
             business_logs_collection=self.business_logs_collection,
         )
-        return df
+        return {"df": convert_objectid_to_str(df), "df_keys": convert_objectid_to_str(df_keys)}
 
     async def get_df_name(self, df_id: str, user: Dict[str, Any]) -> str:
         user_email = user.get("email") or user.get("id") or "system"
