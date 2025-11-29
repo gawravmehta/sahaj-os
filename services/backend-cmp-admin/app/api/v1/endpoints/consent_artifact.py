@@ -10,10 +10,9 @@ import hashlib
 import os
 from datetime import UTC, datetime, timedelta
 from motor.motor_asyncio import AsyncIOMotorCollection
-from app.db.dependencies import get_df_ack_collection, get_customer_notifications_collection, get_consent_artifact_collection
+from app.db.dependencies import get_df_ack_collection, get_customer_notifications_collection, get_consent_artifact_collection, get_df_keys_collection
 from app.core.logger import get_logger
 
-CMP_WEBHOOK_SECRET = "cmp_webhook_secret"
 
 router = APIRouter()
 logger = get_logger("api.consent_artifact")
@@ -98,7 +97,7 @@ async def get_expiring_consents(
     return await service.get_expiring_consents(df_id, dp_id, days_to_expire)
 
 
-def verify_signature(payload: dict, signature: str) -> bool:
+def verify_signature(payload: dict, signature: str, CMP_WEBHOOK_SECRET: str) -> bool:
     """
     Regenerates the HMAC hash of the received payload and compares it.
     """
@@ -121,6 +120,7 @@ async def consent_ack(
     payload: DFAckPayload,
     x_df_signature: str = Header(None, alias="X-DF-Signature"),
     df_ack_collection: AsyncIOMotorCollection = Depends(get_df_ack_collection),
+    df_keys_collection: AsyncIOMotorCollection = Depends(get_df_keys_collection),
     notification_collection: AsyncIOMotorCollection = Depends(get_customer_notifications_collection),
     consent_artifact_collection: AsyncIOMotorCollection = Depends(get_consent_artifact_collection),
 ):
@@ -135,7 +135,10 @@ async def consent_ack(
             logger.warning(f"Missing signature header from DF for DP {payload.dp_id}.")
             raise HTTPException(status_code=401, detail="Missing X-DF-Signature header")
 
-        if not verify_signature(raw_body, x_df_signature):
+        cmp_webhook_secret_details = await df_keys_collection.find_one({"df_id": payload.df_id})
+        CMP_WEBHOOK_SECRET = cmp_webhook_secret_details.get("cmp_webhook_secret")
+
+        if not verify_signature(raw_body, x_df_signature, CMP_WEBHOOK_SECRET):
             logger.warning(f"Invalid signature from DF for DP {payload.dp_id}.")
             raise HTTPException(status_code=401, detail="Invalid signature")
 
