@@ -154,14 +154,12 @@ async def submit_consent(
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
-CMP_WEBHOOK_SECRET = os.getenv("CMP_WEBHOOK_SECRET", "cmp_webhook_secret")
-
-
-def verify_signature(payload: dict, signature: str) -> bool:
+async def verify_signature(payload: dict, signature: str, gdb: Database) -> bool:
     """Verify HMAC-SHA256 signature from headers."""
     payload_str = json.dumps(payload, separators=(",", ":"), sort_keys=True)
+    cmp_secret = (await gdb.df_keys.find_one({}) or {}).get("cmp_webhook_secret")
     computed_sig = hmac.new(
-        CMP_WEBHOOK_SECRET.encode(),
+        cmp_secret.encode(),
         msg=payload_str.encode(),
         digestmod=hashlib.sha256,
     ).hexdigest()
@@ -188,7 +186,7 @@ async def dp_verification_ack(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid timestamp format")
 
-    if not verify_signature(payload, x_df_signature):
+    if not await verify_signature(payload, x_df_signature, gdb):
         raise HTTPException(status_code=401, detail="Invalid signature")
 
     redis_client = get_redis()
