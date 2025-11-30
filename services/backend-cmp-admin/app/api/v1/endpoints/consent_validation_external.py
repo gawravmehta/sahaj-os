@@ -11,6 +11,7 @@ from app.db.dependencies import (
     get_consent_validation_collection,
     get_validation_batch_collection,
     get_vendor_collection,
+    get_customer_notifications_collection,
 )
 from app.db.rabbitmq import publish_message
 from app.schemas.consent_validation_schema import VerificationRequest
@@ -34,6 +35,7 @@ async def verify_consent_external(
     vendor_master_collection=Depends(get_vendor_collection),
     consent_artifact_collection=Depends(get_consent_artifact_collection),
     consent_validation_collection=Depends(get_consent_validation_collection),
+    customer_notifications_collection=Depends(get_customer_notifications_collection),
 ):
     if not dp_id and not dp_system_id and not (dp_e or dp_m):
         raise HTTPException(
@@ -136,6 +138,23 @@ async def verify_consent_external(
     }
 
     verification_req = await consent_validation_collection.insert_one(verification_log)
+
+    if not all_verified:
+        # Create notification for DP
+        dp_id_for_notif = dp_id or artifact_for_log.get("data_principal", {}).get("dp_id")
+        if dp_id_for_notif:
+            now = datetime.now(UTC)
+            notification = {
+                "dp_id": dp_id_for_notif,
+                "type": "CONSENT_VALIDATION_FAILED",
+                "title": "Consent Validation Failed",
+                "message": f"A Data Fiduciary attempted to validate your consent for purpose {purpose_hash}, but it was found to be invalid or expired.",
+                "status": "unread",
+                "created_at": now,
+                "verification_request_id": str(verification_req.inserted_id),
+                "df_id": df_id,
+            }
+            await customer_notifications_collection.insert_one(notification)
 
     return {
         "verified": all_verified,

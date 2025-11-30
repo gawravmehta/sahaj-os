@@ -454,8 +454,15 @@ async def get_consent_validation_service(
     consent_artifact_crud: ConsentArtifactCRUD = Depends(get_consent_artifact_crud),
     vendor_crud: VendorCRUD = Depends(get_vendor_crud),
     business_logs_collection: str = Depends(get_business_logs_collection),
+    customer_notifications_collection: AsyncIOMotorCollection = Depends(get_customer_notifications_collection),
 ) -> ConsentValidationService:
-    return ConsentValidationService(consent_validation_crud, consent_artifact_crud, vendor_crud, business_logs_collection)
+    return ConsentValidationService(
+        consent_validation_crud,
+        consent_artifact_crud,
+        vendor_crud,
+        business_logs_collection,
+        customer_notifications_collection,
+    )
 
 
 async def get_grievance_crud(

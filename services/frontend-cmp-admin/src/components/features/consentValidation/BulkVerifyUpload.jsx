@@ -57,10 +57,8 @@ const BulkVerifyUpload = ({
   };
 
   const handleDownloadTemplate = () => {
-    const pdfUrl = "/consent-validation/bulk-verify-consent-internal";
-
     const link = document.createElement("a");
-    link.href = pdfUrl;
+    link.href = "/assets/other/test-verification-log.csv";
     link.download = "test-verification-log.csv";
     document.body.appendChild(link);
     link.click();
@@ -73,7 +71,6 @@ const BulkVerifyUpload = ({
         <div className="flex flex-col items-center justify-center rounded border-2 border-dashed border-gray-300 bg-[#F9FCFF]">
           <div className="flex flex-col items-center justify-center p-20">
             <CircleProgressBar score={uploadProgress} />
-            <h1 className="mt-4">Loading... {uploadProgress}%</h1>
           </div>
         </div>
       ) : uploadedFiles.length > 0 ? (
