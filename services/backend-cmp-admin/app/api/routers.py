@@ -25,7 +25,8 @@ from app.api.v1.endpoints import (
     webhooks,
     incident_management,
     dashboard,
-    consent_audit
+    consent_audit,
+    logs,
 )
 
 
@@ -57,3 +58,4 @@ api_router.include_router(translation.router, prefix="/v1/translation", tags=["T
 api_router.include_router(grievance.router, prefix="/v1/grievances", tags=["Grievances"])
 api_router.include_router(dpar.router, prefix="/v1/dpar", tags=["DPAR"])
 api_router.include_router(incident_management.router, prefix="/v1/incidents", tags=["Incident Management"])
+api_router.include_router(logs.router, prefix="/v1/business-logs", tags=["Business Logs"])
