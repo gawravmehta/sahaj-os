@@ -3,6 +3,9 @@ services:
   frontend-customer-portal:
     build: 
       context: ./services/frontend-customer-portal
+      args:
+       NEXT_PUBLIC_CUSTOMER_URL: "${NEXT_PUBLIC_CUSTOMER_URL}"
+       NEXT_PUBLIC_DF_ID: "${NEXT_PUBLIC_DF_ID}"
     image: frontend-customer-portal:latest
     ports:
       - "3001:3001"

@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
+const baseURL = process.env.NEXT_PUBLIC_ADMIN_URL || "";
 
 const defaultHeaders = {
   "Content-Type": "application/json",

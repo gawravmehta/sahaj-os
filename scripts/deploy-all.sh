@@ -148,6 +148,6 @@ if ! bash "$ISSUE_CERTS"; then
 fi
 
 echo
-echo "✅ Certificates issued/renewed and nginx reloaded."
+echo "✅ All Containers started and certificates issued/renewed successfully."
 
 exit 0

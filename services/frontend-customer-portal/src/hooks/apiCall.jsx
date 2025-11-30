@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
+const baseURL = process.env.NEXT_PUBLIC_CUSTOMER_URL || "";
 
 const DF_ID = process.env.NEXT_PUBLIC_DF_ID || "";
 
