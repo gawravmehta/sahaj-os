@@ -19,6 +19,7 @@ from datetime import UTC, datetime, timezone
 import uuid
 
 from pymongo import DESCENDING, ASCENDING
+from motor.motor_asyncio import AsyncIOMotorCollection
 from bson import Regex
 
 from app.core.config import settings
@@ -32,11 +33,13 @@ class ConsentValidationService:
         consent_artifact_crud: ConsentArtifactCRUD,
         vendor_crud: VendorCRUD,
         business_logs_collection: str,
+        customer_notifications_collection: AsyncIOMotorCollection,
     ):
         self.consent_validation_crud = consent_validation_crud
         self.consent_artifact_crud = consent_artifact_crud
         self.vendor_crud = vendor_crud
         self.business_logs_collection = business_logs_collection
+        self.customer_notifications_collection = customer_notifications_collection
 
     async def verify_consent_internal(
         self,
@@ -232,6 +235,23 @@ class ConsentValidationService:
             business_logs_collection=self.business_logs_collection,
             log_level="INFO",
         )
+
+        if not all_verified:
+            # Create notification for DP
+            dp_id_for_notif = dp_id or artifact_for_log.get("data_principal", {}).get("dp_id")
+            if dp_id_for_notif:
+                now = datetime.now(UTC)
+                notification = {
+                    "dp_id": dp_id_for_notif,
+                    "type": "CONSENT_VALIDATION_FAILED",
+                    "title": "Consent Validation Failed",
+                    "message": f"A Data Fiduciary attempted to validate your consent for purpose {purpose_hash}, but it was found to be invalid or expired.",
+                    "status": "unread",
+                    "created_at": now,
+                    "verification_request_id": str(verification_req.inserted_id),
+                    "df_id": df_id,
+                }
+                await self.customer_notifications_collection.insert_one(notification)
 
         return {
             "verified": all_verified,

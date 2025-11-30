@@ -27,15 +27,16 @@ db = client[DB_NAME]
 
 s3_client = Minio(
     settings.S3_URL,
-    access_key=settings.MINIO_ROOT_USER,
-    secret_key=settings.MINIO_ROOT_PASSWORD,
-    secure=settings.S3_SECURE
+    access_key=settings.S3_ACCESS_KEY,
+    secret_key=settings.S3_SECRET_KEY,
+    secure=True,
 )
 
 user_collection = db["cmp_users"]
 consent_artifact_collection = db["consent_latest_artifacts"]
 consent_validation_collection = db["consent_validation"]
 consent_validation_files_collection = db["consent_validation_files"]
+customer_notifications_collection = db["customer_notifications"]
 
 
 def hash_shake256(value: str) -> str:
@@ -155,6 +156,23 @@ async def verify_consent_internal(
     }
 
     verification_req = await consent_validation_collection.insert_one(verification_log)
+
+    if not all_verified:
+        # Create notification for DP
+        dp_id_for_notif = dp_id or artifact_for_log.get("data_principal", {}).get("dp_id")
+        if dp_id_for_notif:
+            now = datetime.now(UTC)
+            notification = {
+                "dp_id": dp_id_for_notif,
+                "type": "CONSENT_VALIDATION_FAILED",
+                "title": "Consent Validation Failed",
+                "message": f"A Data Fiduciary attempted to validate your consent for purpose {purpose_hash}, but it was found to be invalid or expired.",
+                "status": "unread",
+                "created_at": now,
+                "verification_request_id": str(verification_req.inserted_id),
+                "df_id": df_id,
+            }
+            await customer_notifications_collection.insert_one(notification)
 
     return {
         "verified": all_verified,

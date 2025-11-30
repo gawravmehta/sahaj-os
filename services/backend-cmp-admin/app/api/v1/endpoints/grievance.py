@@ -24,4 +24,13 @@ async def get_grievance_by_id(
     current_user: dict = Depends(get_current_user),
     grievance_service: GrievanceService = Depends(get_grievance_service),
 ):
-    return await grievance_service.view_grievance(grievance_id, current_user=current_user)
+    return await grievance_service.view_grievance(current_user, grievance_id)
+
+
+@router.patch("/resolve-grievance/{grievance_id}")
+async def resolve_grievance(
+    grievance_id: str = Path(..., description="Grievance ID"),
+    current_user: dict = Depends(get_current_user),
+    grievance_service: GrievanceService = Depends(get_grievance_service),
+):
+    return await grievance_service.resolve_grievance(current_user, grievance_id)

@@ -25,15 +25,16 @@ db = client[DB_NAME]
 
 s3_client = Minio(
     settings.S3_URL,
-    access_key=settings.MINIO_ROOT_USER,
-    secret_key=settings.MINIO_ROOT_PASSWORD,
-    secure=settings.S3_SECURE,
+    access_key=settings.S3_ACCESS_KEY,
+    secret_key=settings.S3_SECRET_KEY,
+    secure=True,
 )
 
 consent_artifact_collection = db["consent_latest_artifacts"]
 consent_validation_collection = db["consent_validation"]
 validation_batch_collection = db["validation_batch"]
 vendor_master_collection = db["vendor_master"]
+customer_notifications_collection = db["customer_notifications"]
 
 
 async def process_verification_record(record: VerificationRecord, df_id: str, vendor_details: dict) -> VerificationResult:
@@ -115,6 +116,23 @@ async def process_verification_record(record: VerificationRecord, df_id: str, ve
     }
 
     verification_req = await consent_validation_collection.insert_one(verification_log)
+
+    if not all_verified:
+        # Create notification for DP
+        dp_id_for_notif = record.dp_id or artifact_for_log.get("data_principal", {}).get("dp_id")
+        if dp_id_for_notif:
+            now = datetime.now(UTC)
+            notification = {
+                "dp_id": dp_id_for_notif,
+                "type": "CONSENT_VALIDATION_FAILED",
+                "title": "Consent Validation Failed",
+                "message": f"A Data Fiduciary attempted to validate your consent for purpose {record.purpose_hash}, but it was found to be invalid or expired.",
+                "status": "unread",
+                "created_at": now,
+                "verification_request_id": str(verification_req.inserted_id),
+                "df_id": df_id,
+            }
+            await customer_notifications_collection.insert_one(notification)
 
     return VerificationResult(
         record=record,

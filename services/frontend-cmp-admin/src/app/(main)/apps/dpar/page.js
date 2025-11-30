@@ -96,12 +96,12 @@ const Page = () => {
                 val === "completed"
                   ? "active"
                   : val === "new"
-                  ? "active"
-                  : val === "in_progress"
-                  ? "suspended"
-                  : val === "rejected"
-                  ? "inactive"
-                  : "suspended"
+                    ? "active"
+                    : val === "in_progress"
+                      ? "suspended"
+                      : val === "rejected"
+                        ? "inactive"
+                        : "suspended"
               }
               className="text-xs capitalize"
             />
@@ -119,28 +119,7 @@ const Page = () => {
         { label: "consumer", value: "consumer" },
         { label: "employee", value: "employee" },
         { label: "vendor", value: "vendor" },
-        { label: "string", value: "string" },
       ],
-    },
-    {
-      name: "status",
-      label: "Status",
-      options: [
-        { label: "created", value: "created" },
-        { label: "in_progress", value: "in_progress" },
-        { label: "completed", value: "completed" },
-        { label: "failed", value: "failed" },
-      ],
-    },
-    {
-      name: "created_from",
-      label: "Created From",
-      type: "date",
-    },
-    {
-      name: "created_to",
-      label: "Created To",
-      type: "date",
     },
   ];
 
@@ -196,19 +175,7 @@ const Page = () => {
           title="Incoming"
           subtitle="List of incoming Data Principal Access Requests"
         />
-        <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            disabled={!canWrite("/apps/dpar")}
-            onClick={() => {
-              router.push("/apps/dpar/new-request");
-            }}
-            className="flex gap-1"
-          >
-            <FiPlus className="text-base" />
-            <h1>Incoming</h1>
-          </Button>
-        </div>
+
       </div>
 
       <DataTable
