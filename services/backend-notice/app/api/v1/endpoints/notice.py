@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi.responses import HTMLResponse, JSONResponse
 from app.db.session import get_mongo_master_db, get_redis
 from app.schemas.consent_schema import TokenModel
-from app.services.consent_service import handle_submit_consent
+from app.services.consent_service import handle_submit_consent, get_redirection_and_fallback_url
 from app.services.notice_service import retrieve_notice_html, retrieve_otp_html
 from pymongo.database import Database
 from app.db.rabbitmq import publish_message
@@ -132,7 +132,18 @@ async def verify_otp(request: Request, token: str, otp: str, gdb: Database = Dep
 
         await redis_client.delete(pending_key)
 
-    return JSONResponse({"message": "OTP verified successfully.", "verified": True})
+    collection_point_id = payload.get("cp_id")
+    redirection_url, fallback_url = await get_redirection_and_fallback_url(collection_point_id, gdb)
+
+    return {
+        "status": "Consent Submitted!",
+        "message": "Consent submitted successfully!",
+        "verified": True,
+        "dp_id": dp_id,
+        "agreement_id": agreement_id,
+        "redirection_url": redirection_url,
+        "fallback_url": fallback_url,
+    }
 
 
 @router.post("/submit-consent", tags=["Consent"])
