@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/ui/Button";
 import DateTimeFormatter from "@/components/ui/DateTimeFormatter";
 import Header from "@/components/ui/Header";
 import NoDataFound from "@/components/ui/NoDataFound";
@@ -32,6 +33,21 @@ const Page = ({ params }) => {
     }
   };
 
+  const resolveGrievance = async (id) => {
+    setLoading(true);
+    try {
+      const response = await apiCall(`/grievances/resolve-grievance/${id}`, {
+        method: "PATCH",
+      });
+      toast.success("Grievance resolved successfully!");
+      getGrievanceDetail(id);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const breadcrumbsProps = {
     path: `/apps/grievances/${grievance?.subject || "Details"}`,
     skip: "/apps",
@@ -45,28 +61,40 @@ const Page = ({ params }) => {
           subtitle="Grievance details and tracking"
           breadcrumbsProps={breadcrumbsProps}
         />
-        {grievance && (
-          <Tag
-            label={
-              grievance?.request_status === "open"
-                ? "active"
-                : grievance?.request_status === "closed"
-                ? "inactive"
-                : "draft"
-            }
-            variant={
-              grievance?.request_status === "open"
-                ? "active"
-                : grievance?.request_status === "closed"
-                ? "inactive"
-                : "draft"
-            }
-            className="mx-6 my-auto capitalize"
-          />
-        )}
+        <div className="flex items-center">
+          {grievance?.request_status === "open" && (
+            <Button
+              onClick={() => resolveGrievance(grievance._id)}
+              className="mx-2 my-auto"
+              variant="secondary"
+            >
+              Resolve Grievance
+            </Button>
+          )}
+        </div>
       </div>
       {grievance ? (
         <div className="mx-auto mt-6 w-full max-w-3xl space-y-6 p-4">
+          <div className="flex items-center justify-between">
+            <div></div>
+            <Tag
+              label={
+                grievance?.request_status === "open"
+                  ? "Open"
+                  : grievance?.request_status === "resolved"
+                  ? "Resolved"
+                  : "Draft"
+              }
+              variant={
+                grievance?.request_status === "open"
+                  ? "active"
+                  : grievance?.request_status === "resolved"
+                  ? "outlineBlue"
+                  : "draft"
+              }
+              className="mx-2 my-auto capitalize"
+            />
+          </div>
           <div>
             <p className="text-sm text-subHeading">Email:</p>
             <p className="font-medium">{grievance.email}</p>

@@ -188,7 +188,7 @@ async def validate_jwt_token(token):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-async def get_dp_info_from_postgres(dp_id: str, redis_client, payload, is_verification_required: bool = False):
+async def get_dp_info_from_postgres(dp_id: str, redis_client=None, payload=None, is_verification_required: bool = False):
     """
     Fetch DP info from Postgres (df_id-specific dpd table).
     """

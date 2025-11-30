@@ -43,7 +43,10 @@ async def get_rendered_notice(token, redis_client, s3_client):
         cp_id = token_info["cp_id"]
         notification_id = str(token_info["notification_id"])
 
-        logger.info(f"Fetching notice for df_id: {df_id}, cp_id: {cp_id}, notification_id: {notification_id}", extra={"df_id": df_id, "cp_id": cp_id, "notification_id": notification_id})
+        logger.info(
+            f"Fetching notice for df_id: {df_id}, cp_id: {cp_id}, notification_id: {notification_id}",
+            extra={"df_id": df_id, "cp_id": cp_id, "notification_id": notification_id},
+        )
 
         cache_key = f"notice:{token}"
         cached_notice = await redis_client.get(cache_key)

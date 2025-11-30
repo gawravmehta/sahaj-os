@@ -618,7 +618,18 @@ const Page = () => {
                     />
                   )}
 
-                  
+                  <SelectInput
+                    name="data-element"
+                    label="Data Elements"
+                    isMulti={true}
+                    options={deOption}
+                    value={currentDe}
+                    onChange={setCurrentDe}
+                    placeholder="Select Data Elements"
+                    tooltipText="Select published data elements to associate with this collection point."
+                    required
+                    missingFields={missingFields}
+                  />
 
                   {currentDe && currentDe.length > 0 && (
                     <InputField
@@ -695,7 +706,6 @@ const Page = () => {
           </div>
         )}
       </div>
-     
 
       <div className=" px-6 pt-4">
         <div className="grid grid-cols-2 gap-6">

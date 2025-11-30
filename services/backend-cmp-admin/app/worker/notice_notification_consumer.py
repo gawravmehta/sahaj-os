@@ -355,7 +355,15 @@ async def main() -> None:
     await rabbitmq_pool.init_pool()
     await declare_queues()
 
-    connection, channel = await rabbitmq_pool.get_connection()
+    # Use a dedicated connection for the consumer to avoid starving the pool
+    connection = await aio_pika.connect_robust(
+        host=settings.RABBITMQ_HOST,
+        port=settings.RABBITMQ_PORT,
+        login=settings.RABBITMQ_USER,
+        password=settings.RABBITMQ_PASSWORD,
+        virtualhost=settings.RABBITMQ_VHOST_NAME,
+    )
+    channel = await connection.channel()
     try:
         await channel.set_qos(prefetch_count=10)
 
@@ -366,8 +374,8 @@ async def main() -> None:
 
         await asyncio.Future()
     finally:
-
-        await rabbitmq_pool.release_connection(connection, channel)
+        if not connection.is_closed:
+            await connection.close()
 
 
 if __name__ == "__main__":
