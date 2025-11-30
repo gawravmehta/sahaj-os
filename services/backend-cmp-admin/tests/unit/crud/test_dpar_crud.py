@@ -1,0 +1,271 @@
+import pytest
+from unittest.mock import AsyncMock, MagicMock
+from bson import ObjectId
+from motor.motor_asyncio import AsyncIOMotorCollection
+from app.crud.dpar_crud import DparCRUD
+from pymongo import ASCENDING, DESCENDING
+
+
+@pytest.fixture
+def mock_dpar_collection():
+    """Mocked Mongo collection for DPAR requests with correct async behavior."""
+    collection = MagicMock(spec=AsyncIOMotorCollection)
+
+    collection.count_documents = AsyncMock(return_value=0)
+    collection.find_one = AsyncMock(return_value=None)
+    collection.insert_one = AsyncMock()
+    collection.update_one = AsyncMock()
+
+    cursor = MagicMock()
+    cursor.sort.return_value = cursor
+    cursor.skip.return_value = cursor
+    cursor.limit.return_value = cursor
+    cursor.to_list = AsyncMock(return_value=[])
+
+    collection.find.return_value = cursor
+
+    return collection
+
+
+@pytest.fixture
+def mock_dpar_reports_collection():
+    """Mocked Mongo collection for DPAR reports with correct async behavior."""
+    collection = MagicMock(spec=AsyncIOMotorCollection)
+    collection.insert_one = AsyncMock()
+    return collection
+
+
+@pytest.fixture
+def mock_dpar_bulk_upload_collection():
+    """Mocked Mongo collection for DPAR bulk uploads with correct async behavior."""
+    collection = MagicMock(spec=AsyncIOMotorCollection)
+    collection.insert_one = AsyncMock()
+    return collection
+
+
+@pytest.fixture
+def crud(mock_dpar_collection, mock_dpar_reports_collection, mock_dpar_bulk_upload_collection):
+    return DparCRUD(mock_dpar_collection, mock_dpar_reports_collection, mock_dpar_bulk_upload_collection)
+
+
+@pytest.fixture
+def dummy_request_data():
+    return {
+        "_id": ObjectId("60d0fe4f3460595e63456789"),
+        "df_id": "df123",
+        "requested_by": "user123",
+        "request_status": "pending",
+        "created_timestamp": "2023-01-01T12:00:00Z",
+        "is_deleted": False,
+        "request_conversation": [],
+    }
+
+
+@pytest.fixture
+def dummy_report_data():
+    return {
+        "_id": ObjectId("60d0fe4f3460595e6345678a"),
+        "request_id": "60d0fe4f3460595e63456789",
+        "report_type": "some_type",
+        "content": "report content",
+    }
+
+
+@pytest.fixture
+def dummy_upload_data():
+    return {
+        "_id": ObjectId("60d0fe4f3460595e6345678b"),
+        "df_id": "df123",
+        "file_name": "bulk_upload.csv",
+        "upload_status": "completed",
+    }
+
+
+@pytest.mark.asyncio
+async def test_count_requests(crud, mock_dpar_collection):
+    mock_dpar_collection.count_documents.return_value = 5
+    filters = {"df_id": "df123"}
+
+    result = await crud.count_requests(filters)
+
+    mock_dpar_collection.count_documents.assert_called_once_with(filters)
+    assert result == 5
+
+
+@pytest.mark.asyncio
+async def test_get_requests(crud, mock_dpar_collection, dummy_request_data):
+    mock_dpar_collection.find.return_value.to_list.return_value = [dummy_request_data.copy()]
+    filters = {"df_id": dummy_request_data["df_id"]}
+    projection = {"_id": 1, "request_status": 1}
+    skip = 0
+    limit = 10
+
+    result = await crud.get_requests(filters, projection, skip, limit)
+
+    mock_dpar_collection.find.assert_called_once_with(filters, projection)
+    mock_dpar_collection.find.return_value.skip.assert_called_once_with(skip)
+    mock_dpar_collection.find.return_value.limit.assert_called_once_with(limit)
+    mock_dpar_collection.find.return_value.to_list.assert_called_once_with(length=limit)
+    assert len(result) == 1
+    assert result[0] == dummy_request_data
+
+
+@pytest.mark.asyncio
+async def test_insert_request_success(crud, mock_dpar_collection, dummy_request_data):
+    mock_insert_one_result = MagicMock()
+    mock_insert_one_result.acknowledged = True
+    mock_insert_one_result.inserted_id = dummy_request_data["_id"]
+    mock_dpar_collection.insert_one.return_value = mock_insert_one_result
+
+    request_data_to_insert = dummy_request_data.copy()
+    del request_data_to_insert["_id"]
+
+    result = await crud.insert_request(request_data_to_insert)
+
+    mock_dpar_collection.insert_one.assert_called_once_with(request_data_to_insert)
+    assert result == str(dummy_request_data["_id"])
+
+
+@pytest.mark.asyncio
+async def test_insert_request_failure(crud, mock_dpar_collection, dummy_request_data):
+    mock_insert_one_result = MagicMock()
+    mock_insert_one_result.acknowledged = False
+    mock_dpar_collection.insert_one.return_value = mock_insert_one_result
+
+    request_data_to_insert = dummy_request_data.copy()
+    del request_data_to_insert["_id"]
+
+    result = await crud.insert_request(request_data_to_insert)
+
+    mock_dpar_collection.insert_one.assert_called_once_with(request_data_to_insert)
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_get_last_request(crud, mock_dpar_collection, dummy_request_data):
+    mock_dpar_collection.find_one.return_value = dummy_request_data.copy()
+    user_id = dummy_request_data["requested_by"]
+
+    result = await crud.get_last_request(user_id)
+
+    mock_dpar_collection.find_one.assert_called_once_with({"requested_by": user_id}, sort=[("created_timestamp", -1)])
+    assert result == dummy_request_data
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "count_return, expected_result",
+    [
+        (1, True),
+        (0, False),
+    ],
+)
+async def test_check_recent_request(crud, mock_dpar_collection, count_return, expected_result):
+    mock_dpar_collection.count_documents.return_value = count_return
+    query_filter = {"df_id": "df123", "requested_by": "user123"}
+
+    result = await crud.check_recent_request(query_filter)
+
+    mock_dpar_collection.count_documents.assert_called_once_with(query_filter)
+    assert result == expected_result
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "request_id_input, filters, find_one_return, expected_result",
+    [
+        ("60d0fe4f3460595e63456789", None, {"_id": ObjectId("60d0fe4f3460595e63456789"), "request_status": "pending"}, True),
+        ("60d0fe4f3460595e63456789", {"df_id": "df123"}, {"_id": ObjectId("60d0fe4f3460595e63456789"), "df_id": "df123"}, True),
+        ("60d0fe4f3460595e63456781", None, None, False),
+    ],
+)
+async def test_get_by_id(crud, mock_dpar_collection, dummy_request_data, request_id_input, filters, find_one_return, expected_result):
+    mock_dpar_collection.find_one.return_value = find_one_return
+
+    result = await crud.get_by_id(request_id_input, filters)
+
+    expected_query = {"_id": ObjectId(request_id_input), "is_deleted": False}
+    if filters:
+        expected_query.update(filters)
+    mock_dpar_collection.find_one.assert_called_once_with(expected_query)
+
+    if expected_result:
+        assert result == find_one_return
+    else:
+        assert result is None
+
+
+@pytest.mark.asyncio
+async def test_update_request(crud, mock_dpar_collection, dummy_request_data):
+    request_id = str(dummy_request_data["_id"])
+    update_fields = {"request_status": "completed"}
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_dpar_collection.update_one.return_value = mock_update_result
+
+    result = await crud.update_request(request_id, update_fields)
+
+    mock_dpar_collection.update_one.assert_called_once_with({"_id": ObjectId(request_id)}, update_fields)
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_insert_report(crud, mock_dpar_reports_collection, dummy_report_data):
+    mock_insert_one_result = MagicMock()
+    mock_insert_one_result.inserted_id = dummy_report_data["_id"]
+    mock_dpar_reports_collection.insert_one.return_value = mock_insert_one_result
+
+    report_data_to_insert = dummy_report_data.copy()
+    del report_data_to_insert["_id"]
+
+    result = await crud.insert_report(report_data_to_insert)
+
+    mock_dpar_reports_collection.insert_one.assert_called_once_with(report_data_to_insert)
+    assert result == mock_insert_one_result
+
+
+@pytest.mark.asyncio
+async def test_add_conversation(crud, mock_dpar_collection, dummy_request_data):
+    request_id = str(dummy_request_data["_id"])
+    conversation_entry = {"message": "Hello", "timestamp": "2023-01-01T12:01:00Z"}
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_dpar_collection.update_one.return_value = mock_update_result
+
+    result = await crud.add_conversation(request_id, conversation_entry)
+
+    mock_dpar_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(request_id)},
+        {"$push": {"request_conversation": conversation_entry}},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_insert_upload(crud, mock_dpar_bulk_upload_collection, dummy_upload_data):
+    mock_insert_one_result = MagicMock()
+    mock_insert_one_result.inserted_id = dummy_upload_data["_id"]
+    mock_dpar_bulk_upload_collection.insert_one.return_value = mock_insert_one_result
+
+    upload_data_to_insert = dummy_upload_data.copy()
+    del upload_data_to_insert["_id"]
+
+    result = await crud.insert_upload(upload_data_to_insert)
+
+    mock_dpar_bulk_upload_collection.insert_one.assert_called_once_with(upload_data_to_insert)
+    assert result == mock_insert_one_result
+
+
+@pytest.mark.asyncio
+async def test_get_requests_for_export(crud, mock_dpar_collection, dummy_request_data):
+    mock_dpar_collection.find.return_value.to_list.return_value = [dummy_request_data.copy()]
+    df_id = dummy_request_data["df_id"]
+    fields = ["df_id", "request_status"]
+
+    result = await crud.get_requests_for_export(df_id, fields)
+
+    projection = {field: 1 for field in fields}
+    mock_dpar_collection.find.assert_called_once_with({"df_id": df_id, "is_deleted": False}, projection)
+    mock_dpar_collection.find.return_value.to_list.assert_called_once_with(length=None)
+    assert len(result) == 1
+    assert result[0] == dummy_request_data
