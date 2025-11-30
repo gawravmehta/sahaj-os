@@ -21,7 +21,7 @@ export const OrgProvider = ({ children }) => {
     try {
       const response = await apiCall("/data-fiduciary/data-fiduciary-details");
 
-      const name = response?.org_info?.name || "";
+      const name = response?.df?.org_info?.name || "";
       setOrgDetails(response || null);
       setOrgName(name);
     } catch (error) {

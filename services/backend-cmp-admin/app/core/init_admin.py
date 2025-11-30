@@ -239,6 +239,7 @@ async def create_initial_admin(client: AsyncIOMotorClient):
     system_role = await roles_collection.insert_one(
         {
             "role_name": "system_admin",
+            "df_id": df_id,
             "description": "System Admin role with all permissions",
             "permissions": [
                 {
