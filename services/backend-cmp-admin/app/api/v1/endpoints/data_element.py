@@ -96,7 +96,7 @@ async def copy_data_element_endpoint(
 
 @router.patch(
     "/update-data-element/{de_id}",
-    response_model=DataElementDB,
+    response_model=DataElementResponse,
     summary="Update an existing Data Element Template",
 )
 async def update_data_element_endpoint(
@@ -205,6 +205,7 @@ async def get_data_element_endpoint(
 
 @router.delete(
     "/delete-data-element/{de_id}",
+    response_model=DataElementResponse,
     summary="Delete a Data Element Template",
 )
 async def delete_data_element_endpoint(
