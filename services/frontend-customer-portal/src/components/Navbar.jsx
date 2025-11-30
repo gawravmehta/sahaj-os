@@ -175,6 +175,7 @@ function Navbar() {
               { href: "/past-request", label: "Past Request" },
               { href: "/data-rights", label: "Data Rights" },
               { href: "/manage-preference", label: "Preference Center" },
+              { href: "/manage-preference/time-line", label: "Time Line" },
             ].map(({ href, label }) => (
               <Link
                 key={href}
