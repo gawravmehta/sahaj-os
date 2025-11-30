@@ -1,4 +1,3 @@
-import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -10,15 +9,8 @@ MONGO_TEST_URI = "mongodb://localhost:27017"
 TEST_DB_NAME = "test_db"
 
 
-# ------------------------------
-# Database Fixture (Function Scope)
-# ------------------------------
 @pytest_asyncio.fixture(scope="function")
 async def test_db():
-    """
-    Creates a fresh DB for each test.
-    Fast, safe, and does not cause event-loop issues.
-    """
     motor_client = AsyncIOMotorClient(MONGO_TEST_URI)
     db = motor_client[TEST_DB_NAME]
 
@@ -40,6 +32,7 @@ async def test_db():
 
     yield db
 
+    # Teardown
     await motor_client.drop_database(TEST_DB_NAME)
     motor_client.close()
 
@@ -47,14 +40,8 @@ async def test_db():
     app.dependency_overrides.pop(get_current_user, None)
 
 
-# ------------------------------
-# HTTP Test Client
-# ------------------------------
 @pytest_asyncio.fixture(scope="function")
 async def client(test_db):
-    """
-    Ensures dependency overrides (DB + User) are loaded before client is created.
-    """
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
