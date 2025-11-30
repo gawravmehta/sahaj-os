@@ -71,6 +71,18 @@ async def test_create_cookie(crud, mock_collection, dummy_cookie_data):
 
 
 @pytest.mark.asyncio
+async def test_create_cookie_insert_failed_returns_none(crud, mock_collection, dummy_cookie_data):
+    """If Mongo returns inserted_id=None, function should return None."""
+
+    mock_collection.insert_one.return_value = MagicMock(inserted_id=None)
+
+    result = await crud.create_cookie(dummy_cookie_data.copy())
+
+    mock_collection.insert_one.assert_called_once()
+    assert result is None
+
+
+@pytest.mark.asyncio
 async def test_get_cookies_for_website(crud, mock_collection, dummy_cookie_data):
     cookie_id = ObjectId("60d0fe4f3460595e63456789")
     mock_collection.find.return_value.__aiter__.return_value = iter(

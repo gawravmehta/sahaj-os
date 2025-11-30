@@ -8,9 +8,7 @@ from pymongo import ASCENDING, DESCENDING
 
 @pytest.fixture
 def mock_vendor_collection():
-    """Mocked Mongo collection for vendors with correct async behavior."""
     collection = MagicMock(spec=AsyncIOMotorCollection)
-
     collection.find_one = AsyncMock(return_value=None)
     collection.insert_one = AsyncMock()
     collection.update_one = AsyncMock()
@@ -24,7 +22,6 @@ def mock_vendor_collection():
     cursor.__aiter__.return_value = iter([])
 
     collection.find.return_value = cursor
-
     return collection
 
 
