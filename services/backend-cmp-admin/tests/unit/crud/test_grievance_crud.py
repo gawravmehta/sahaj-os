@@ -5,9 +5,6 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from app.crud.grievance_crud import GrievanceCRUD
 
 
-# ------------------ MOCK COLLECTIONS FIXTURE ------------------
-
-
 @pytest.fixture
 def mock_grievance_collection():
     """Mocked Mongo collection for grievances with correct async behavior."""
@@ -17,7 +14,6 @@ def mock_grievance_collection():
     collection.find_one = AsyncMock(return_value=None)
     collection.find_one_and_update = AsyncMock(return_value=None)
 
-    # Mock cursor for find()
     cursor = MagicMock()
     cursor.skip.return_value = cursor
     cursor.limit.return_value = cursor
@@ -50,9 +46,6 @@ def dummy_grievance_data():
         "data_processor": "Test Processor",
         "ticket_allocated": "ticket123",
     }
-
-
-# ------------------ TESTS ------------------
 
 
 @pytest.mark.asyncio
@@ -105,10 +98,12 @@ async def test_get_grievances(crud, mock_grievance_collection, dummy_grievance_d
         ("60d0fe4f3460595e63456781", True, None, False),
     ],
 )
-async def test_get_by_id(crud, mock_grievance_collection, dummy_grievance_data, grievance_id_input, is_valid_objectid, find_one_return, expected_result):
+async def test_get_by_id(
+    crud, mock_grievance_collection, dummy_grievance_data, grievance_id_input, is_valid_objectid, find_one_return, expected_result
+):
     if is_valid_objectid:
         mock_grievance_collection.find_one.return_value = find_one_return
-        
+
     result = await crud.get_by_id(grievance_id_input)
 
     if is_valid_objectid:
@@ -133,10 +128,12 @@ async def test_get_by_id(crud, mock_grievance_collection, dummy_grievance_data, 
         ("60d0fe4f3460595e63456781", True, None, False),
     ],
 )
-async def test_resolve_grievance(crud, mock_grievance_collection, dummy_grievance_data, grievance_id_input, is_valid_objectid, find_one_and_update_return, expected_result):
+async def test_resolve_grievance(
+    crud, mock_grievance_collection, dummy_grievance_data, grievance_id_input, is_valid_objectid, find_one_and_update_return, expected_result
+):
     if is_valid_objectid:
         mock_grievance_collection.find_one_and_update.return_value = find_one_and_update_return
-        
+
     result = await crud.resolve_grievance(grievance_id_input)
 
     if is_valid_objectid:

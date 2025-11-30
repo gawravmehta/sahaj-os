@@ -9,10 +9,6 @@ from app.schemas.auth_schema import UserInDB
 from app.utils.common import convert_objectid_to_str
 
 
-# -----------------------------------------------------------------------------
-# FIXTURES
-# -----------------------------------------------------------------------------
-
 @pytest.fixture
 def mock_users_collection():
     """Mocked Mongo collection for users with correct async behavior."""
@@ -49,10 +45,6 @@ def dummy_user_data():
     }
 
 
-# -----------------------------------------------------------------------------
-# TESTS
-# -----------------------------------------------------------------------------
-
 @pytest.mark.asyncio
 async def test_get_user_by_email_found(crud, mock_users_collection, dummy_user_data):
     mock_users_collection.find_one.return_value = dummy_user_data.copy()
@@ -73,8 +65,6 @@ async def test_get_user_by_email_not_found(crud, mock_users_collection):
     mock_users_collection.find_one.assert_called_once()
     assert result is None
 
-
-# ---------------- Test get_user_by_id --------------------
 
 @pytest.mark.asyncio
 @patch("app.crud.user_crud.validate_object_id")
@@ -114,27 +104,15 @@ async def test_get_user_by_id_not_found(mock_validate_object_id, crud, mock_user
     assert result is None
 
 
-# ---------------- Test find_by_ids --------------------
-
 @pytest.mark.asyncio
 @patch("app.crud.user_crud.validate_object_id")
 async def test_find_by_ids(mock_validate_object_id, crud, mock_users_collection, dummy_user_data):
 
-    user_ids = [
-        "60d0fe4f3460595e63456789",
-        "60d0fe4f3460595e6345678a",
-        "invalid_id"
-    ]
+    user_ids = ["60d0fe4f3460595e63456789", "60d0fe4f3460595e6345678a", "invalid_id"]
 
-    valid_obj_ids = [
-        ObjectId("60d0fe4f3460595e63456789"),
-        ObjectId("60d0fe4f3460595e6345678a")
-    ]
+    valid_obj_ids = [ObjectId("60d0fe4f3460595e63456789"), ObjectId("60d0fe4f3460595e6345678a")]
 
-    # Valid → True (truthy) ; Invalid → False (skip)
-    mock_validate_object_id.side_effect = (
-        lambda uid: True if ObjectId.is_valid(uid) else False
-    )
+    mock_validate_object_id.side_effect = lambda uid: True if ObjectId.is_valid(uid) else False
 
     user_doc_1 = {**dummy_user_data, "_id": valid_obj_ids[0], "email": "user1@example.com"}
     user_doc_2 = {**dummy_user_data, "_id": valid_obj_ids[1], "email": "user2@example.com"}
@@ -153,8 +131,6 @@ async def test_find_by_ids(mock_validate_object_id, crud, mock_users_collection,
     assert result[1]["_id"] == str(valid_obj_ids[1])
 
 
-# ---------------- Insert user --------------------
-
 @pytest.mark.asyncio
 async def test_insert_user_data(crud, mock_users_collection, dummy_user_data):
 
@@ -170,8 +146,6 @@ async def test_insert_user_data(crud, mock_users_collection, dummy_user_data):
     mock_users_collection.insert_one.assert_called_once_with(to_insert)
     assert result == inserted_id
 
-
-# ---------------- Update role --------------------
 
 @pytest.mark.asyncio
 async def test_add_role_to_user(crud, mock_users_collection, dummy_user_data):
@@ -190,8 +164,6 @@ async def test_add_role_to_user(crud, mock_users_collection, dummy_user_data):
     assert result == mock_update
 
 
-# ---------------- Update department --------------------
-
 @pytest.mark.asyncio
 async def test_add_department_to_user(crud, mock_users_collection, dummy_user_data):
 
@@ -209,8 +181,6 @@ async def test_add_department_to_user(crud, mock_users_collection, dummy_user_da
     )
     assert result == mock_update
 
-
-# ---------------- Count users --------------------
 
 @pytest.mark.asyncio
 async def test_count_users(crud, mock_users_collection, dummy_user_data):

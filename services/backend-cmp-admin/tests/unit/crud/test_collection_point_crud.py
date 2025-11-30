@@ -6,9 +6,6 @@ from fastapi import HTTPException
 from app.crud.collection_point_crud import CollectionPointCrud
 
 
-# ------------------ MOCK COLLECTION FIXTURE ------------------
-
-
 @pytest.fixture
 def mock_collection():
     """Mocked Mongo collection with correct async behavior."""
@@ -19,7 +16,6 @@ def mock_collection():
     collection.update_one = AsyncMock()
     collection.count_documents = AsyncMock()
 
-    # Cursor mock for find()
     cursor = MagicMock()
     cursor.skip.return_value = cursor
     cursor.limit.return_value = cursor
@@ -43,9 +39,6 @@ def dummy_data():
         "asset_id": "test_asset_id",
         "cp_status": "draft",
     }
-
-
-# ------------------ TESTS ------------------
 
 
 @pytest.mark.asyncio

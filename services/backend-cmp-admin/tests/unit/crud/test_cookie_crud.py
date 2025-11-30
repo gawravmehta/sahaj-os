@@ -3,10 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorCollection
 from app.crud.cookie_crud import CookieCrud
-from app.schemas.cookie_schema import CookieCreate # Import if needed for dummy data
-
-
-# ------------------ MOCK COLLECTION FIXTURE ------------------
+from app.schemas.cookie_schema import CookieCreate
 
 
 @pytest.fixture
@@ -20,7 +17,6 @@ def mock_collection():
     collection.delete_one = AsyncMock()
     collection.count_documents = AsyncMock()
 
-    # Cursor mock for find()
     cursor = MagicMock()
     cursor.skip.return_value = cursor
     cursor.limit.return_value = cursor
@@ -52,22 +48,18 @@ def dummy_cookie_data():
     }
 
 
-# ------------------ TESTS ------------------
-
-
 @pytest.mark.asyncio
 async def test_create_cookie(crud, mock_collection, dummy_cookie_data):
     inserted_id = ObjectId("60d0fe4f3460595e63456789")
     mock_collection.insert_one.return_value = MagicMock(inserted_id=inserted_id)
 
     cookie_to_create = dummy_cookie_data.copy()
-    result = await crud.create_cookie(cookie_to_create) # Only one call to create_cookie
+    result = await crud.create_cookie(cookie_to_create)
 
     mock_collection.insert_one.assert_called_once()
-    
+
     actual_args_passed_to_insert = mock_collection.insert_one.call_args.args[0].copy()
-    
-    # Remove the '_id' field from the actual arguments for comparison, as it's added later by the CRUD method
+
     if "_id" in actual_args_passed_to_insert:
         del actual_args_passed_to_insert["_id"]
 
@@ -81,9 +73,11 @@ async def test_create_cookie(crud, mock_collection, dummy_cookie_data):
 @pytest.mark.asyncio
 async def test_get_cookies_for_website(crud, mock_collection, dummy_cookie_data):
     cookie_id = ObjectId("60d0fe4f3460595e63456789")
-    mock_collection.find.return_value.__aiter__.return_value = iter([
-        {**dummy_cookie_data, "_id": cookie_id},
-    ])
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            {**dummy_cookie_data, "_id": cookie_id},
+        ]
+    )
     mock_collection.count_documents.return_value = 1
 
     website_id = dummy_cookie_data["website_id"]
@@ -108,10 +102,12 @@ async def test_get_cookies_for_website(crud, mock_collection, dummy_cookie_data)
 async def test_get_published_cookies_for_website(crud, mock_collection, dummy_cookie_data):
     cookie_id_1 = ObjectId("60d0fe4f3460595e63456789")
     cookie_id_2 = ObjectId("60d0fe4f3460595e6345678a")
-    mock_collection.find.return_value.__aiter__.return_value = iter([
-        {**dummy_cookie_data, "_id": cookie_id_1, "cookie_status": "published"},
-        {**dummy_cookie_data, "_id": cookie_id_2, "cookie_status": "published", "cookie_name": "another_cookie"},
-    ])
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            {**dummy_cookie_data, "_id": cookie_id_1, "cookie_status": "published"},
+            {**dummy_cookie_data, "_id": cookie_id_2, "cookie_status": "published", "cookie_name": "another_cookie"},
+        ]
+    )
 
     website_id = dummy_cookie_data["website_id"]
     df_id = dummy_cookie_data["df_id"]
@@ -154,7 +150,7 @@ async def test_get_cookie_master(crud, mock_collection, dummy_cookie_data, cooki
 async def test_update_cookie_master(crud, mock_collection, dummy_cookie_data):
     cookie_id = "60d0fe4f3460595e63456789"
     updated_name = "Updated Cookie Name"
-    
+
     mock_collection.find_one.return_value = {**dummy_cookie_data, "_id": ObjectId(cookie_id), "cookie_name": updated_name}
 
     update_data = {"cookie_name": updated_name}
@@ -163,7 +159,7 @@ async def test_update_cookie_master(crud, mock_collection, dummy_cookie_data):
     query = {"_id": ObjectId(cookie_id), "df_id": dummy_cookie_data["df_id"]}
     mock_collection.update_one.assert_called_once_with(query, {"$set": update_data})
     mock_collection.find_one.assert_called_with({"_id": ObjectId(cookie_id)})
-    
+
     assert result["_id"] == cookie_id
     assert result["cookie_name"] == updated_name
 

@@ -5,9 +5,6 @@ from motor.motor_asyncio import AsyncIOMotorCollection
 from app.crud.consent_artifact_crud import ConsentArtifactCRUD
 
 
-# ------------------ MOCK COLLECTION FIXTURE ------------------
-
-
 @pytest.fixture
 def mock_collection():
     """Mocked Mongo collection with correct async behavior."""
@@ -19,7 +16,6 @@ def mock_collection():
     collection.count_documents = AsyncMock()
     collection.distinct = AsyncMock()
 
-    # Cursor mock for find()
     cursor = MagicMock()
     cursor.sort.return_value = cursor
     cursor.skip.return_value = cursor
@@ -53,21 +49,17 @@ def dummy_consent_artifact_data():
     }
 
 
-# ------------------ TESTS ------------------
-
-
 @pytest.mark.asyncio
 async def test_get_filtered_consent_artifacts(crud, mock_collection, dummy_consent_artifact_data):
     mock_collection.find.return_value.__aiter__.return_value = iter([dummy_consent_artifact_data])
-    
+
     query = {"some_field": "some_value"}
     sort_dir = 1
     skip = 0
     limit = 10
 
     result_cursor = crud.get_filtered_consent_artifacts(query, sort_dir, skip, limit)
-    
-    # Iterate through the cursor to trigger the async operation
+
     result_data = []
     async for doc in result_cursor:
         result_data.append(doc)
@@ -109,7 +101,6 @@ async def test_get_expiring_consent_artifacts(crud, mock_collection, dummy_conse
 
     result_cursor = crud.get_expiring_consent_artifacts(query)
 
-    # Iterate through the cursor to trigger the async operation
     result_data = []
     async for doc in result_cursor:
         result_data.append(doc)
@@ -121,58 +112,60 @@ async def test_get_expiring_consent_artifacts(crud, mock_collection, dummy_conse
 
 @pytest.mark.asyncio
 async def test_count_collected_data_elements(crud, mock_collection, dummy_consent_artifact_data):
-    mock_collection.find.return_value.__aiter__.return_value = iter([
-        dummy_consent_artifact_data,
-        {
-            "_id": ObjectId(),
-            "cp_id": "cp456",
-            "artifact": {
-                "consent_scope": {
-                    "data_elements": [
-                        {"de_id": "de1"}, # Duplicate de_id
-                        {"de_id": "de3"},
-                    ]
-                }
-            }
-        },
-        # Document with no artifact or malformed structure
-        {"_id": ObjectId(), "cp_id": "cp789"},
-        {"_id": ObjectId(), "cp_id": "cp101", "artifact": {"consent_scope": {}}}
-    ])
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            dummy_consent_artifact_data,
+            {
+                "_id": ObjectId(),
+                "cp_id": "cp456",
+                "artifact": {
+                    "consent_scope": {
+                        "data_elements": [
+                            {"de_id": "de1"},
+                            {"de_id": "de3"},
+                        ]
+                    }
+                },
+            },
+            {"_id": ObjectId(), "cp_id": "cp789"},
+            {"_id": ObjectId(), "cp_id": "cp101", "artifact": {"consent_scope": {}}},
+        ]
+    )
     query = {"status": "active"}
 
     result = await crud.count_collected_data_elements(query)
 
     mock_collection.find.assert_called_once_with(query)
-    # Expected unique de_ids: de1, de2, de3
+
     assert result == 3
 
 
 @pytest.mark.asyncio
 async def test_count_collected_purposes(crud, mock_collection, dummy_consent_artifact_data):
-    mock_collection.find.return_value.__aiter__.return_value = iter([
-        dummy_consent_artifact_data,
-        {
-            "_id": ObjectId(),
-            "cp_id": "cp456",
-            "artifact": {
-                "consent_scope": {
-                    "data_elements": [
-                        {"de_id": "de4", "consents": [{"purpose_id": "p1"}, {"purpose_id": "p4"}]},
-                    ]
-                }
-            }
-        },
-        # Document with no artifact or malformed structure
-        {"_id": ObjectId(), "cp_id": "cp789"},
-        {"_id": ObjectId(), "cp_id": "cp101", "artifact": {"consent_scope": {"data_elements": [{"de_id": "de5"}]}}}
-    ])
+    mock_collection.find.return_value.__aiter__.return_value = iter(
+        [
+            dummy_consent_artifact_data,
+            {
+                "_id": ObjectId(),
+                "cp_id": "cp456",
+                "artifact": {
+                    "consent_scope": {
+                        "data_elements": [
+                            {"de_id": "de4", "consents": [{"purpose_id": "p1"}, {"purpose_id": "p4"}]},
+                        ]
+                    }
+                },
+            },
+            {"_id": ObjectId(), "cp_id": "cp789"},
+            {"_id": ObjectId(), "cp_id": "cp101", "artifact": {"consent_scope": {"data_elements": [{"de_id": "de5"}]}}},
+        ]
+    )
     query = {"status": "active"}
 
     result = await crud.count_collected_purposes(query)
 
     mock_collection.find.assert_called_once_with(query)
-    # Expected unique purpose_ids: p1, p2, p3, p4
+
     assert result == 4
 
 
