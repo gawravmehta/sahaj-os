@@ -6,7 +6,6 @@ from fastapi import HTTPException
 from bson import ObjectId
 
 
-# Helper function to create a valid PurposeCreate payload
 def purpose_create_body(
     title="Test Purpose",
     description="Description",
@@ -33,9 +32,6 @@ def dummy_object_id():
     return str(ObjectId())
 
 
-# -------------------------
-# CREATE TESTS
-# -------------------------
 @pytest.mark.asyncio
 async def test_create_purpose_success(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     purpose_data = purpose_create_body(title="New Purpose Integration")
@@ -47,7 +43,6 @@ async def test_create_purpose_success(client: AsyncClient, test_db: AsyncIOMotor
     assert "purpose_id" in response_data
     assert response_data["purpose_status"] == "draft"
 
-    # Verify DB
     purpose_id = response_data["purpose_id"]
     get_response = await client.get(f"/api/v1/purposes/get-purpose/{purpose_id}")
     assert get_response.status_code == 200
@@ -56,12 +51,12 @@ async def test_create_purpose_success(client: AsyncClient, test_db: AsyncIOMotor
 @pytest.mark.asyncio
 async def test_create_purpose_invalid_data(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     invalid_data = purpose_create_body()
-    invalid_data.pop("purpose_title")  # Missing required field
+    invalid_data.pop("purpose_title")
     response = await client.post("/api/v1/purposes/create-purpose", json=invalid_data)
     assert response.status_code == 422
 
     invalid_data = purpose_create_body()
-    invalid_data["purpose_priority"] = "super_high"  # Invalid enum value
+    invalid_data["purpose_priority"] = "super_high"
     response = await client.post("/api/v1/purposes/create-purpose", json=invalid_data)
     assert response.status_code == 422
 
@@ -77,9 +72,6 @@ async def test_create_purpose_duplicate_name(client: AsyncClient, test_db: Async
     assert res2.json()["detail"] == "Purpose title already exists."
 
 
-# -------------------------
-# GET TESTS
-# -------------------------
 @pytest.mark.asyncio
 async def test_get_purpose_not_found(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     non_existent = dummy_object_id()
@@ -100,9 +92,6 @@ async def test_get_all_purposes_success(client: AsyncClient, test_db: AsyncIOMot
     assert data["total_items"] >= 2
 
 
-# -------------------------
-# UPDATE TESTS
-# -------------------------
 @pytest.mark.asyncio
 async def test_update_purpose_success(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="Purpose Update"))
@@ -130,19 +119,14 @@ async def test_update_purpose_not_draft(client: AsyncClient, test_db: AsyncIOMot
     res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="Published Purpose"))
     purpose_id = res.json()["purpose_id"]
 
-    # First publish it
     await client.patch(f"/api/v1/purposes/publish-purpose/{purpose_id}")
 
-    # Then try to update
     update_data = {"purpose_description": "Should not update"}
     res2 = await client.put(f"/api/v1/purposes/update-purpose/{purpose_id}", json=update_data)
     assert res2.status_code == 400
     assert res2.json()["detail"] == "Only Purpose in draft status can be updated."
 
 
-# -------------------------
-# PUBLISH TEST
-# -------------------------
 @pytest.mark.asyncio
 async def test_publish_purpose_success(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="Publish Me"))
@@ -162,9 +146,7 @@ async def test_publish_purpose_not_found(client: AsyncClient, test_db: AsyncIOMo
 
 @pytest.mark.asyncio
 async def test_publish_purpose_missing_translations(client: AsyncClient, test_db: AsyncIOMotorDatabase):
-    res = await client.post(
-        "/api/v1/purposes/create-purpose", json=purpose_create_body(title="No Translations", translations={})
-    )
+    res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="No Translations", translations={}))
     purpose_id = res.json()["purpose_id"]
 
     res2 = await client.patch(f"/api/v1/purposes/publish-purpose/{purpose_id}")
@@ -172,9 +154,6 @@ async def test_publish_purpose_missing_translations(client: AsyncClient, test_db
     assert res2.json()["detail"] == "Translations are required and cannot be empty before publishing."
 
 
-# -------------------------
-# DELETE TESTS
-# -------------------------
 @pytest.mark.asyncio
 async def test_delete_purpose_success(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="Delete Me"))
@@ -183,7 +162,6 @@ async def test_delete_purpose_success(client: AsyncClient, test_db: AsyncIOMotor
     res2 = await client.delete(f"/api/v1/purposes/delete-purpose/{purpose_id}")
     assert res2.status_code == 204
 
-    # Verify deletion
     res3 = await client.get(f"/api/v1/purposes/get-purpose/{purpose_id}")
     assert res3.status_code == 404
 
@@ -196,12 +174,9 @@ async def test_delete_purpose_not_found(client: AsyncClient, test_db: AsyncIOMot
     assert res.json()["detail"] == "Purpose Template not found"
 
 
-# -------------------------
-# COPY TESTS
-# -------------------------
 @pytest.mark.asyncio
 @patch("app.services.purpose_service.log_business_event", return_value=None)
-@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")  # Mock the external call
+@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")
 @patch("app.services.data_element_service.DataElementService.copy_data_element_by_title")
 async def test_copy_purpose_success(
     mock_copy_de_by_title,
@@ -212,7 +187,6 @@ async def test_copy_purpose_success(
 ):
     template_id = dummy_object_id()
 
-    # Mock the external template call
     mock_get_templates.return_value = {
         "data": [
             {
@@ -226,16 +200,13 @@ async def test_copy_purpose_success(
         "total": 1,
     }
 
-    # Mock data element service for copying data elements
     mock_copy_de_by_title.side_effect = [
         {"_id": dummy_object_id(), "de_name": "Copied DE1"},
         {"_id": dummy_object_id(), "de_name": "Copied DE2"},
     ]
 
     data_elements_to_copy = ["DE_Template_1", "DE_Template_2"]
-    copy_response = await client.post(
-        f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=data_elements_to_copy
-    )
+    copy_response = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=data_elements_to_copy)
 
     assert copy_response.status_code == 201
     copied_purpose = copy_response.json()
@@ -265,7 +236,7 @@ async def test_copy_purpose_template_not_found(mock_get_templates, client: Async
 @patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")
 async def test_copy_purpose_duplicate_name(mock_get_templates, client: AsyncClient, test_db: AsyncIOMotorDatabase):
     template_id = dummy_object_id()
-    # Create a purpose first with a known title
+
     existing_purpose_title = "Existing Purpose for Copy Test"
     await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title=existing_purpose_title))
 
@@ -294,17 +265,11 @@ async def test_copy_purpose_http_exception(client: AsyncClient, test_db: AsyncIO
     from app.services.purpose_service import PurposeService
 
     purpose_id = dummy_object_id()
-    with patch.object(
-        PurposeService, "copy_purpose", side_effect=HTTPException(status_code=400, detail="A simulated HTTP error")
-    ):
+    with patch.object(PurposeService, "copy_purpose", side_effect=HTTPException(status_code=400, detail="A simulated HTTP error")):
         res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={purpose_id}", json=[])
         assert res.status_code == 400
         assert res.json()["detail"] == "A simulated HTTP error"
 
-
-# ================================================================
-#  🔥 CONSOLIDATED INTERNAL SERVER ERROR TESTS
-# ================================================================
 
 ENDPOINTS = [
     (
@@ -329,14 +294,10 @@ ENDPOINTS = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("method, url, service_method, needs_payload", ENDPOINTS)
-async def test_internal_server_errors(
-    client: AsyncClient, test_db: AsyncIOMotorDatabase, method, url, service_method, needs_payload
-):
-    # Create a real purpose when required for URL
+async def test_internal_server_errors(client: AsyncClient, test_db: AsyncIOMotorDatabase, method, url, service_method, needs_payload):
+
     if "{id}" in url:
-        c = await client.post(
-            "/api/v1/purposes/create-purpose", json=purpose_create_body(title="Temp Internal Error")
-        )
+        c = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="Temp Internal Error"))
         purpose_id = c.json()["purpose_id"]
         url = url.replace("{id}", purpose_id)
 
@@ -361,3 +322,42 @@ async def test_internal_server_errors(
 
     assert response.status_code == 500
     assert response.json()["detail"] == "Simulated Internal Error"
+
+
+@pytest.mark.asyncio
+async def test_update_purpose_no_changes(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+
+    res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="NoChangeTest"))
+    purpose_id = res.json()["purpose_id"]
+
+    with patch("app.services.purpose_service.PurposeService.update_purpose_data", return_value=None):
+        resp = await client.put(f"/api/v1/purposes/update-purpose/{purpose_id}", json={"purpose_description": "New Desc"})
+        assert resp.status_code == 404
+        assert resp.json()["detail"] == "Purpose not found or no changes made"
+
+
+@pytest.mark.asyncio
+async def test_get_all_purposes_empty(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    resp = await client.get("/api/v1/purposes/get-all-purposes")
+    assert resp.status_code == 404
+    assert resp.json()["detail"] == "No Purpose Templates found"
+
+
+@pytest.mark.asyncio
+async def test_template_list_internal_error(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    with patch("app.services.purpose_service.PurposeService.get_all_purpose_templates", side_effect=Exception("Template error")):
+        resp = await client.get("/api/v1/purposes/templates")
+        assert resp.status_code == 500
+        assert resp.json()["detail"] == "Template error"
+
+
+@pytest.mark.asyncio
+async def test_list_templates_http_exception_is_propagated(client, test_db):
+    with patch(
+        "app.services.purpose_service.PurposeService.get_all_purpose_templates", side_effect=HTTPException(status_code=401, detail="Not allowed")
+    ):
+        response = await client.get("/api/v1/purposes/templates")
+
+        # Because except HTTPException: raise  is executed
+        assert response.status_code == 401
+        assert response.json()["detail"] == "Not allowed"
