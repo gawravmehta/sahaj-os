@@ -282,23 +282,39 @@ async def test_list_data_element_templates_internal_error(client: AsyncClient, t
 # -------------------------
 
 
-# @pytest.mark.asyncio
-# @patch("app.utils.business_logger.log_business_event", return_value=None)
-# async def test_copy_data_element_success(mock_log, client: AsyncClient, test_db: AsyncIOMotorDatabase):
-#     # First create a data element
-#     create_res = await client.post("/api/v1/data-elements/create-data-element", json=de_create_body(name="Original DE"))
-#     assert create_res.status_code == 201
-#     original_id = create_res.json()["de_id"]
+@pytest.mark.asyncio
+@patch("app.utils.business_logger.log_business_event", return_value=None)
+@patch("app.crud.data_element_crud.DataElementCRUD.get_all_de_templates")
+async def test_copy_data_element_success(mock_get_templates, mock_log, client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    template_id = dummy_object_id()
+    mock_template = {
+        "total": 1,
+        "data": [
+            {
+                "_id": template_id,
+                "title": "Mock Template DE",
+                "description": "A description from a mock template",
+                "translations": {"eng": "English mock translation"},
+            }
+        ],
+    }
+    mock_get_templates.return_value = mock_template
 
-#     # Copy it
-#     copy_res = await client.post(f"/api/v1/data-elements/copy-data-element?de_id={original_id}")
+    # Trigger the copy operation
+    copy_response = await client.post(f"/api/v1/data-elements/copy-data-element?de_id={template_id}")
 
-#     assert copy_res.status_code == 201
-#     copied = copy_res.json()
+    # Assert the response of the copy endpoint
+    assert copy_response.status_code == 201
+    copied_de = copy_response.json()
 
+    # Verify the copied data element's integrity
+    assert copied_de["de_id"] != template_id
+    assert copied_de["de_name"] == "Mock Template DE"
+    assert copied_de["de_description"] == "A description from a mock template"
+    assert copied_de["de_status"] == "draft"
+    assert "eng" in copied_de["translations"]
+    assert copied_de["translations"]["eng"] == "English mock translation"
 
-#     assert copied["de_id"] != original_id
-#     assert copied["de_name"] == "Original DE"
 @pytest.mark.asyncio
 async def test_copy_data_element_internal_error(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     from app.services.data_element_service import DataElementService
