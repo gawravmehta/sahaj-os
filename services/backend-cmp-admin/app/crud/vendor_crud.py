@@ -81,9 +81,6 @@ class VendorCRUD:
         )
         return result
 
-    async def count_vendors(self, query: dict) -> int:
-        return await self.vendor_collection.count_documents(query)
-
     async def update_purpose_with_vendor(self, purpose_id: str, vendor_details: dict):
         result = await self.purpose_collection.update_one(
             {"_id": ObjectId(purpose_id)},
