@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from app.api.v1.deps import get_current_user, get_asset_service
 from app.schemas.assets_schema import (
     AssetCreate,
-    AssetInDB,
     AssetPaginatedResponse,
     AssetResponse,
     AssetUpdate,
@@ -14,11 +13,7 @@ from app.schemas.assets_schema import (
     LogStatistics,
 )
 from app.services.assets_service import AssetService
-from typing import List, Optional
-from app.db.rabbitmq import publish_message
-import random, string, time
-from typing import Any, Dict
-import asyncio
+from typing import Optional
 from app.utils.business_logger import opensearch_client
 from app.core.logger import get_logger
 
@@ -28,49 +23,6 @@ logger = get_logger("api.assets")
 
 class PublishMessageRequest(BaseModel):
     routing_key: str = "data_element_translation"
-
-
-def random_string(length: int = 8) -> str:
-    """Generate a random string for testing."""
-    return "".join(random.choices(string.ascii_letters + string.digits, k=length))
-
-
-@router.post("/publish-test")
-async def publish_message_test(request: PublishMessageRequest):
-    """
-    Publishes a number of test messages to a RabbitMQ queue concurrently.
-    This demonstrates how to use asyncio.gather for parallel publishing.
-    """
-    try:
-        num_messages = 19
-        start_time = time.perf_counter()
-
-        tasks = []
-        for i in range(num_messages):
-            random_message: Dict[str, Any] = {
-                "id": i + 1,
-                "title": random_string(10),
-                "description": random_string(20),
-                "value": random.randint(1, 1000),
-            }
-            tasks.append(publish_message(request.routing_key, str(random_message)))
-
-        await asyncio.gather(*tasks)
-
-        end_time = time.perf_counter()
-        total_time = end_time - start_time
-        avg_time = total_time / num_messages
-
-        logger.info(f"{num_messages} test messages published to {request.routing_key} successfully.")
-        return {
-            "status": "success",
-            "message": f"{num_messages} messages published successfully",
-            "total_time_sec": round(total_time, 4),
-            "avg_time_per_message_sec": round(avg_time, 4),
-        }
-    except Exception as e:
-        logger.critical(f"Error publishing test messages to {request.routing_key}: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post(
@@ -90,7 +42,7 @@ async def create_asset_endpoint(
     """
     try:
         created_asset = await service.create_asset(asset_data.model_dump(), current_user)
-        logger.info(f"Asset '{created_asset.name}' (ID: {created_asset.id}) created by user {current_user.get('email')}.")
+        logger.info(f"Asset '{created_asset.get('asset_name')}' (ID: {created_asset.get('id')}) created by user {current_user.get('email')}.")
         return created_asset
     except HTTPException as e:
         logger.error(f"HTTPException while creating asset for user {current_user.get('email')}: {e.detail}")
@@ -102,7 +54,7 @@ async def create_asset_endpoint(
 
 @router.patch(
     "/update-asset/{asset_id}",
-    response_model=AssetInDB,
+    response_model=AssetResponse,
     summary="Update an existing Asset",
 )
 async def update_asset_endpoint(

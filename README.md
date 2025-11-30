@@ -43,7 +43,7 @@ You can explore the following live environments:
 - **Cookie & Consent Notice:** [https://test-website.sahaj.live](https://test-website.sahaj.live)  
 - **Data Fiduciary Admin Portal:** [https://df-admin.sahaj.live](https://df-admin.sahaj.live)  
 - **Preference Centre:** [https://privacy-centre.sahaj.live](https://privacy-centre.sahaj.live)
-- **OpenAPi Specifications:** [[https://privacy-centre.sahaj.live](https://test-api.sahaj.live)]([https://privacy-centre.sahaj.live](https://test-api.sahaj.live))
+- **OpenAPi Specifications:** [https://test-api.sahaj.live](https://test-api.sahaj.live)]
 
 These test instances demonstrate the key consent and preference management functionalities within the SAHAJ platform.
 
