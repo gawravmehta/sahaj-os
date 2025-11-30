@@ -32,6 +32,9 @@ _list_by_label() {
   docker image ls --filter "label=${label}" --format '{{.Repository}}:{{.Tag}} {{.ID}}' 2>/dev/null || true
 }
 
+imgs1=()
+imgs2=()
+
 echo "Searching for images built by docker-compose for this repo..."
 # 1) images labeled with working_dir === REPO_ROOT
 label1="com.docker.compose.project.working_dir=${REPO_ROOT}"
@@ -42,7 +45,7 @@ label2="com.docker.compose.project=${PROJ_NAME}"
 mapfile -t imgs2 < <(_list_by_label "$label2")
 
 # combine unique image IDs (and keep their repo:tag display)
-declare -A byid
+declare -A byid=()
 
 for line in "${imgs1[@]}"; do
   repo_tag="${line%% *}"
@@ -56,7 +59,7 @@ for line in "${imgs2[@]}"; do
 done
 
 # If nothing found, exit
-if [ "${#byid[@]}" -eq 0 ]; then
+if [ -z "${byid+x}" ] || [ "${#byid[@]}" -eq 0 ]; then
   echo "✅ No compose-built images found for this repository (labels: ${label1} / ${label2})."
   exit 0
 fi

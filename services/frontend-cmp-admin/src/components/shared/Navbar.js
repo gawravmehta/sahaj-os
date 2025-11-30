@@ -20,7 +20,7 @@ import TimeAgo from "./TimeAgo";
 import Cookies from "js-cookie";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
+const baseURL = process.env.NEXT_PUBLIC_ADMIN_URL || "";
 const Navbar = ({ showSidebar, setShowSidebar }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -256,15 +256,13 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
         >
           <LuBell
             size={24}
-            className={`${
-              notificationModal ? "text-black" : "text-[#9f9f9f]"
-            } hover:text-hover`}
+            className={`${notificationModal ? "text-black" : "text-[#9f9f9f]"
+              } hover:text-hover`}
           />
           {notificationCount > 0 && (
             <span
-              className={`absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-red-500 ${
-                notificationCount > 9 ? "p-2 tracking-tighter" : ""
-              } text-[10px] text-white`}
+              className={`absolute -right-0.5 -top-0.5 flex size-5 items-center justify-center rounded-full bg-red-500 ${notificationCount > 9 ? "p-2 tracking-tighter" : ""
+                } text-[10px] text-white`}
             >
               {notificationCount > 9 ? "9+" : notificationCount}
             </span>
@@ -281,9 +279,8 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
                 <p className="text-lg">Notifications</p>
                 <button
                   onClick={handleMarkAsRead}
-                  className={`flex items-center cursor-pointer gap-2 ${
-                    notificationCount > 0 && "text-primary"
-                  } `}
+                  className={`flex items-center cursor-pointer gap-2 ${notificationCount > 0 && "text-primary"
+                    } `}
                 >
                   <PiChecks size={20} />
                   Mark all as read
@@ -302,11 +299,10 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
                           handleReadNotification(notification._id);
                         }
                       }}
-                      className={`group relative flex cursor-pointer gap-3 border-b border-[#D2E1FB66] p-2 px-3 ${
-                        notification.is_read
+                      className={`group relative flex cursor-pointer gap-3 border-b border-[#D2E1FB66] p-2 px-3 ${notification.is_read
                           ? "bg-white hover:bg-gray-100"
                           : "bg-[#ECF6FF] hover:bg-[#cee7fe]"
-                      }`}
+                        }`}
                     >
                       <span
                         className={`flex h-8 w-8 items-center justify-center rounded-full p-1 text-xl ${getNotificationStyle(
@@ -319,11 +315,10 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
                         <div className="flex flex-col">
                           <span>{notification.notification_title}</span>
                           <span
-                            className={`text-xs ${
-                              notification.is_read
+                            className={`text-xs ${notification.is_read
                                 ? "text-subHeading group-hover:text-gray-600"
                                 : "text-gray-600"
-                            }`}
+                              }`}
                           >
                             {notification.notification_message}
                           </span>
@@ -359,9 +354,8 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
             <span className="user-toggle-button flex items-center pr-2 text-lg">
               <FaRegUserCircle
                 size={24}
-                className={`${
-                  isOpen ? "text-black" : "text-[#9f9f9f]"
-                } hover:text-hover`}
+                className={`${isOpen ? "text-black" : "text-[#9f9f9f]"
+                  } hover:text-hover`}
               />
             </span>
           </div>

@@ -45,7 +45,7 @@ const ExportModal = ({ closeModal }) => {
 
     try {
       const url = new URL(
-        `${process.env.NEXT_PUBLIC_API_URL}/dp-bulk-internal/bulk-export-data-principal`
+        `${process.env.NEXT_PUBLIC_ADMIN_URL}/dp-bulk-internal/bulk-export-data-principal`
       );
       url.searchParams.append("format", selectedFormat);
       url.searchParams.append("match_type", selectedMatchType);
@@ -64,7 +64,7 @@ const ExportModal = ({ closeModal }) => {
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
-        } catch (e) {}
+        } catch (e) { }
         throw new Error(errorMessage);
       }
 
@@ -117,11 +117,10 @@ const ExportModal = ({ closeModal }) => {
         <div className="mt-6 flex justify-center gap-10 px-6">
           <div className="">
             <button
-              className={`flex h-36 w-36 flex-col items-center justify-center border p-4 transition ${
-                selectedFormat === "csv"
+              className={`flex h-36 w-36 flex-col items-center justify-center border p-4 transition ${selectedFormat === "csv"
                   ? "border-primary"
                   : "border-[#c7cfe2] hover:border-hover"
-              }`}
+                }`}
               onClick={() => setSelectedFormat("csv")}
             >
               <BsFiletypeCsv size={40} className="text-green-500" />
@@ -131,11 +130,10 @@ const ExportModal = ({ closeModal }) => {
 
           <div className="">
             <button
-              className={`flex h-36 w-36 flex-col items-center justify-center border p-4 transition ${
-                selectedFormat === "xlsx"
+              className={`flex h-36 w-36 flex-col items-center justify-center border p-4 transition ${selectedFormat === "xlsx"
                   ? "border-primary"
                   : "border-[#c7cfe2] hover:border-hover"
-              }`}
+                }`}
               onClick={() => setSelectedFormat("xlsx")}
             >
               <BsFiletypeXlsx size={40} className="text-green-500" />
