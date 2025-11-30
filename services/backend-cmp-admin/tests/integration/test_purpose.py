@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from unittest.mock import patch
+from unittest.mock import patch, ANY
 from fastapi import HTTPException
 from bson import ObjectId
 
@@ -15,6 +15,7 @@ def purpose_create_body(
     consent_time_period=30,
     reconsent=False,
     translations={"eng": "English translation"},
+    data_elements=[],
 ):
     return {
         "purpose_title": title,
@@ -23,7 +24,7 @@ def purpose_create_body(
         "review_frequency": review_frequency,
         "consent_time_period": consent_time_period,
         "reconsent": reconsent,
-        "data_elements": [],
+        "data_elements": data_elements,
         "translations": translations,
     }
 
@@ -33,7 +34,7 @@ def dummy_object_id():
 
 
 # -------------------------
-# CREATE TEST
+# CREATE TESTS
 # -------------------------
 @pytest.mark.asyncio
 async def test_create_purpose_success(client: AsyncClient, test_db: AsyncIOMotorDatabase):
@@ -161,7 +162,9 @@ async def test_publish_purpose_not_found(client: AsyncClient, test_db: AsyncIOMo
 
 @pytest.mark.asyncio
 async def test_publish_purpose_missing_translations(client: AsyncClient, test_db: AsyncIOMotorDatabase):
-    res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title="No Translations", translations={}))
+    res = await client.post(
+        "/api/v1/purposes/create-purpose", json=purpose_create_body(title="No Translations", translations={})
+    )
     purpose_id = res.json()["purpose_id"]
 
     res2 = await client.patch(f"/api/v1/purposes/publish-purpose/{purpose_id}")
@@ -197,8 +200,8 @@ async def test_delete_purpose_not_found(client: AsyncClient, test_db: AsyncIOMot
 # COPY TESTS
 # -------------------------
 @pytest.mark.asyncio
-@patch("app.utils.business_logger.log_business_event", return_value=None)
-@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates") # Mock the external call
+@patch("app.services.purpose_service.log_business_event", return_value=None)
+@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")  # Mock the external call
 @patch("app.services.data_element_service.DataElementService.copy_data_element_by_title")
 async def test_copy_purpose_success(
     mock_copy_de_by_title,
@@ -208,17 +211,19 @@ async def test_copy_purpose_success(
     test_db: AsyncIOMotorDatabase,
 ):
     template_id = dummy_object_id()
-    
+
     # Mock the external template call
     mock_get_templates.return_value = {
-        "data": [{
-            "_id": template_id,
-            "translations": {"eng": "External Template Purpose Title"},
-            "industry": "Finance",
-            "sub_category": "Loans",
-            "data_elements": ["DE_Template_1", "DE_Template_2"],
-        }],
-        "total": 1
+        "data": [
+            {
+                "_id": template_id,
+                "translations": {"en": "External Template Purpose Title"},
+                "industry": "Finance",
+                "sub_category": "Loans",
+                "data_elements": ["DE_Template_1", "DE_Template_2"],
+            }
+        ],
+        "total": 1,
     }
 
     # Mock data element service for copying data elements
@@ -228,7 +233,9 @@ async def test_copy_purpose_success(
     ]
 
     data_elements_to_copy = ["DE_Template_1", "DE_Template_2"]
-    copy_response = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=data_elements_to_copy)
+    copy_response = await client.post(
+        f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=data_elements_to_copy
+    )
 
     assert copy_response.status_code == 201
     copied_purpose = copy_response.json()
@@ -238,35 +245,61 @@ async def test_copy_purpose_success(
     assert copied_purpose["purpose_id"] != template_id
     assert copied_purpose["purpose_status"] == "draft"
     assert len(copied_purpose["data_elements"]) == 2
-    mock_copy_de_by_title.assert_called_with("DE_Template_2", {"_id": "u1", "email": "test@example.com", "df_id": "df123"})
+    mock_copy_de_by_title.assert_any_call("DE_Template_1", ANY)
+    mock_copy_de_by_title.assert_any_call("DE_Template_2", ANY)
+    assert mock_copy_de_by_title.call_count == len(data_elements_to_copy)
     mock_log.assert_called_once()
 
+
 @pytest.mark.asyncio
-async def test_copy_purpose_template_not_found(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")
+async def test_copy_purpose_template_not_found(mock_get_templates, client: AsyncClient, test_db: AsyncIOMotorDatabase):
     fake_id = dummy_object_id()
+    mock_get_templates.return_value = {"data": [], "total": 0}
     res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={fake_id}", json=[])
     assert res.status_code == 404
     assert res.json()["detail"] == f"Purpose template with ID '{fake_id}' not found."
 
 
 @pytest.mark.asyncio
-async def test_copy_purpose_duplicate_name(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+@patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates")
+async def test_copy_purpose_duplicate_name(mock_get_templates, client: AsyncClient, test_db: AsyncIOMotorDatabase):
     template_id = dummy_object_id()
     # Create a purpose first with a known title
     existing_purpose_title = "Existing Purpose for Copy Test"
     await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title=existing_purpose_title))
 
-    with patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates") as mock_get_templates:
-        mock_get_templates.return_value = {
-            "data": [{
-                "_id": template_id,
-                "translations": {"eng": existing_purpose_title}, # Template has same title as existing
-            }],
-            "total": 1
-        }
-        res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=[])
+    mock_get_templates.return_value = {
+        "data": [{"_id": template_id, "translations": {"en": existing_purpose_title}}],
+        "total": 1,
+    }
+    res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={template_id}", json=[])
+    assert res.status_code == 400
+    assert res.json()["detail"] == f"Purpose title '{existing_purpose_title}' already exists."
+
+
+@pytest.mark.asyncio
+async def test_copy_purpose_internal_error(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    from app.services.purpose_service import PurposeService
+
+    purpose_id = dummy_object_id()
+    with patch.object(PurposeService, "copy_purpose", side_effect=Exception("Simulated internal error")):
+        res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={purpose_id}", json=[])
+        assert res.status_code == 500
+        assert res.json()["detail"] == "Simulated internal error"
+
+
+@pytest.mark.asyncio
+async def test_copy_purpose_http_exception(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    from app.services.purpose_service import PurposeService
+
+    purpose_id = dummy_object_id()
+    with patch.object(
+        PurposeService, "copy_purpose", side_effect=HTTPException(status_code=400, detail="A simulated HTTP error")
+    ):
+        res = await client.post(f"/api/v1/purposes/copy-purpose?purpose_id={purpose_id}", json=[])
         assert res.status_code == 400
-        assert res.json()["detail"] == f"Purpose title '{existing_purpose_title}' already exists."
+        assert res.json()["detail"] == "A simulated HTTP error"
 
 
 # ================================================================
@@ -274,55 +307,55 @@ async def test_copy_purpose_duplicate_name(client: AsyncClient, test_db: AsyncIO
 # ================================================================
 
 ENDPOINTS = [
-    ("POST", "/api/v1/purposes/create-purpose", "app.services.purpose_service.PurposeService.create_purpose", {"purpose_title": "Error Purpose", "purpose_description": "Desc", "purpose_priority": "low", "review_frequency": "quarterly", "consent_time_period": 30, "reconsent": False, "translations": {"eng": "English translation"}}),
-    ("POST", "/api/v1/purposes/copy-purpose?purpose_id={id}", "app.services.purpose_service.PurposeService.copy_purpose", []),
-    ("PUT", "/api/v1/purposes/update-purpose/{id}", "app.services.purpose_service.PurposeService.update_purpose_data", {"purpose_description": "Updated"}),
-    ("PATCH", "/api/v1/purposes/publish-purpose/{id}", "app.services.purpose_service.PurposeService.publish_purpose", None),
-    ("GET", "/api/v1/purposes/get-purpose/{id}", "app.services.purpose_service.PurposeService.get_purpose", None),
-    ("GET", "/api/v1/purposes/get-all-purposes", "app.services.purpose_service.PurposeService.get_all_purpose", None),
-    ("DELETE", "/api/v1/purposes/delete-purpose/{id}", "app.services.purpose_service.PurposeService.delete_purpose", None),
-    ("GET", "/api/v1/purposes/templates", "app.services.purpose_service.PurposeService.get_all_purpose_templates", None),
+    (
+        "POST",
+        "/api/v1/purposes/create-purpose",
+        "app.services.purpose_service.PurposeService.create_purpose",
+        True,
+    ),
+    ("PUT", "/api/v1/purposes/update-purpose/{id}", "app.services.purpose_service.PurposeService.update_purpose_data", True),
+    ("PATCH", "/api/v1/purposes/publish-purpose/{id}", "app.services.purpose_service.PurposeService.publish_purpose", False),
+    ("GET", "/api/v1/purposes/get-purpose/{id}", "app.services.purpose_service.PurposeService.get_purpose", False),
+    ("GET", "/api/v1/purposes/get-all-purposes", "app.services.purpose_service.PurposeService.get_all_purpose", False),
+    ("DELETE", "/api/v1/purposes/delete-purpose/{id}", "app.services.purpose_service.PurposeService.delete_purpose", False),
+    (
+        "GET",
+        "/api/v1/purposes/templates",
+        "app.services.purpose_service.PurposeService.get_all_purpose_templates",
+        False,
+    ),
 ]
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("method, url, service_method, payload_data", ENDPOINTS)
-async def test_internal_server_errors(client: AsyncClient, test_db: AsyncIOMotorDatabase, method, url, service_method, payload_data):
-    purpose_id = dummy_object_id()
-
-    # Create a real purpose if the URL requires an ID and it's not a template list endpoint
-    if "{id}" in url and "templates" not in url:
-        if "copy-purpose" in url:
-            # Need a valid template ID to try to copy
-            with patch("app.crud.purpose_crud.PurposeCRUD.get_all_purpose_templates") as mock_get_templates:
-                mock_get_templates.return_value = {
-                    "data": [{
-                        "_id": purpose_id,
-                        "translations": {"eng": "Internal Error Template"},
-                        "industry": "Finance",
-                        "sub_category": "Loans",
-                    }],
-                    "total": 1
-                }
-                url = url.replace("{id}", purpose_id)
-        else:
-            create_res = await client.post("/api/v1/purposes/create-purpose", json=purpose_create_body(title=f"Temp Error {purpose_id[:5]}"))
-            assert create_res.status_code == 201
-            purpose_id = create_res.json()["purpose_id"]
-            url = url.replace("{id}", purpose_id)
-    elif "{id}" in url and "templates" in url: # For templates endpoint, just use a dummy ID
+@pytest.mark.parametrize("method, url, service_method, needs_payload", ENDPOINTS)
+async def test_internal_server_errors(
+    client: AsyncClient, test_db: AsyncIOMotorDatabase, method, url, service_method, needs_payload
+):
+    # Create a real purpose when required for URL
+    if "{id}" in url:
+        c = await client.post(
+            "/api/v1/purposes/create-purpose", json=purpose_create_body(title="Temp Internal Error")
+        )
+        purpose_id = c.json()["purpose_id"]
         url = url.replace("{id}", purpose_id)
 
+    payload = None
+    if needs_payload:
+        if "create-purpose" in url:
+            payload = purpose_create_body()
+        elif "update-purpose" in url:
+            payload = {"purpose_description": "Updated"}
 
     with patch(service_method, side_effect=Exception("Simulated Internal Error")):
         if method == "GET":
             response = await client.get(url)
         elif method == "POST":
-            response = await client.post(url, json=payload_data)
+            response = await client.post(url, json=payload)
         elif method == "PUT":
-            response = await client.put(url, json=payload_data)
+            response = await client.put(url, json=payload)
         elif method == "PATCH":
-            response = await client.patch(url, json=payload_data)
+            response = await client.patch(url, json=payload)
         elif method == "DELETE":
             response = await client.delete(url)
 
