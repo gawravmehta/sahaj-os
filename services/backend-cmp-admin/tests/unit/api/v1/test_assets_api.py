@@ -60,33 +60,25 @@ def override_deps(mock_user, mock_service):
 # ---------------- TEST CREATE ASSET ---------------- #
 
 
-def test_create_asset_success(mock_service):
-    mock_service.create_asset.return_value = asset_response()
-
-    body = {"asset_name": "Asset1", "category": "Website", "usage_url": "x.com"}
-
-    res = client.post(f"{BASE_URL}/create-asset", json=body)
-
-    assert res.status_code == 201
-    data = res.json()
-    assert data["asset_id"] == "a1"
-    mock_service.create_asset.assert_called_once()
-
-
-def test_create_asset_http_exception(mock_service):
-    mock_service.create_asset.side_effect = HTTPException(status_code=409, detail="duplicate")
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (None, asset_response(), 201),
+        (HTTPException(status_code=409, detail="duplicate"), None, 409),
+        (Exception("boom"), None, 500),
+    ],
+)
+def test_create_asset(mock_service, side_effect, return_value, expected_status):
+    mock_service.create_asset.side_effect = side_effect
+    mock_service.create_asset.return_value = return_value
 
     body = {"asset_name": "Asset1", "category": "Website", "usage_url": "x.com"}
     res = client.post(f"{BASE_URL}/create-asset", json=body)
-    assert res.status_code == 409
 
-
-def test_create_asset_internal_error(mock_service):
-    mock_service.create_asset.side_effect = Exception("boom")
-
-    body = {"asset_name": "Asset1", "category": "Website", "usage_url": "x.com"}
-    res = client.post(f"{BASE_URL}/create-asset", json=body)
-    assert res.status_code == 500
+    assert res.status_code == expected_status
+    if expected_status == 201:
+        assert res.json()["asset_id"] == "a1"
+        mock_service.create_asset.assert_called_once()
 
 
 def test_create_asset_validation_error():
@@ -97,37 +89,28 @@ def test_create_asset_validation_error():
 # ---------------- TEST UPDATE ASSET ---------------- #
 
 
-def test_update_asset_success(mock_service):
-    data = asset_response()
-    data["asset_name"] = "Updated"
-    mock_service.update_asset.return_value = data
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status, body",
+    [
+        (None, asset_response(), 200, {"asset_name": "Updated"}),
+        (None, None, 404, {"asset_name": "NewName"}),
+        (HTTPException(status_code=400, detail="bad"), None, 400, {"asset_name": "NewName"}),
+        (Exception("boom"), None, 500, {"asset_name": "NewName"}),
+    ],
+)
+def test_update_asset(mock_service, side_effect, return_value, expected_status, body):
+    if return_value:
+        return_value["asset_name"] = body.get("asset_name", "Asset1")
 
-    res = client.patch(f"{BASE_URL}/update-asset/a1", json={"asset_name": "Updated"})
+    mock_service.update_asset.side_effect = side_effect
+    mock_service.update_asset.return_value = return_value
 
-    assert res.status_code == 200
-    assert res.json()["asset_id"] == "a1"
-    mock_service.update_asset.assert_called_once()
+    res = client.patch(f"{BASE_URL}/update-asset/a1", json=body)
 
-
-def test_update_asset_not_found(mock_service):
-    mock_service.update_asset.return_value = None
-
-    res = client.patch(f"{BASE_URL}/update-asset/a1", json={"asset_name": "NewName"})
-    assert res.status_code == 404
-
-
-def test_update_asset_http_exception(mock_service):
-    mock_service.update_asset.side_effect = HTTPException(status_code=400, detail="bad")
-
-    res = client.patch(f"{BASE_URL}/update-asset/a1", json={"asset_name": "NewName"})
-    assert res.status_code == 400
-
-
-def test_update_asset_internal_error(mock_service):
-    mock_service.update_asset.side_effect = Exception("boom")
-
-    res = client.patch(f"{BASE_URL}/update-asset/a1", json={"asset_name": "NewName"})
-    assert res.status_code == 500
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["asset_id"] == "a1"
+        mock_service.update_asset.assert_called_once()
 
 
 def test_update_asset_invalid_body():
@@ -138,55 +121,57 @@ def test_update_asset_invalid_body():
 # ---------------- TEST PUBLISH ASSET ---------------- #
 
 
-def test_publish_asset_success(mock_service):
-    data = asset_response()
-    data["asset_status"] = "published"
-    mock_service.publish_asset.return_value = data
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (None, {**asset_response(), "asset_status": "published"}, 200),
+        (HTTPException(status_code=404, detail="not found"), None, 404),
+        (Exception("boom"), None, 500),
+    ],
+)
+def test_publish_asset(mock_service, side_effect, return_value, expected_status):
+    mock_service.publish_asset.side_effect = side_effect
+    mock_service.publish_asset.return_value = return_value
 
     res = client.patch(f"{BASE_URL}/publish-asset/a1")
-    assert res.status_code == 200
-    assert res.json()["asset_status"] == "published"
 
-
-def test_publish_asset_http_exception(mock_service):
-    mock_service.publish_asset.side_effect = HTTPException(status_code=404, detail="not found")
-
-    res = client.patch(f"{BASE_URL}/publish-asset/a1")
-    assert res.status_code == 404
-
-
-def test_publish_asset_internal_error(mock_service):
-    mock_service.publish_asset.side_effect = Exception("boom")
-
-    res = client.patch(f"{BASE_URL}/publish-asset/a1")
-    assert res.status_code == 500
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["asset_status"] == "published"
 
 
 # ---------------- TEST GET ALL ASSETS ---------------- #
 
 
-def test_get_all_assets_success(mock_service):
-    mock_service.get_all_assets.return_value = {
-        "current_page": 1,
-        "data_per_page": 20,
-        "total_items": 1,
-        "total_pages": 1,
-        "has_next": False,
-        "has_previous": False,
-        "assets": [asset_response()],
-    }
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (
+            None,
+            {
+                "current_page": 1,
+                "data_per_page": 20,
+                "total_items": 1,
+                "total_pages": 1,
+                "has_next": False,
+                "has_previous": False,
+                "assets": [asset_response()],
+            },
+            200,
+        ),
+        (HTTPException(status_code=400, detail="bad"), None, 400),
+        (Exception("boom"), None, 500),
+    ],
+)
+def test_get_all_assets(mock_service, side_effect, return_value, expected_status):
+    mock_service.get_all_assets.side_effect = side_effect
+    mock_service.get_all_assets.return_value = return_value
 
     res = client.get(f"{BASE_URL}/get-all-assets")
 
-    assert res.status_code == 200
-    assert res.json()["assets"][0]["asset_id"] == "a1"
-
-
-def test_get_all_asset_http_exception(mock_service):
-    mock_service.get_all_assets.side_effect = HTTPException(status_code=400, detail="bad")
-
-    res = client.get(f"{BASE_URL}/get-all-assets")  # ✔ FIXED
-    assert res.status_code == 400
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["assets"][0]["asset_id"] == "a1"
 
 
 def test_get_all_assets_invalid_query():
@@ -194,75 +179,47 @@ def test_get_all_assets_invalid_query():
     assert res.status_code == 422
 
 
-def test_get_all_asset_internal_error(mock_service):
-    mock_service.get_all_assets.side_effect = Exception("boom")
-
-    res = client.get(f"{BASE_URL}/get-all-assets")
-    assert res.status_code == 500
-
-
 # ---------------- TEST GET ASSET ---------------- #
 
 
-def test_get_asset_success(mock_service):
-    mock_service.get_asset.return_value = asset_response()
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (None, asset_response(), 200),
+        (None, None, 404),
+        (HTTPException(status_code=400, detail="bad"), None, 400),
+        (Exception("boom"), None, 500),
+    ],
+)
+def test_get_asset(mock_service, side_effect, return_value, expected_status):
+    mock_service.get_asset.side_effect = side_effect
+    mock_service.get_asset.return_value = return_value
 
     res = client.get(f"{BASE_URL}/get-asset/a1")
-    assert res.status_code == 200
-    assert res.json()["asset_id"] == "a1"
 
-
-def test_get_asset_not_found(mock_service):
-    mock_service.get_asset.return_value = None
-
-    res = client.get(f"{BASE_URL}/get-asset/a1")
-    assert res.status_code == 404
-
-
-def test_get_asset_http_exception(mock_service):
-    mock_service.get_asset.side_effect = HTTPException(status_code=400, detail="bad")
-
-    res = client.get(f"{BASE_URL}/get-asset/a1")
-    assert res.status_code == 400
-
-
-def test_get_asset_internal_error(mock_service):
-    mock_service.get_asset.side_effect = Exception("boom")
-
-    res = client.get(f"{BASE_URL}/get-asset/a1")
-    assert res.status_code == 500
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["asset_id"] == "a1"
 
 
 # ---------------- TEST DELETE ASSET ---------------- #
 
 
-def test_delete_asset_success(mock_service):
-    data = asset_response()
-    data["asset_status"] = "archived"
-    mock_service.delete_asset.return_value = data
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (None, {**asset_response(), "asset_status": "archived"}, 200),
+        (None, None, 404),
+        (HTTPException(status_code=400, detail="bad"), None, 400),
+        (Exception("boom"), None, 500),
+    ],
+)
+def test_delete_asset(mock_service, side_effect, return_value, expected_status):
+    mock_service.delete_asset.side_effect = side_effect
+    mock_service.delete_asset.return_value = return_value
 
     res = client.delete(f"{BASE_URL}/delete-asset/a1")
 
-    assert res.status_code == 200
-    assert res.json()["asset_status"] == "archived"
-
-
-def test_delete_asset_not_found(mock_service):
-    mock_service.delete_asset.return_value = None
-
-    res = client.delete(f"{BASE_URL}/delete-asset/a1")
-    assert res.status_code == 404
-
-
-def test_delete_asset_http_exception(mock_service):
-    mock_service.delete_asset.side_effect = HTTPException(status_code=400, detail="bad")
-
-    res = client.delete(f"{BASE_URL}/delete-asset/a1")
-    assert res.status_code == 400
-
-
-def test_delete_asset_internal_error(mock_service):
-    mock_service.delete_asset.side_effect = Exception("boom")
-
-    res = client.delete(f"{BASE_URL}/delete-asset/a1")
-    assert res.status_code == 500
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["asset_status"] == "archived"
