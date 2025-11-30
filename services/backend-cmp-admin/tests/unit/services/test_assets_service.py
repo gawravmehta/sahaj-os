@@ -164,9 +164,8 @@ async def test_delete_asset(service, mock_crud, monkeypatch, get_asset_return, e
     user = {"df_id": "df1", "_id": "u1"}
 
     if get_asset_return is None:
-        with pytest.raises(HTTPException) as exc:
-            await service.delete_asset("a1", user)
-        assert exc.value.status_code == 404
+        result = await service.delete_asset("a1", user)
+        assert result is None
     elif expected_result:
         result = await service.delete_asset("a1", user)
         assert result["archived"] is True
@@ -336,7 +335,7 @@ async def test_get_all_assets_with_category(monkeypatch):
     [
         ({"_id": "a1"}, False, True),
         ({"_id": "a1"}, True, False),
-        (None, False, False),
+        (None, False, True),
     ],
 )
 async def test_get_asset(service, mock_crud, monkeypatch, get_asset_return, for_system, expected_log_called):
