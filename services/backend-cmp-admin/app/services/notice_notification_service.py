@@ -164,7 +164,7 @@ class NoticeNotificationService:
             await self.crud.mark_notification_as_clicked(event_id)
 
             if url_type == "ln":
-                redirect_url = f"{settings.CMP_NOTICE_WORKER_URL}/api/v1/ln/CONCUR?{token}"
+                redirect_url = f"{settings.CMP_NOTICE_WORKER_URL}/api/v1/ln/{settings.SMS_SENDER_ID}?{token}"
             elif url_type == "mln":
                 redirect_url = f"{settings.CMP_NOTICE_WORKER_URL}/api/v1/ln/mln/{token}"
             else:

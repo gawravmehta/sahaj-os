@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     NOTICE_WORKER_BUCKET: str = "notice-worker-dev"
     S3_SECURE: bool = False
 
-    SMS_SENDER_ID: str = "CONCUR"
+    SMS_SENDER_ID: str = "SAHAJ"
 
     RABBITMQ_HOST: str
     RABBITMQ_PORT: int = 5672

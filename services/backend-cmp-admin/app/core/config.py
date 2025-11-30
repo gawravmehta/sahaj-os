@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
 
+    SMS_SENDER_ID: str = "SAHAJ"
+
     POSTGRES_DATABASE_URL: str
 
     MINIO_ROOT_USER: str
