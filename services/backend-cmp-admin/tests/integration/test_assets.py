@@ -1,7 +1,6 @@
 import pytest
 from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from bson import ObjectId
 
 
 @pytest.mark.asyncio
@@ -14,9 +13,12 @@ async def test_create_asset(client: AsyncClient, test_db: AsyncIOMotorDatabase):
     assert response_data["description"] == asset_data["description"]
     assert "asset_id" in response_data
 
-    asset_in_db = await test_db.asset_master.find_one({"_id": ObjectId(response_data["asset_id"])})
-    assert asset_in_db is not None
-    assert asset_in_db["asset_name"] == asset_data["asset_name"]
+    asset_id = response_data["asset_id"]
+    get_response = await client.get(f"/api/v1/assets/get-asset/{asset_id}")
+    assert get_response.status_code == 200
+    get_response_data = get_response.json()
+    assert get_response_data["asset_name"] == asset_data["asset_name"]
+    assert get_response_data["description"] == asset_data["description"]
 
 
 @pytest.mark.asyncio
