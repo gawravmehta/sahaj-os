@@ -47,3 +47,14 @@ class GrievanceCRUD:
         if grievance:
             grievance["_id"] = str(grievance["_id"])
         return grievance
+
+    async def resolve_grievance(self, grievance_id: str) -> Optional[Dict[str, Any]]:
+        if not ObjectId.is_valid(grievance_id):
+            return None
+        grievance = await self.grievance_collection.find_one_and_update(
+            {"_id": ObjectId(grievance_id)},
+            {"$set": {"request_status": "resolved"}},
+        )
+        if grievance:
+            grievance["_id"] = str(grievance["_id"])
+        return grievance

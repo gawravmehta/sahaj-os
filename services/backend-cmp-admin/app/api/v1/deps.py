@@ -467,8 +467,9 @@ async def get_grievance_crud(
 async def get_grievance_service(
     crud: GrievanceCRUD = Depends(get_grievance_crud),
     business_logs_collection: str = Depends(get_business_logs_collection),
+    customer_notification_collection: AsyncIOMotorCollection = Depends(get_customer_notifications_collection),
 ) -> GrievanceService:
-    return GrievanceService(crud, business_logs_collection)
+    return GrievanceService(crud, business_logs_collection, customer_notification_collection)
 
 
 async def get_notice_notification_crud(

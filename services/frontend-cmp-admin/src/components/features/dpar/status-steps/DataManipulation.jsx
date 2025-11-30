@@ -27,7 +27,6 @@ export default function DataManipulation({ data }) {
 
   return (
     <div className="space-y-6">
-
       <div className="border border-gray-300  p-4 bg-white">
         <h3 className="text-md font-semibold mb-2">Add Notes</h3>
         <div className="space-y-4">
@@ -48,12 +47,6 @@ export default function DataManipulation({ data }) {
         <div className="flex items-center justify-end">
           <Button onClick={handleAddAdminNote}>Save</Button>
         </div>
-      </div>
-      <div className="border flex items-center justify-between border-gray-300  p-4 bg-white">
-        <h3 className="text-md font-semibold">Event Status</h3>
-        <span className="text-orange-500">
-          ⏳ Awaiting completion on remaining processors
-        </span>
       </div>
     </div>
   );

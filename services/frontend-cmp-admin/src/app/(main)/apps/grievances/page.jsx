@@ -84,7 +84,7 @@ const Page = () => {
       headerClassName: "text-center",
       render: (element) => (
         <Tag
-          variant={element === "open" ? "active" : "inactive"}
+          variant={element === "open" ? "active" : "outlineBlue"}
           label={element}
           className="mx-auto w-20 capitalize"
         />
@@ -106,7 +106,6 @@ const Page = () => {
           title="Grievances"
           subtitle="Manage, track, and resolve employee or customer grievances to ensure fairness, trust, and compliance."
         />
-
       </div>
 
       <DataTable
