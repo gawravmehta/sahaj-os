@@ -59,7 +59,11 @@ const Page = () => {
       Cookies.set("mobile", mobile, { expires: 1 });
 
       toast.success(response.message);
-      router.push(`/verify-otp?agreement_id=${agreementId}`);
+      if (agreementId) {
+        router.push(`/verify-otp?agreement_id=${agreementId}`);
+      } else {
+        router.push(`/verify-otp`);
+      }
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
@@ -181,6 +185,7 @@ const Page = () => {
                     type="button"
                     onClick={() => setIsEmailLogin(!isEmailLogin)}
                     className="w-full h-10"
+                    disabled={isEmailLogin}
                   >
                     {isEmailLogin ? t.button2 : t.button3}
                   </Button>
