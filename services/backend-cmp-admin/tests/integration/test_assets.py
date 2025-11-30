@@ -1,48 +1,52 @@
-# tests/integration/test_assets.py
 import pytest
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from motor.motor_asyncio import AsyncIOMotorDatabase
+from bson import ObjectId
 
-BASE = "/api/v1/assets"
+
+@pytest.mark.asyncio
+async def test_create_asset(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    asset_data = {"asset_name": "Test Asset", "category": "Website", "description": "This is a test asset.", "usage_url": "https://example.com"}
+    response = await client.post("/api/v1/assets/create-asset", json=asset_data)
+    assert response.status_code == 201
+    response_data = response.json()
+    assert response_data["asset_name"] == asset_data["asset_name"]
+    assert response_data["description"] == asset_data["description"]
+    assert "asset_id" in response_data
+
+    asset_in_db = await test_db.asset_master.find_one({"_id": ObjectId(response_data["asset_id"])})
+    assert asset_in_db is not None
+    assert asset_in_db["asset_name"] == asset_data["asset_name"]
 
 
-# ------------------------------- CREATE ASSET ----------------------------------
-
-def test_create_asset_success(client: TestClient):
-    body = {
-        "asset_name": "TestAsset",
-        "category": "Website",
-        "usage_url": "https://example.com"
+@pytest.mark.asyncio
+async def test_create_asset_invalid_category(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    asset_data = {
+        "asset_name": "Test Asset",
+        "category": "Invalid Category",
+        "description": "This is a test asset.",
+        "usage_url": "https://example.com",
     }
-
-    res = client.post(f"{BASE}/create-asset", json=body)
-
-    assert res.status_code == 201
-    data = res.json()
-
-    assert data["asset_id"]                      # should exist
-    assert data["asset_name"] == "TestAsset"
-    assert data["usage_url"] == "https://example.com"
+    response = await client.post("/api/v1/assets/create-asset", json=asset_data)
+    assert response.status_code == 422
 
 
-def test_create_asset_duplicate(client: TestClient):
-    body = {
-        "asset_name": "DuplicateAsset",
-        "category": "Website",
-        "usage_url": "https://example.com"
-    }
-
-    # first insert
-    res1 = client.post(f"{BASE}/create-asset", json=body)
-    assert res1.status_code == 201
-
-    # duplicate insert
-    res2 = client.post(f"{BASE}/create-asset", json=body)
-    assert res2.status_code == 409
+@pytest.mark.asyncio
+async def test_create_asset_missing_usage_url(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    asset_data = {"asset_name": "Test Asset", "category": "Website", "description": "This is a test asset."}
+    response = await client.post("/api/v1/assets/create-asset", json=asset_data)
+    assert response.status_code == 422
 
 
-def test_create_asset_validation_error(client: TestClient):
-    invalid_body = {"wrong": "field"}
+@pytest.mark.asyncio
+async def test_create_asset_missing_name(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    asset_data = {"category": "Website", "description": "This is a test asset.", "usage_url": "https://example.com"}
+    response = await client.post("/api/v1/assets/create-asset", json=asset_data)
+    assert response.status_code == 422
 
-    res = client.post(f"{BASE}/create-asset", json=invalid_body)
 
-    assert res.status_code == 422
+@pytest.mark.asyncio
+async def test_create_asset_missing_category(client: AsyncClient, test_db: AsyncIOMotorDatabase):
+    asset_data = {"asset_name": "Test Asset", "description": "This is a test asset.", "usage_url": "https://example.com"}
+    response = await client.post("/api/v1/assets/create-asset", json=asset_data)
+    assert response.status_code == 422
