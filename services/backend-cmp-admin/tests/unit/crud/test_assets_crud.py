@@ -65,42 +65,42 @@ async def test_create_asset(crud, mock_collection, dummy_data):
 
 
 @pytest.mark.asyncio
-async def test_get_asset_found(crud, mock_collection, dummy_data):
-    asset_id = "60d0fe4f3460595e63456789"
+@pytest.mark.parametrize(
+    "asset_id, find_one_return, expected_result",
+    [
+        ("60d0fe4f3460595e63456789", {"asset_name": "Test Asset", "_id": ObjectId("60d0fe4f3460595e63456789")}, True),
+        ("60d0fe4f3460595e63456781", None, False),
+    ],
+)
+async def test_get_asset(crud, mock_collection, dummy_data, asset_id, find_one_return, expected_result):
+    if find_one_return:
+        find_one_return = {**dummy_data, **find_one_return}
 
-    mock_collection.find_one.return_value = {**dummy_data, "_id": ObjectId(asset_id)}
+    mock_collection.find_one.return_value = find_one_return
 
     result = await crud.get_asset(asset_id, dummy_data["df_id"])
 
-    assert result["_id"] == asset_id
-    assert result["asset_name"] == dummy_data["asset_name"]
+    if expected_result:
+        assert result["_id"] == asset_id
+        assert result["asset_name"] == dummy_data["asset_name"]
+    else:
+        assert result is None
 
 
 @pytest.mark.asyncio
-async def test_get_asset_not_found(crud, mock_collection):
-    mock_collection.find_one.return_value = None
-
-    result = await crud.get_asset("60d0fe4f3460595e63456781", "test_df_id")
-
-    assert result is None
-
-
-@pytest.mark.asyncio
-async def test_is_duplicate_name_true(crud, mock_collection, dummy_data):
-    mock_collection.find_one.return_value = {"_id": ObjectId()}
+@pytest.mark.parametrize(
+    "find_one_return, expected_result",
+    [
+        ({"_id": ObjectId()}, True),
+        (None, False),
+    ],
+)
+async def test_is_duplicate_name(crud, mock_collection, dummy_data, find_one_return, expected_result):
+    mock_collection.find_one.return_value = find_one_return
 
     result = await crud.is_duplicate_name(dummy_data["asset_name"], dummy_data["df_id"])
 
-    assert result is True
-
-
-@pytest.mark.asyncio
-async def test_is_duplicate_name_false(crud, mock_collection, dummy_data):
-    mock_collection.find_one.return_value = None
-
-    result = await crud.is_duplicate_name(dummy_data["asset_name"], dummy_data["df_id"])
-
-    assert result is False
+    assert result is expected_result
 
 
 @pytest.mark.asyncio
@@ -117,21 +117,34 @@ async def test_update_asset_by_id(crud, mock_collection, dummy_data):
 
 
 @pytest.mark.asyncio
-async def test_get_all_assets(crud, mock_collection, dummy_data):
-    # Mock cursor __aiter__
-    mock_collection.find.return_value.__aiter__.return_value = iter(
-        [
-            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
-            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e6345678a"), "asset_name": "Another"},
-        ]
-    )
+@pytest.mark.parametrize(
+    "category, expected_total, expected_data_len",
+    [
+        ("essential", 2, 2),
+        (None, 1, 1),
+    ],
+)
+async def test_get_all_assets(crud, mock_collection, dummy_data, category, expected_total, expected_data_len):
+    if category:
+        mock_collection.find.return_value.__aiter__.return_value = iter(
+            [
+                {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
+                {**dummy_data, "_id": ObjectId("60d0fe4f3460595e6345678a"), "asset_name": "Another"},
+            ]
+        )
+    else:
+        mock_collection.find.return_value.__aiter__.return_value = iter(
+            [
+                {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
+            ]
+        )
 
-    mock_collection.count_documents.return_value = 2
+    mock_collection.count_documents.return_value = expected_total
 
-    result = await crud.get_all_assets(dummy_data["df_id"], 0, 10, "essential")
+    result = await crud.get_all_assets(dummy_data["df_id"], 0, 10, category)
 
-    assert result["total"] == 2
-    assert len(result["data"]) == 2
+    assert result["total"] == expected_total
+    assert len(result["data"]) == expected_data_len
 
 
 @pytest.mark.asyncio
@@ -153,28 +166,45 @@ async def test_get_assets_categories(crud, mock_collection):
 
 
 @pytest.mark.asyncio
-async def test_get_total_cookie_count(crud, mock_collection):
-    mock_collection.find.return_value.__aiter__.return_value = iter(
-        [{"meta_cookies": {"cookies_count": 5}}, {"meta_cookies": {"cookies_count": 10}}, {"meta_cookies": None}, {}]
-    )
+@pytest.mark.parametrize(
+    "find_return, expected_total",
+    [
+        (
+            [{"meta_cookies": {"cookies_count": 5}}, {"meta_cookies": {"cookies_count": 10}}, {"meta_cookies": None}, {}],
+            15,
+        ),
+        (
+            [
+                {"meta_cookies": {"cookies_count": 5}},
+                {"meta_cookies": {"cookies_count": "10"}},
+                {"meta_cookies": 5},
+                {"meta_cookies": []},
+                {"meta_cookies": "random"},
+                {},
+            ],
+            5,
+        ),
+    ],
+)
+async def test_get_total_cookie_count(crud, mock_collection, find_return, expected_total):
+    mock_collection.find.return_value.__aiter__.return_value = iter(find_return)
 
     result = await crud.get_total_cookie_count("df123")
 
-    assert result == 15
+    assert result == expected_total
 
 
 @pytest.mark.asyncio
-async def test_update_asset_invalid_id(crud):
+@pytest.mark.parametrize(
+    "method_name, method_args",
+    [
+        ("update_asset_by_id", ("not_valid_id", "df123", {})),
+        ("get_asset", ("invalid_id", "df123")),
+    ],
+)
+async def test_invalid_id_http_exception(crud, method_name, method_args):
     with pytest.raises(HTTPException) as exc:
-        await crud.update_asset_by_id("not_valid_id", "df123", {})
-
-    assert exc.value.status_code == 422
-
-
-@pytest.mark.asyncio
-async def test_get_asset_invalid_id(crud):
-    with pytest.raises(HTTPException) as exc:
-        await crud.get_asset("invalid_id", "df123")
+        await getattr(crud, method_name)(*method_args)
 
     assert exc.value.status_code == 422
 
@@ -189,40 +219,3 @@ async def test_create_asset_does_not_mutate_input(crud, mock_collection, dummy_d
 
     # Ensure original data is untouched
     assert "_id" not in original
-
-
-@pytest.mark.asyncio
-async def test_get_all_assets_without_category(crud, mock_collection, dummy_data):
-    mock_collection.find.return_value.__aiter__.return_value = iter(
-        [
-            {**dummy_data, "_id": ObjectId("60d0fe4f3460595e63456789")},
-        ]
-    )
-    mock_collection.count_documents.return_value = 1
-
-    result = await crud.get_all_assets(dummy_data["df_id"], 0, 10, None)
-
-    # Ensure category filter was NOT added
-    called_query = mock_collection.find.call_args[0][0]
-    assert "category" not in called_query
-
-    assert result["total"] == 1
-    assert len(result["data"]) == 1
-
-
-@pytest.mark.asyncio
-async def test_get_total_cookie_count_with_invalid_values(crud, mock_collection):
-    mock_collection.find.return_value.__aiter__.return_value = iter(
-        [
-            {"meta_cookies": {"cookies_count": 5}},
-            {"meta_cookies": {"cookies_count": "10"}},
-            {"meta_cookies": 5},
-            {"meta_cookies": []},
-            {"meta_cookies": "random"},
-            {},
-        ]
-    )
-
-    result = await crud.get_total_cookie_count("df123")
-
-    assert result == 5
