@@ -356,12 +356,12 @@ class ConsentArtifactService:
                             thirty_days_expiring[dp_id_from_doc] = ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
                         thirty_days_expiring[dp_id_from_doc].expiring_purposes.append(purpose_consent_expiry)
 
-        if days_to_expire == "7":
-            return list(seven_days_expiring.values())
-        elif days_to_expire == "15":
-            return list(fifteen_days_expiring.values())
-        else:
-            expiring_consents_result = list(thirty_days_expiring.values())
+            if days_to_expire == "7":
+                result = list(seven_days_expiring.values())
+            elif days_to_expire == "15":
+                result = list(fifteen_days_expiring.values())
+            else:
+                result = list(thirty_days_expiring.values())
 
         await log_business_event(
             event_type="LIST_EXPIRING_CONSENTS",
@@ -376,4 +376,4 @@ class ConsentArtifactService:
             business_logs_collection=self.business_logs_collection,
         )
 
-        return expiring_consents_result
+        return result
