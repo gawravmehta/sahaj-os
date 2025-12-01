@@ -77,7 +77,7 @@ class DataFiduciaryService:
         updated = await self.crud.update_data_fiduciary(df_id, update_ops)
 
         if user_basic_info:
-            admin_email = settings.INITIAL_ADMIN_EMAIL
+            admin_email = settings.SUPERADMIN_EMAIL
             user_update_doc = jsonable_encoder(user_basic_info, exclude_unset=True)
 
             user_update_doc["is_org_configured"] = True

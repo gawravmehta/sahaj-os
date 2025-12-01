@@ -1,0 +1,277 @@
+import pytest
+from unittest.mock import AsyncMock, MagicMock
+from bson import ObjectId
+from motor.motor_asyncio import AsyncIOMotorCollection
+from app.crud.role_crud import RoleCRUD
+
+
+@pytest.fixture
+def mock_collection():
+    """Mocked Mongo collection with correct async behavior."""
+    collection = MagicMock(spec=AsyncIOMotorCollection)
+
+    collection.find_one = AsyncMock(return_value=None)
+    collection.insert_one = AsyncMock()
+    collection.update_one = AsyncMock()
+    collection.count_documents = AsyncMock(return_value=0)
+    collection.update_many = AsyncMock()
+
+    cursor = MagicMock()
+    cursor.skip.return_value = cursor
+    cursor.limit.return_value = cursor
+    cursor.to_list = AsyncMock(return_value=[])
+
+    collection.find.return_value = cursor
+
+    return collection
+
+
+@pytest.fixture
+def crud(mock_collection):
+    return RoleCRUD(mock_collection)
+
+
+@pytest.fixture
+def dummy_role_data():
+    return {
+        "_id": ObjectId("60d0fe4f3460595e63456789"),
+        "role_name": "Admin",
+        "role_description": "Administrator role",
+        "df_id": "df123",
+        "is_deleted": False,
+        "routes_accessible": ["/admin", "/dashboard"],
+        "role_users": ["user1_id", "user2_id"],
+    }
+
+
+@pytest.mark.asyncio
+async def test_find_by_name(crud, mock_collection, dummy_role_data):
+    mock_collection.find_one.return_value = dummy_role_data.copy()
+    role_name = dummy_role_data["role_name"]
+    df_id = dummy_role_data["df_id"]
+
+    result = await crud.find_by_name(role_name, df_id)
+
+    mock_collection.find_one.assert_called_once_with({"role_name": role_name, "df_id": df_id, "is_deleted": False})
+    assert result == dummy_role_data
+
+
+@pytest.mark.asyncio
+async def test_insert_role(crud, mock_collection, dummy_role_data):
+    mock_insert_one_result = MagicMock()
+    mock_insert_one_result.inserted_id = dummy_role_data["_id"]
+    mock_collection.insert_one.return_value = mock_insert_one_result
+
+    role_data_to_create = dummy_role_data.copy()
+    del role_data_to_create["_id"]
+
+    result = await crud.insert(role_data_to_create)
+
+    mock_collection.insert_one.assert_called_once_with(role_data_to_create)
+    assert result == mock_insert_one_result
+
+
+@pytest.mark.asyncio
+async def test_get_roles_paginated(crud, mock_collection, dummy_role_data):
+    mock_collection.find.return_value.to_list.return_value = [dummy_role_data.copy()]
+    df_id = dummy_role_data["df_id"]
+    skip = 0
+    limit = 10
+
+    result = await crud.get_roles_paginated(df_id, skip, limit)
+
+    mock_collection.find.assert_called_once_with(
+        {"is_deleted": False, "df_id": df_id},
+        {"_id": 1, "role_name": 1, "role_description": 1, "routes_accessible": 1},
+    )
+    mock_collection.find.return_value.skip.assert_called_once_with(skip)
+    mock_collection.find.return_value.limit.assert_called_once_with(limit)
+    mock_collection.find.return_value.to_list.assert_called_once_with(length=limit)
+    assert result == [dummy_role_data]
+
+
+@pytest.mark.asyncio
+async def test_count_roles(crud, mock_collection, dummy_role_data):
+    mock_collection.count_documents.return_value = 5
+    df_id = dummy_role_data["df_id"]
+
+    result = await crud.count_roles(df_id)
+
+    mock_collection.count_documents.assert_called_once_with({"is_deleted": False, "df_id": df_id})
+    assert result == 5
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "role_id_input, is_valid_objectid, find_one_return, expected_result",
+    [
+        ("60d0fe4f3460595e63456789", True, {"_id": ObjectId("60d0fe4f3460595e63456789"), "role_name": "Test Role"}, True),
+        ("invalid_id", False, None, False),
+        ("60d0fe4f3460595e63456781", True, None, False),
+    ],
+)
+async def test_find_by_id(crud, mock_collection, dummy_role_data, role_id_input, is_valid_objectid, find_one_return, expected_result):
+    if is_valid_objectid:
+        mock_collection.find_one.return_value = find_one_return
+
+    result = await crud.find_by_id(role_id_input)
+
+    if is_valid_objectid:
+        mock_collection.find_one.assert_called_once_with({"_id": ObjectId(role_id_input), "is_deleted": False})
+        if expected_result:
+            assert result == find_one_return
+        else:
+            assert result is None
+    else:
+        mock_collection.find_one.assert_not_called()
+        assert result is None
+
+
+@pytest.mark.asyncio
+async def test_update_role(crud, mock_collection, dummy_role_data):
+    role_id = str(dummy_role_data["_id"])
+    update_fields = {"role_description": "Updated Description"}
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_collection.update_one.return_value = mock_update_result
+
+    result = await crud.update_role(role_id, update_fields)
+
+    mock_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(role_id)},
+        {"$set": update_fields},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "role_id_input, is_valid_objectid, find_one_return, expected_result",
+    [
+        ("60d0fe4f3460595e63456789", True, {"_id": ObjectId("60d0fe4f3460595e63456789"), "role_users": ["user1", "user2"]}, True),
+        ("invalid_id", False, None, False),
+        ("60d0fe4f3460595e63456781", True, None, False),
+    ],
+)
+async def test_get_role_users(crud, mock_collection, role_id_input, is_valid_objectid, find_one_return, expected_result):
+    if is_valid_objectid:
+        mock_collection.find_one.return_value = find_one_return
+
+    result = await crud.get_role_users(role_id_input)
+
+    if is_valid_objectid:
+        mock_collection.find_one.assert_called_once_with({"_id": ObjectId(role_id_input), "is_deleted": False}, {"role_users": 1})
+        if expected_result:
+            assert result == find_one_return
+        else:
+            assert result is None
+    else:
+        mock_collection.find_one.assert_not_called()
+        assert result is None
+
+
+@pytest.mark.asyncio
+async def test_update_role_users(crud, mock_collection, dummy_role_data):
+    role_id = str(dummy_role_data["_id"])
+    updated_users = ["user1_id", "user3_id"]
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_collection.update_one.return_value = mock_update_result
+
+    result = await crud.update_role_users(role_id, updated_users)
+
+    mock_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(role_id)},
+        {"$set": {"role_users": updated_users}},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_update_role_permissions(crud, mock_collection, dummy_role_data):
+    role_id = str(dummy_role_data["_id"])
+    routes = ["/new_route", "/another_route"]
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_collection.update_one.return_value = mock_update_result
+
+    result = await crud.update_role_permissions(role_id, routes)
+
+    mock_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(role_id)},
+        {"$set": {"routes_accessible": routes}},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_search_roles(crud, mock_collection, dummy_role_data):
+    mock_collection.find.return_value.to_list.return_value = [dummy_role_data.copy()]
+    df_id = dummy_role_data["df_id"]
+    role_name_part = "adm"
+
+    result = await crud.search_roles(df_id, role_name_part)
+
+    regex_pattern = {"$regex": role_name_part, "$options": "i"}
+    mock_collection.find.assert_called_once_with(
+        {
+            "role_name": regex_pattern,
+            "df_id": df_id,
+            "is_deleted": False,
+        },
+        {"_id": 1, "role_name": 1, "role_description": 1},
+    )
+    mock_collection.find.return_value.to_list.assert_called_once_with(length=None)
+    assert result == [dummy_role_data]
+
+
+@pytest.mark.asyncio
+async def test_soft_delete_role(crud, mock_collection, dummy_role_data):
+    role_id = str(dummy_role_data["_id"])
+    updated_data = {"is_deleted": True}
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_collection.update_one.return_value = mock_update_result
+
+    result = await crud.soft_delete_role(role_id, updated_data)
+
+    mock_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(role_id)},
+        {"$set": updated_data},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_add_user_to_role(crud, mock_collection, dummy_role_data):
+    role_id = str(dummy_role_data["_id"])
+    user_id = "new_user_id"
+
+    mock_update_result = MagicMock(matched_count=1, modified_count=1)
+    mock_collection.update_one.return_value = mock_update_result
+
+    result = await crud.add_user_to_role(role_id, user_id)
+
+    mock_collection.update_one.assert_called_once_with(
+        {"_id": ObjectId(role_id)},
+        {"$addToSet": {"role_users": user_id}},
+    )
+    assert result == mock_update_result
+
+
+@pytest.mark.asyncio
+async def test_add_user_to_roles(crud, mock_collection):
+    role_ids = ["60d0fe4f3460595e63456789", "60d0fe4f3460595e6345678a"]
+    user_id = "another_new_user_id"
+
+    mock_update_result = MagicMock(matched_count=2, modified_count=2)
+    mock_collection.update_many.return_value = mock_update_result
+
+    result = await crud.add_user_to_roles(role_ids, user_id)
+
+    object_ids = [ObjectId(rid) for rid in role_ids]
+    mock_collection.update_many.assert_called_once_with(
+        {"_id": {"$in": object_ids}},
+        {"$addToSet": {"role_users": user_id}},
+    )
+    assert result == mock_update_result

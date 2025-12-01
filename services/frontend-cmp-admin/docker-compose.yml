@@ -3,6 +3,8 @@ services:
   frontend-cmp-admin:
     build: 
       context: ./services/frontend-cmp-admin
+      args:
+        NEXT_PUBLIC_ADMIN_URL: "${NEXT_PUBLIC_ADMIN_URL}"
     image: frontend-cmp-admin:latest
     ports:
       - "3000:3000"

@@ -62,6 +62,8 @@ async def create_purpose_endpoint(
     try:
         created_purpose = await service.create_purpose(purpose_data.model_dump(), current_user)
         return created_purpose
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -103,7 +105,7 @@ async def update_purpose_endpoint(
         if not updated:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Purpose Template not found or no changes made",
+                detail="Purpose not found or no changes made",
             )
         return updated
     except HTTPException:
@@ -144,10 +146,10 @@ async def get_all_purposes_endpoint(
             current_page=current_page,
             data_per_page=data_per_page,
         )
-        if not purposes:
+        if not purposes or not purposes["purposes"]:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Purpose Template not found",
+                detail="No Purpose Templates found",
             )
         return purposes
     except HTTPException:

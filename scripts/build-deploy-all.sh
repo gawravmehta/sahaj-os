@@ -112,7 +112,7 @@ if [ -d "$REPO_ROOT/services" ]; then
 fi
 
 echo
-echo "Final compose build command:"
+echo "▶ Final compose build command:"
 printf ' %q' "${CMD[@]}"
 if [ "$PARALLEL_SUPPORTED" = true ]; then
   echo " build --pull --parallel"
@@ -131,7 +131,7 @@ echo
 echo "✅ Build finished. No containers have been started by build."
 
 echo
-echo "Running: ${CMD[*]} up -d"
+echo "▶ Running: ${CMD[*]} up -d"
 "${CMD[@]}" up -d
 
 echo
@@ -145,6 +145,12 @@ if ! bash "$ISSUE_CERTS"; then
 fi
 
 echo
-echo "✅ Certificates issued/renewed and nginx reloaded."
+echo "✅ All Containers started and certificates issued/renewed successfully."
+
+read -p "Do you want to display the environment variables? (y/n): " show_env
+if [[ "$show_env" =~ ^[Yy]$ ]]; then
+  echo "Environment variables:"
+  printenv
+fi
 
 exit 0

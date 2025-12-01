@@ -61,7 +61,7 @@ export async function middleware(request) {
     try {
       const encodedPath = encodeURIComponent(request.nextUrl.pathname);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/check-access/${encodedPath}`,
+        `${process.env.NEXT_PUBLIC_ADMIN_URL}/auth/check-access/${encodedPath}`,
         {
           method: "GET",
           headers: {

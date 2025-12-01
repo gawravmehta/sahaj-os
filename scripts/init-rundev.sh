@@ -226,4 +226,11 @@ for svc in */; do
 done
 
 echo "✅ All services started."
+
+read -p "Do you want to display the environment variables? (y/n): " show_env
+if [[ "$show_env" =~ ^[Yy]$ ]]; then
+  echo "Environment variables:"
+  printenv
+fi
+
 exit 0

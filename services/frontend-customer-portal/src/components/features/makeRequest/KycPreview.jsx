@@ -52,7 +52,7 @@ const KycPreview = ({
         }));
       }
 
-      const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
+      const baseURL = process.env.NEXT_PUBLIC_CUSTOMER_URL || "";
       const response = await fetch(
         `${baseURL}/api/v1/grievance/files/${objectName}`,
         {
