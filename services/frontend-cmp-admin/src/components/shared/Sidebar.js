@@ -112,9 +112,8 @@ const Sidebar = ({ children }) => {
     <>
       <div
         onClick={handleSidebar}
-        className={` ${
-          showSidebar ? "fixed" : "hidden"
-        } inset-0 left-0 top-0 z-10 h-screen w-screen bg-black/20 opacity-75 blur-2xl lg:hidden`}
+        className={` ${showSidebar ? "fixed" : "hidden"
+          } inset-0 left-0 top-0 z-10 h-screen w-screen bg-black/20 opacity-75 blur-2xl lg:hidden`}
       ></div>
       <Navbar
         showSidebar={showSidebar}
@@ -124,14 +123,12 @@ const Sidebar = ({ children }) => {
 
       <div className={`${showSidebar ? "fixed" : "hidden"} z-20 lg:fixed`}>
         <div
-          className={`custom-scrollbar flex h-screen flex-col justify-between text-sm text-[#ccd5ed] ${
-            showHamburger ? "pt-[60px]" : "w-60 pt-[60px]"
-          } bg-[#13132A]`}
+          className={`custom-scrollbar flex h-screen flex-col justify-between text-sm text-[#ccd5ed] ${showHamburger ? "pt-[60px]" : "w-60 pt-[60px]"
+            } bg-[#13132A]`}
         >
           <div
-            className={`mb-4 flex flex-col gap-y-1 ${
-              showHamburger && "items-center"
-            } ${showHamburger && "relative"} `}
+            className={`mb-4 flex flex-col gap-y-1 ${showHamburger && "items-center"
+              } ${showHamburger && "relative"} `}
           >
             <div className="absolute -right-7 hidden h-12 w-full lg:flex">
               <button
@@ -140,9 +137,8 @@ const Sidebar = ({ children }) => {
               >
                 <MdKeyboardArrowLeft
                   size={20}
-                  className={`transition-transform duration-300 ease-in-out ${
-                    showHamburger ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`transition-transform duration-300 ease-in-out ${showHamburger ? "rotate-180" : "rotate-0"
+                    }`}
                 />
               </button>
             </div>
@@ -156,9 +152,8 @@ const Sidebar = ({ children }) => {
                       onMouseEnter={() => setHoveredMenu(menu.label)}
                       onMouseLeave={() => setHoveredMenu(null)}
                       href={menu.href}
-                      className={`w-full px-4 py-2 hover:bg-hover ${
-                        pathname.includes(menu.href) && "bg-primary"
-                      }`}
+                      className={`w-full px-4 py-2 hover:bg-hover ${pathname.includes(menu.href) && "bg-primary"
+                        }`}
                     >
                       <div className="group relative flex items-center justify-between gap-3">
                         <div className="group relative flex items-center gap-3">
@@ -172,9 +167,8 @@ const Sidebar = ({ children }) => {
                             />
                           </span>
                           <span
-                            className={`text-[#ccd5ed] ${
-                              showHamburger ? "hidden" : ""
-                            }`}
+                            className={`text-[#ccd5ed] ${showHamburger ? "hidden" : ""
+                              }`}
                           >
                             {menu.label}
                           </span>
@@ -212,9 +206,8 @@ const Sidebar = ({ children }) => {
                           setHoveredMenu(null);
                           toggleSubMenu(menu.label);
                         }}
-                        className={`group relative flex w-full items-center justify-between gap-2 py-2 pl-6 pr-5 hover:bg-hover ${
-                          isOpen[menu.label] ? "bg-primary" : ""
-                        } ${pathname.includes(menu.href) && "bg-primary"}`}
+                        className={`group relative flex w-full items-center justify-between gap-2 py-2 pl-6 pr-5 hover:bg-hover ${isOpen[menu.label] ? "bg-primary" : ""
+                          } ${pathname.includes(menu.href) && "bg-primary"}`}
                       >
                         <div className="flex items-center gap-3">
                           <Image
@@ -225,13 +218,11 @@ const Sidebar = ({ children }) => {
                             className="size-5"
                           />
                           <span
-                            className={`${
-                              showHamburger
-                                ? "hidden"
-                                : `text-[#ccd5ed] group-hover:text-[#ccd5ed] ${
-                                    isOpen[menu.label] && "text-[#ccd5ed]"
-                                  }`
-                            }`}
+                            className={`${showHamburger
+                              ? "hidden"
+                              : `text-[#ccd5ed] group-hover:text-[#ccd5ed] ${isOpen[menu.label] && "text-[#ccd5ed]"
+                              }`
+                              }`}
                           >
                             {menu.label}
                           </span>
@@ -249,21 +240,18 @@ const Sidebar = ({ children }) => {
 
                         {!showHamburger ? (
                           <FaChevronDown
-                            className={`text-[12px] font-bold transition-transform duration-300 ${
-                              isOpen[menu.label] && "rotate-180"
-                            } ${
-                              pathname.includes(menu.href)
+                            className={`text-[12px] font-bold transition-transform duration-300 ${isOpen[menu.label] && "rotate-180"
+                              } ${pathname.includes(menu.href)
                                 ? "text-[#ccd5ed]"
                                 : "text-[#345594]"
-                            } group-hover:text-[#ccd5ed]`}
+                              } group-hover:text-[#ccd5ed]`}
                           />
                         ) : (
                           <FaChevronRight
-                            className={`text-[12px] transition-transform duration-300 ${
-                              isOpen[menu.label] || pathname.includes(menu.href)
-                                ? "text-[#ccd5ed]"
-                                : "text-[#345594]"
-                            } group-hover:text-[#ccd5ed]`}
+                            className={`text-[12px] transition-transform duration-300 ${isOpen[menu.label] || pathname.includes(menu.href)
+                              ? "text-[#ccd5ed]"
+                              : "text-[#345594]"
+                              } group-hover:text-[#ccd5ed]`}
                           />
                         )}
                       </button>
@@ -276,18 +264,16 @@ const Sidebar = ({ children }) => {
                                 ? getRefForMenu(menu.label)
                                 : null
                             }
-                            className={`${
-                              isOpen[menu.label] && showHamburger
-                                ? "absolute left-[92px] top-0 z-50 w-[220px] border border-[#345594] bg-white px-2 py-2 shadow-xl"
-                                : ""
-                            }`}
+                            className={`${isOpen[menu.label] && showHamburger
+                              ? "absolute left-[92px] top-0 z-50 w-[220px] border border-[#345594] bg-white px-2 py-2 shadow-xl"
+                              : ""
+                              }`}
                           >
                             {menu.submenu.map((subItem, index) => (
                               <div
                                 key={subItem.href}
-                                className={`relative flex items-center py-1 ${
-                                  showHamburger ? "ml-0" : "ml-4"
-                                }`}
+                                className={`relative flex items-center py-1 ${showHamburger ? "ml-0" : "ml-4"
+                                  }`}
                               >
                                 {!showHamburger && (
                                   <>
@@ -301,16 +287,14 @@ const Sidebar = ({ children }) => {
 
                                 <Link
                                   href={subItem.href}
-                                  className={`block w-full py-1.5 pl-2 text-sm font-medium ${
-                                    showHamburger
-                                      ? "ml-0 text-gray-500"
-                                      : "ml-10 text-[#ccd5ed]"
-                                  } hover:bg-hover hover:text-[#ccd5ed] ${
-                                    pathname.includes(subItem.href) ||
-                                    activeItem === subItem.href
+                                  className={`block w-full py-1.5 pl-2 text-sm font-medium ${showHamburger
+                                    ? "ml-0 text-gray-500"
+                                    : "ml-10 text-[#ccd5ed]"
+                                    } hover:bg-hover hover:text-[#ccd5ed] ${pathname.includes(subItem.href) ||
+                                      activeItem === subItem.href
                                       ? "bg-[#3359b9] font-bold text-[#ccd5ed]"
                                       : ""
-                                  }`}
+                                    }`}
                                   onClick={() => handleItemClick(subItem.href)}
                                 >
                                   {subItem.label}
@@ -332,15 +316,13 @@ const Sidebar = ({ children }) => {
             })}
           </div>
           <div
-            className={` ${
-              showHamburger ? "" : "-ml-2"
-            } mb-2 flex items-center justify-between`}
+            className={` ${showHamburger ? "" : "-ml-2"
+              } mb-2 flex items-center justify-between`}
           >
             <Link
               href="#"
-              className={`${
-                showHamburger ? "hidden" : ""
-              } mr-2 w-full px-6 py-2 hover:bg-hover`}
+              className={`${showHamburger ? "hidden" : ""
+                } mr-2 w-full px-6 py-2 hover:bg-hover`}
             >
               <div className="flex items-center gap-2">
                 <span className="px-2">

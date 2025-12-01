@@ -113,7 +113,7 @@ const page = () => {
       render: (element) => (
         <div className="flex">
           <span className="line-clamp-2 items-center w-56 ">
-            {element["eng"]}
+            {element["eng"] || element["en"]}
           </span>
         </div>
       ),

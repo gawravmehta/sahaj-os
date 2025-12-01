@@ -46,6 +46,37 @@ const CreateStep2 = ({
   const [allDparData, setAllDparData] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const legalBasisOfProcessingOptions = [
+    {
+      value: "consent",
+      label: "Consent",
+    },
+    {
+      value: "contract",
+      label: "Contract",
+    },
+    {
+      value: "legal_obligation",
+      label: "Legal Obligation",
+    },
+    {
+      value: "vital_interest",
+      label: "Vital Interest",
+    },
+    {
+      value: "public_task",
+      label: "Public Task",
+    },
+    {
+      value: "public_interest",
+      label: "Public Interest",
+    },
+    {
+      value: "legitimate_interest",
+      label: "Legitimate Interest",
+    },
+  ];
+
   useEffect(() => {
     getAllDataPurpose();
     getAllDataElement();
@@ -361,14 +392,14 @@ Whether any third-party processors are involved.
             tooltipText="Legal justification for processing.
 "
             value={
-              countryOptions.find(
+              legalBasisOfProcessingOptions.find(
                 (item) => item.value === legal_basis_of_processing
               ) || null
             }
             onChange={(selectedOptions) =>
               setLegal_basis_of_processing(selectedOptions.value || "")
             }
-            options={countryOptions}
+            options={legalBasisOfProcessingOptions}
             placeholder="Select Legal Basic of Processing "
             className="w-full mb-0.5"
           />

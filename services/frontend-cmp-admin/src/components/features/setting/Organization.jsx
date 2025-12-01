@@ -100,14 +100,6 @@ const Organization = ({
                 />
               </div>
             </div>
-            <div>
-              <h1 className="text-[16px] font-medium">
-                {formData.organizationName || "Organization Name"}
-              </h1>
-              <p className="text-[14px] text-gray-600">
-                {formData.industry || "Industry"}
-              </p>
-            </div>
           </div>
         </div>
       </div>
@@ -167,7 +159,7 @@ const Organization = ({
                 handleInputChange("privacy_policy_url", e.target.value)
               }
             />
-            
+
             <TextareaField
               label="Address"
               placeholder="Enter address"
