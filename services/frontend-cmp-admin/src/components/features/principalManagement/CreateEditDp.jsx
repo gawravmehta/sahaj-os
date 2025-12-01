@@ -25,6 +25,7 @@ const CreateEditDp = ({
   missingFields,
   allEmails,
   allMobile,
+  allOtherIdentifiers,
   tagOptions,
   setTagOptions,
   allDataElements,
@@ -188,23 +189,33 @@ const CreateEditDp = ({
       {formData?.identifiers
         ?.filter((id) => allDataElements.map((el) => el.value).includes(id))
         .map((dataElement, index) => (
-          <InputField
-            missingFields={missingFields}
-            required
-            key={dataElement}
-            label={capitalizeWords(dataElement)}
-            name={`dp_other_identifier-${dataElement}`}
-            value={formData?.dp_other_identifier?.[index] || ""}
-            placeholder={`Add notes for ${dataElement}`}
-            onChange={(e) => {
-              const updated = [...(formData.dp_other_identifier || [])];
-              updated[index] = e.target.value;
-              setFormData({
-                ...formData,
-                dp_other_identifier: updated,
-              });
-            }}
-          />
+          <div key={dataElement}>
+            <InputField
+              missingFields={missingFields}
+              required
+              label={capitalizeWords(dataElement)}
+              name={`dp_other_identifier-${dataElement}`}
+              value={formData?.dp_other_identifier?.[index] || ""}
+              placeholder={`Add notes for ${dataElement}`}
+              onChange={(e) => {
+                const updated = [...(formData.dp_other_identifier || [])];
+                updated[index] = e.target.value;
+                setFormData({
+                  ...formData,
+                  dp_other_identifier: updated,
+                });
+              }}
+            />
+            {allOtherIdentifiers?.[index] && (
+              <div className="mt-1 flex flex-wrap gap-2">
+                <Tag
+                  variant="outlineBlue"
+                  key={allOtherIdentifiers[index]}
+                  label={allOtherIdentifiers[index]}
+                />
+              </div>
+            )}
+          </div>
         ))}
 
       {!isEdit && (
