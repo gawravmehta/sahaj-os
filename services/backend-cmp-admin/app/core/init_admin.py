@@ -230,6 +230,52 @@ async def create_initial_admin(client: AsyncIOMotorClient):
     df_doc = {
         "df_id": df_id,
         "created_at": datetime.now(UTC),
+        "configured": False,
+        "ai": {
+            "openrouter_api_key": "",
+        },
+        "communication": {
+            "smtp": {
+                "credentials": {
+                    "provider": "",
+                    "host": "",
+                    "port": 587,
+                    "username": "",
+                    "password": "",
+                    "from_email": "",
+                    "from_name": "",
+                    "tls": False,
+                    "encryption_type": "",
+                },
+                "system": {
+                    "max_email_allowed": 10000,
+                    "daily_email_limit": 500,
+                    "is_active": True,
+                    "is_blocked": False,
+                    "is_sandbox_mode": False,
+                    "email_blacklist": [],
+                    "is_two_factor_enabled": False,
+                    "ip_restrictions": [],
+                    "spam_rate": 0,
+                    "bounce_rate": 0,
+                    "delivery_rate": 0,
+                },
+            },
+        },
+        "org_info": {
+            "country": "",
+            "name": "",
+            "website_url": "",
+            "df_logo_url": "",
+            "cookie_policy_url": "",
+            "privacy_policy_url": "",
+            "address": "",
+        },
+        "dpo_information": {
+            "email": "",
+            "full_name": "",
+            "mobile": "",
+        },
     }
 
     await df_register_collection.insert_one(df_doc)
