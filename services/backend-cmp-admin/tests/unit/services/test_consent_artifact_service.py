@@ -32,7 +32,7 @@ def sample_consent_artifact():
     return {
         "_id": ObjectId(),
         "df_id": "df123",
-        "dp_id": "dp1",  # Added top-level dp_id for query
+        "dp_id": "dp1",
         "artifact": {
             "agreement_id": "agr1",
             "cp_name": "CP1",
@@ -66,7 +66,9 @@ def sample_consent_artifact():
 
 
 @pytest.mark.asyncio
-async def test_get_all_consent_artifact_success(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_all_consent_artifact_success(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_filtered_consent_artifacts.return_value = mock_cursor
@@ -97,7 +99,9 @@ async def test_get_all_consent_artifact_success(consent_artifact_service, mock_c
 
 
 @pytest.mark.asyncio
-async def test_get_all_consent_artifact_with_search(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_all_consent_artifact_with_search(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_filtered_consent_artifacts.return_value = mock_cursor
@@ -147,7 +151,9 @@ async def test_get_all_consent_artifact_no_user_df_id(consent_artifact_service, 
 
 
 @pytest.mark.asyncio
-async def test_download_consent_artifact_success(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_download_consent_artifact_success(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_filtered_consent_artifacts.return_value = mock_cursor
@@ -177,7 +183,10 @@ async def test_download_consent_artifact_success(consent_artifact_service, mock_
         content += chunk
 
     assert "Agreement ID,Agreement Timestamp,Collection Point,Data Elements,DP ID,DP Email,DP Mobile,Purposes" in content
-    assert f"agr1,{datetime(2023, 1, 1).isoformat()},CP1,DE1,dp1,{hash_shake256('dp1@example.com')},{hash_shake256('1234567890')},Purpose 1|Purpose 2" in content
+    assert (
+        f"agr1,{datetime(2023, 1, 1).isoformat()},CP1,DE1,dp1,{hash_shake256('dp1@example.com')},{hash_shake256('1234567890')},Purpose 1|Purpose 2"
+        in content
+    )
 
 
 @pytest.mark.asyncio
@@ -199,15 +208,15 @@ async def test_download_consent_artifact_no_user_df_id(consent_artifact_service,
 
 
 @pytest.mark.asyncio
-async def test_get_consent_artifact_by_id_success(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_consent_artifact_by_id_success(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_consent_artifact_crud.get_one_consent_artifacts.return_value = sample_consent_artifact
 
     mock_log = AsyncMock()
     monkeypatch.setattr("app.services.consent_artifact_service.log_business_event", mock_log)
 
-    result = await consent_artifact_service.get_consent_artifact_by_id(
-        str(sample_consent_artifact["_id"]), current_user_data
-    )
+    result = await consent_artifact_service.get_consent_artifact_by_id(str(sample_consent_artifact["_id"]), current_user_data)
 
     mock_consent_artifact_crud.get_one_consent_artifacts.assert_called_once_with(
         {"_id": ObjectId(str(sample_consent_artifact["_id"])), "df_id": current_user_data["df_id"]}
@@ -224,7 +233,7 @@ async def test_get_consent_artifact_by_id_not_found(consent_artifact_service, mo
     monkeypatch.setattr("app.services.consent_artifact_service.log_business_event", mock_log)
 
     with pytest.raises(HTTPException) as exc:
-        # Provide a valid-looking but non-existent ObjectId string
+
         await consent_artifact_service.get_consent_artifact_by_id(str(ObjectId()), current_user_data)
 
     assert exc.value.status_code == status.HTTP_404_NOT_FOUND
@@ -242,7 +251,9 @@ async def test_get_consent_artifact_by_id_no_user_df_id(consent_artifact_service
 
 
 @pytest.mark.asyncio
-async def test_get_expiring_consents_success(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_expiring_consents_success(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_expiring_consent_artifacts.return_value = mock_cursor
@@ -257,7 +268,7 @@ async def test_get_expiring_consents_success(consent_artifact_service, mock_cons
     assert isinstance(result, list)
     assert len(result) == 1
     assert result[0].dp_id == "dp1"
-    assert len(result[0].expiring_purposes) == 1 # Only Purpose 1 (5 days) should expire in 7 days
+    assert len(result[0].expiring_purposes) == 1
 
 
 @pytest.mark.asyncio
@@ -269,7 +280,6 @@ async def test_get_expiring_consents_no_matching_consents(consent_artifact_servi
     mock_log = AsyncMock()
     monkeypatch.setattr("app.services.consent_artifact_service.log_business_event", mock_log)
 
-    # For this test, log_business_event should still be called to log the query attempt, even if no results
     mock_log.reset_mock()
     result = await consent_artifact_service.get_expiring_consents(df_id=current_user_data["df_id"], days_to_expire="7")
 
@@ -278,7 +288,9 @@ async def test_get_expiring_consents_no_matching_consents(consent_artifact_servi
 
 
 @pytest.mark.asyncio
-async def test_get_expiring_consents_with_dp_id_filter(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_expiring_consents_with_dp_id_filter(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_expiring_consent_artifacts.return_value = mock_cursor
@@ -287,20 +299,20 @@ async def test_get_expiring_consents_with_dp_id_filter(consent_artifact_service,
     monkeypatch.setattr("app.services.consent_artifact_service.log_business_event", mock_log)
 
     mock_log.reset_mock()
-    result = await consent_artifact_service.get_expiring_consents(
-        df_id=current_user_data["df_id"], dp_id="dp1", days_to_expire="15"
-    )
+    result = await consent_artifact_service.get_expiring_consents(df_id=current_user_data["df_id"], dp_id="dp1", days_to_expire="15")
 
     args, _ = mock_consent_artifact_crud.get_expiring_consent_artifacts.call_args
     assert args[0]["dp_id"] == "dp1"
     assert len(result) == 1
     assert result[0].dp_id == "dp1"
-    assert len(result[0].expiring_purposes) == 2 # Both purposes expire within 15 days (5 and 10 days)
+    assert len(result[0].expiring_purposes) == 2
     mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
-async def test_get_expiring_consents_default_30_days(consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch):
+async def test_get_expiring_consents_default_30_days(
+    consent_artifact_service, mock_consent_artifact_crud, current_user_data, sample_consent_artifact, monkeypatch
+):
     mock_cursor = AsyncMock()
     mock_cursor.to_list.return_value = [sample_consent_artifact]
     mock_consent_artifact_crud.get_expiring_consent_artifacts.return_value = mock_cursor
@@ -315,5 +327,5 @@ async def test_get_expiring_consents_default_30_days(consent_artifact_service, m
     assert "$lte" in args[0]["artifact.consent_scope.data_elements.consents.consent_expiry_period"]
     assert len(result) == 1
     assert result[0].dp_id == "dp1"
-    assert len(result[0].expiring_purposes) == 2 # Both purposes expire within 30 days (5 and 10 days)
+    assert len(result[0].expiring_purposes) == 2
     mock_log.assert_called_once()

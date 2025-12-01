@@ -106,9 +106,7 @@ def enriched_de_purpose_data():
     return [
         {
             "de_obj": {"_id": "de1", "de_name": "DE1", "de_status": "published", "translations": {"en": "DE1"}},
-            "purposes": [
-                {"_id": "p1", "purpose_title": "P1", "purpose_status": "published", "translations": {"en": "P1"}}
-            ],
+            "purposes": [{"_id": "p1", "purpose_title": "P1", "purpose_status": "published", "translations": {"en": "P1"}}],
         }
     ]
 
@@ -139,9 +137,7 @@ async def test_create_collection_point_draft_success(
 
     result = await collection_point_service.create_collection_point(cp_data_draft.copy(), user_data)
 
-    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(
-        cp_name="Test CP Draft", asset_id="asset123", df_id="df123"
-    )
+    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(cp_name="Test CP Draft", asset_id="asset123", df_id="df123")
     mock_data_element_service.get_data_element.assert_called_once_with("de1", user_data, for_system=True)
     mock_purpose_service.get_purpose.assert_called_once_with("p1", user_data, for_system=True)
     mock_notice_service.build_notice_data.assert_called_once()
@@ -178,9 +174,7 @@ async def test_create_collection_point_published_success(
 
     result = await collection_point_service.create_collection_point(cp_data_published.copy(), user_data)
 
-    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(
-        cp_name="Test CP Published", asset_id="asset123", df_id="df123"
-    )
+    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(cp_name="Test CP Published", asset_id="asset123", df_id="df123")
     mock_data_element_service.get_data_element.assert_called_once_with("de1", user_data, for_system=True)
     mock_purpose_service.get_purpose.assert_called_once_with("p1", user_data, for_system=True)
     mock_notice_service.build_notice_data.assert_called_once()
@@ -192,9 +186,7 @@ async def test_create_collection_point_published_success(
 
 
 @pytest.mark.asyncio
-async def test_create_collection_point_duplicate_name(
-    collection_point_service, mock_collection_point_crud, user_data, cp_data_draft
-):
+async def test_create_collection_point_duplicate_name(collection_point_service, mock_collection_point_crud, user_data, cp_data_draft):
     mock_collection_point_crud.is_duplicate_name.return_value = True
 
     with pytest.raises(HTTPException) as exc:
@@ -221,7 +213,7 @@ async def test_create_collection_point_published_validation_failure(
         "de_name": "DE1",
         "de_status": "draft",
         "translations": {"en": "DE1"},
-    }  # Not published
+    }
     mock_purpose_service.get_purpose.return_value = {
         "_id": "p1",
         "purpose_title": "P1",
@@ -345,7 +337,7 @@ async def test_publish_collection_point_validation_failure(
         "de_name": "DE1",
         "de_status": "draft",
         "translations": {"en": "DE1"},
-    }  # Not published
+    }
     mock_purpose_service.get_purpose.return_value = {
         "_id": "p1",
         "purpose_title": "P1",
@@ -365,9 +357,7 @@ async def test_publish_collection_point_validation_failure(
 
 
 @pytest.mark.asyncio
-async def test_update_collection_point_success_name_only(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_update_collection_point_success_name_only(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     cp_id = "cp1"
     existing_cp = {
         "_id": cp_id,
@@ -389,9 +379,7 @@ async def test_update_collection_point_success_name_only(
     result = await collection_point_service.update_collection_point(cp_id, update_data, user_data)
 
     mock_collection_point_crud.get_cp_master.assert_called_once_with(cp_id, user_data["df_id"])
-    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(
-        cp_name="New Name", asset_id="asset123", df_id="df123"
-    )
+    mock_collection_point_crud.is_duplicate_name.assert_called_once_with(cp_name="New Name", asset_id="asset123", df_id="df123")
     mock_collection_point_crud.update_cp_by_id.assert_called_once()
     mock_log.assert_called_once()
     assert result["cp_name"] == "New Name"
@@ -527,17 +515,13 @@ async def test_update_collection_point_notice_type_only(
 
     result = await collection_point_service.update_collection_point(cp_id, update_data.copy(), user_data)
 
-    mock_notice_service.render_html.assert_called_once_with(
-        {"html": "mock_html"}, df_name="Test DF", notice_type="layered"
-    )
+    mock_notice_service.render_html.assert_called_once_with({"html": "mock_html"}, df_name="Test DF", notice_type="layered")
     assert result["notice_type"] == "layered"
     assert "notice_html" in result
 
 
 @pytest.mark.asyncio
-async def test_get_all_collection_points_success(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_get_all_collection_points_success(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     mock_collection_point_crud.get_all_cps.return_value = {"data": [{"_id": "cp1"}, {"_id": "cp2"}], "total": 2}
 
     mock_log = AsyncMock()
@@ -545,26 +529,20 @@ async def test_get_all_collection_points_success(
 
     result = await collection_point_service.get_all_collection_points(user_data, current_page=1, data_per_page=2)
 
-    mock_collection_point_crud.get_all_cps.assert_called_once_with(
-        df_id="df123", offset=0, limit=2, additional_filters={}
-    )
+    mock_collection_point_crud.get_all_cps.assert_called_once_with(df_id="df123", offset=0, limit=2, additional_filters={})
     mock_log.assert_called_once()
     assert result["total_items"] == 2
     assert result["collection_points"][0]["_id"] == "cp1"
 
 
 @pytest.mark.asyncio
-async def test_get_all_collection_points_with_filters(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_get_all_collection_points_with_filters(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     mock_collection_point_crud.get_all_cps.return_value = {"data": [{"_id": "cp1"}], "total": 1}
 
     mock_log = AsyncMock()
     monkeypatch.setattr("app.services.collection_point_service.log_business_event", mock_log)
 
-    result = await collection_point_service.get_all_collection_points(
-        user_data, current_page=1, data_per_page=10, is_legacy=True, is_published=True
-    )
+    result = await collection_point_service.get_all_collection_points(user_data, current_page=1, data_per_page=10, is_legacy=True, is_published=True)
 
     mock_collection_point_crud.get_all_cps.assert_called_once_with(
         df_id="df123", offset=0, limit=10, additional_filters={"cp_type": "legacy", "cp_status": "published"}
@@ -573,9 +551,7 @@ async def test_get_all_collection_points_with_filters(
 
 
 @pytest.mark.asyncio
-async def test_get_collection_point_success(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_get_collection_point_success(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     cp_id = "cp1"
     existing_cp = {"_id": cp_id, "cp_name": "Test CP"}
     mock_collection_point_crud.get_cp_master.return_value = existing_cp
@@ -591,9 +567,7 @@ async def test_get_collection_point_success(
 
 
 @pytest.mark.asyncio
-async def test_get_collection_point_not_found(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_get_collection_point_not_found(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     mock_collection_point_crud.get_cp_master.return_value = None
 
     mock_log = AsyncMock()
@@ -606,9 +580,7 @@ async def test_get_collection_point_not_found(
 
 
 @pytest.mark.asyncio
-async def test_delete_collection_point_success(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_delete_collection_point_success(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     cp_id = "cp1"
     existing_cp = {"_id": cp_id, "cp_name": "Test CP", "cp_status": "draft"}
     updated_cp = {**existing_cp, "cp_status": "archived"}
@@ -628,12 +600,10 @@ async def test_delete_collection_point_success(
 
 
 @pytest.mark.asyncio
-async def test_delete_collection_point_not_found_or_archived(
-    collection_point_service, mock_collection_point_crud, user_data, monkeypatch
-):
+async def test_delete_collection_point_not_found_or_archived(collection_point_service, mock_collection_point_crud, user_data, monkeypatch):
     mock_collection_point_crud.get_cp_master.side_effect = [
-        None,  # Not found
-        {"_id": "cp2", "cp_status": "archived"},  # Already archived
+        None,
+        {"_id": "cp2", "cp_status": "archived"},
     ]
 
     mock_log = AsyncMock()
@@ -644,14 +614,13 @@ async def test_delete_collection_point_not_found_or_archived(
     mock_collection_point_crud.update_cp_by_id.assert_not_called()
     mock_log.assert_not_called()
 
-    mock_log.reset_mock() # Reset mock for the second scenario
+    mock_log.reset_mock()
 
     result2 = await collection_point_service.delete_collection_point("cp2", user_data)
     assert result2 is None
     mock_collection_point_crud.update_cp_by_id.assert_not_called()
     mock_log.assert_not_called()
 
-# Test cases for Minio related functions
 
 @pytest.mark.asyncio
 async def test_upload_audio_to_minio_success(collection_point_service, mock_minio_client, monkeypatch):
@@ -665,9 +634,7 @@ async def test_upload_audio_to_minio_success(collection_point_service, mock_mini
 
     mock_minio_client.put_object = MagicMock()
 
-    result_url = await collection_point_service.upload_audio_to_minio(
-        mock_minio_client, file_content, content_type, file_extension
-    )
+    result_url = await collection_point_service.upload_audio_to_minio(mock_minio_client, file_content, content_type, file_extension)
 
     expected_object_name = "audio/test-uuid.mp3"
     mock_minio_client.put_object.assert_called_once()
