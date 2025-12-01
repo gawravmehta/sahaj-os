@@ -65,7 +65,7 @@ class PurposeService:
             raise HTTPException(status_code=404, detail=f"Purpose template with ID '{purpose_id}' not found.")
 
         purpose_template = response["data"][0]
-        purpose_title = purpose_template["translations"].get("en")
+        purpose_title = purpose_template["translations"].get("eng") or purpose_template["translations"].get("en")
 
         is_duplicate = await self.crud.is_duplicate_name(purpose_title, df_id)
         if is_duplicate:
