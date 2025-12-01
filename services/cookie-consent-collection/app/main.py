@@ -24,6 +24,17 @@ class MongoDB:
     database = None
 
 
+async def create_indexes():
+    db = MongoDB.database
+    await db["user_preferences_current"].create_index([("website_id", 1), ("unique_key", 1)], unique=True, name="idx_website_unique")
+
+    await db["consent_audit_records"].create_index([("website_id", 1)], name="idx_website")
+
+    await db["consent_audit_records"].create_index([("unique_key", 1)], name="idx_unique_key")
+
+    await db["consent_audit_records"].create_index([("timestamp", -1)], name="idx_timestamp_desc")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging()
@@ -34,6 +45,7 @@ async def lifespan(app: FastAPI):
     except ConnectionFailure as e:
         app_logger.critical(f"Could not connect to MongoDB at {settings.MONGO_URI}. {e}")
     MongoDB.database = MongoDB.client[settings.DB_NAME_COOKIE_MANAGEMENT]
+    await create_indexes()
     yield
     if MongoDB.client:
         MongoDB.client.close()
