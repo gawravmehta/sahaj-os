@@ -10,24 +10,28 @@ from app.crud.role_crud import RoleCRUD
 from app.crud.invite_crud import InviteCRUD
 from app.crud.data_fiduciary_crud import DataFiduciaryCRUD
 from app.schemas.invite_schema import InviteModel
-from app.core.config import settings
+
 
 # --- Fixtures ---
 @pytest.fixture
 def mock_user_crud():
     return MagicMock(spec=UserCRUD)
 
+
 @pytest.fixture
 def mock_role_crud():
     return MagicMock(spec=RoleCRUD)
+
 
 @pytest.fixture
 def mock_invite_crud():
     return MagicMock(spec=InviteCRUD)
 
+
 @pytest.fixture
 def mock_df_crud():
     return MagicMock(spec=DataFiduciaryCRUD)
+
 
 @pytest.fixture
 def invite_service(mock_user_crud, mock_role_crud, mock_invite_crud, mock_df_crud):
@@ -40,13 +44,16 @@ def invite_service(mock_user_crud, mock_role_crud, mock_invite_crud, mock_df_cru
         df_register_collection=MagicMock(),
     )
 
+
 @pytest.fixture
 def current_user_data():
     return {"_id": str(ObjectId()), "email": "test@example.com", "df_id": "df123", "user_roles": []}
 
+
 @pytest.fixture
 def system_admin_role_id():
     return "system_admin_role_id"
+
 
 @pytest.fixture
 def invite_data():
@@ -55,6 +62,7 @@ def invite_data():
         invited_user_name="New User",
         invited_user_roles=[],
     )
+
 
 # --- Tests for create_invite ---
 @pytest.mark.asyncio
