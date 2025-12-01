@@ -152,22 +152,26 @@ class DepartmentService:
 
             async def validate_users(user_ids: List[str]):
                 valid_users = set()
-                for user_id in user_ids:
-                    user = await self.user_crud.get_user_by_id(user_id)
-                    if user and user.df_id == department_df_id:
-                        valid_users.add(user_id)
+                for uid in user_ids:
+                    try:
+                        user = await self.user_crud.get_user_by_id(uid)
+                    except Exception as e:
+                        raise HTTPException(status_code=500, detail=f"InvalidId: {str(e)}")
+
+                    if user and getattr(user, "df_id", None) == department_df_id:
+                        valid_users.add(uid)
                     else:
                         await log_business_event(
                             event_type="UPDATE_DEPT_USERS_FAILED",
                             user_email=current_user["email"],
                             message="User validation failed",
                             log_level="ERROR",
-                            context={"user_id": user_id, "df_id": df_id, "invalid_user": user_id},
+                            context={"user_id": uid, "df_id": df_id, "invalid_user": uid},
                             business_logs_collection=self.business_logs_collection,
                         )
                         raise HTTPException(
                             status_code=400,
-                            detail=f"User {user_id} not found or does not belong to the same df_id as the department",
+                            detail=f"User {uid} not found or does not belong to the same df_id as the department",
                         )
                 return valid_users
 
