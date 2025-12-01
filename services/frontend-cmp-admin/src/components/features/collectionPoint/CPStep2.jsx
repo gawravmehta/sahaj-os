@@ -47,7 +47,7 @@ const VERIFICATION_DONE_BY_OPTIONS = [
 
 const PREFERED_VERIFICATION_MEDIUM = [
   { value: "email", label: "Email" },
-  { value: "mobile", label: "Mobile" },
+  // { value: "mobile", label: "Mobile" },
 ];
 
 const CPStep2 = ({ formData, setFormData, missingFields }) => {

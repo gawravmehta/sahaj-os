@@ -79,7 +79,7 @@ class WidgetService:
             f"Fetching DF info for df_id={user['df_id']}", extra={"user_id": user.get("id"), "df_id": user.get("df_id"), "asset_id": asset_id}
         )
         df_info = await self.df_service.get_details(df_id=user["df_id"], user=user)
-        df_info = df_info["org_info"]
+        df_info = df_info["df"]["org_info"]
 
         cookies_data: Dict[str, list] = {}
         for cookie in cookies_result.get("cookies", []):
