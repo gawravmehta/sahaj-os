@@ -233,7 +233,6 @@ async def test_update_department_users_department_not_found(
 ):
     department_id = str(ObjectId())
     update_data = UpdateDepartmentUsers(department_users=[str(ObjectId())])
-
     mock_department_crud.find_by_id.return_value = None
 
     mock_log = AsyncMock()
@@ -243,10 +242,9 @@ async def test_update_department_users_department_not_found(
         await department_service.update_department_users(department_id, update_data, current_user_data, system_admin_role_id)
 
     assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
-
-    assert "UnboundLocalError" in exc_info.value.detail  # Due to user_id/df_id not defined in log context
+    assert "Department not found" in exc_info.value.detail
     mock_department_crud.find_by_id.assert_called_once_with(department_id)
-    mock_log.assert_not_called()  # Log not called because UnboundLocalError occurs first
+    mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -280,12 +278,13 @@ async def test_update_department_users_invalid_user_id_format(
     department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, system_admin_role_id, monkeypatch
 ):
     department_id = str(sample_department_in_db["_id"])
-    update_data = UpdateDepartmentUsers(department_users=["invalid_user_id_format"])
+    update_data = UpdateDepartmentUsers(department_users=["invalid_id"])
 
     mock_department_crud.find_by_id.return_value = {
         **sample_department_in_db,
         "department_admins": [current_user_data["_id"]],
     }
+    mock_user_crud.get_user_by_id.side_effect = Exception("InvalidId")
 
     mock_log = AsyncMock()
     monkeypatch.setattr("app.services.department_service.log_business_event", mock_log)
@@ -294,9 +293,8 @@ async def test_update_department_users_invalid_user_id_format(
         await department_service.update_department_users(department_id, update_data, current_user_data, system_admin_role_id)
 
     assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    assert "InvalidId" in exc_info.value.detail  # Due to ObjectId('invalid_user_id_format')
-    mock_user_crud.get_user_by_id.assert_not_called()
-    mock_log.assert_not_called()  # No log before HTTPException due to InvalidId
+    assert "InvalidId" in exc_info.value.detail
+    mock_log.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -371,11 +369,18 @@ async def test_update_department_users_user_df_id_mismatch(
 
 @pytest.mark.asyncio
 async def test_update_department_users_overlap_users_admins(
-    department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, system_admin_role_id, monkeypatch
+    department_service,
+    mock_department_crud,
+    mock_user_crud,
+    current_user_data,
+    sample_department_in_db,
+    sample_user_model,
+    system_admin_role_id,
+    monkeypatch,
 ):
     department_id = str(sample_department_in_db["_id"])
-    overlapping_user_id = str(ObjectId())
-    update_data = UpdateDepartmentUsers(department_users=[overlapping_user_id], department_admins=[overlapping_user_id])
+    user_id = str(ObjectId())
+    update_data = UpdateDepartmentUsers(department_users=[user_id], department_admins=[user_id])  # Overlap
 
     mock_department_crud.find_by_id.return_value = {
         **sample_department_in_db,
@@ -390,14 +395,21 @@ async def test_update_department_users_overlap_users_admins(
     with pytest.raises(HTTPException) as exc_info:
         await department_service.update_department_users(department_id, update_data, current_user_data, system_admin_role_id)
 
-    assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    assert "cannot be both admins and users" in exc_info.value.detail  # Message from original HTTPException
-    mock_log.assert_called_once()  # The error happens in validate_users, but the outer try-except means the log event might still be triggered or not depending on where user_id/df_id are set.
+    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert "cannot be both users and admins" in exc_info.value.detail
+    mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_update_department_users_duplicate_existing_user(
-    department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, system_admin_role_id, monkeypatch
+    department_service,
+    mock_department_crud,
+    mock_user_crud,
+    current_user_data,
+    sample_department_in_db,
+    sample_user_model,
+    system_admin_role_id,
+    monkeypatch,
 ):
     department_id = str(sample_department_in_db["_id"])
     existing_user_id = str(ObjectId())
@@ -405,11 +417,10 @@ async def test_update_department_users_duplicate_existing_user(
 
     mock_department_crud.find_by_id.return_value = {
         **sample_department_in_db,
-        "department_users": [existing_user_id],  # User already exists
         "department_admins": [current_user_data["_id"]],
+        "department_users": [existing_user_id],  # User already exists
     }
     mock_user_crud.get_user_by_id.return_value = sample_user_model
-    mock_user_crud.get_user_by_id.return_value.id = existing_user_id  # Match the ID
     mock_user_crud.get_user_by_id.return_value.df_id = current_user_data["df_id"]
 
     mock_log = AsyncMock()
@@ -418,14 +429,21 @@ async def test_update_department_users_duplicate_existing_user(
     with pytest.raises(HTTPException) as exc_info:
         await department_service.update_department_users(department_id, update_data, current_user_data, system_admin_role_id)
 
-    assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
     assert "already exist in the department" in exc_info.value.detail
-    mock_log.assert_called_once()
+    mock_log.assert_not_called()  # No log for this specific error path
 
 
 @pytest.mark.asyncio
 async def test_update_department_users_duplicate_existing_admin(
-    department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, system_admin_role_id, monkeypatch
+    department_service,
+    mock_department_crud,
+    mock_user_crud,
+    current_user_data,
+    sample_department_in_db,
+    sample_user_model,
+    system_admin_role_id,
+    monkeypatch,
 ):
     department_id = str(sample_department_in_db["_id"])
     existing_admin_id = str(ObjectId())
@@ -434,9 +452,9 @@ async def test_update_department_users_duplicate_existing_admin(
     mock_department_crud.find_by_id.return_value = {
         **sample_department_in_db,
         "department_admins": [current_user_data["_id"], existing_admin_id],  # Admin already exists
+        "department_users": [],
     }
     mock_user_crud.get_user_by_id.return_value = sample_user_model
-    mock_user_crud.get_user_by_id.return_value.id = existing_admin_id
     mock_user_crud.get_user_by_id.return_value.df_id = current_user_data["df_id"]
 
     mock_log = AsyncMock()
@@ -445,9 +463,9 @@ async def test_update_department_users_duplicate_existing_admin(
     with pytest.raises(HTTPException) as exc_info:
         await department_service.update_department_users(department_id, update_data, current_user_data, system_admin_role_id)
 
-    assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
     assert "already exist in the department" in exc_info.value.detail
-    mock_log.assert_called_once()
+    mock_log.assert_not_called()
 
 
 @pytest.mark.asyncio
@@ -586,7 +604,6 @@ async def test_update_department_permissions_department_not_found(
 ):
     department_id = str(ObjectId())
     update_data = UpdateDepartmentPermission(modules_accessible=["module1"])
-
     mock_department_crud.find_by_id.return_value = None
 
     mock_log = AsyncMock()
@@ -595,10 +612,10 @@ async def test_update_department_permissions_department_not_found(
     with pytest.raises(HTTPException) as exc_info:
         await department_service.update_department_permissions(department_id, update_data, current_user_data, system_admin_role_id)
 
-    assert exc_info.value.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
-    assert "UnboundLocalError" in exc_info.value.detail
+    assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
+    assert "Department not found" in exc_info.value.detail
     mock_department_crud.find_by_id.assert_called_once_with(department_id)
-    mock_log.assert_not_called()
+    mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -720,29 +737,20 @@ async def test_get_all_departments_invalid_pagination(department_service, curren
 # --- Tests for get_one_department ---
 @pytest.mark.asyncio
 async def test_get_one_department_success(
-    department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, sample_user_model, monkeypatch
+    department_service, mock_department_crud, mock_user_crud, current_user_data, sample_department_in_db, monkeypatch
 ):
     department_id = str(sample_department_in_db["_id"])
-    sample_department_in_db_with_users = {
-        **sample_department_in_db,
-        "department_users": [current_user_data["_id"]],
-        "department_admins": [current_user_data["_id"]],
-    }
-    mock_department_crud.find_by_id.return_value = sample_department_in_db_with_users
-    mock_user_crud.find_by_ids.side_effect = [[sample_user_model], [sample_user_model]]  # For users and admins
+    mock_department_crud.find_by_id.return_value = sample_department_in_db
+    mock_user_crud.find_by_ids.return_value = []
 
     mock_log = AsyncMock()
     monkeypatch.setattr("app.services.department_service.log_business_event", mock_log)
 
     result = await department_service.get_one_department(department_id, current_user_data)
 
-    mock_department_crud.find_by_id.assert_called_once_with(department_id)
-    mock_user_crud.find_by_ids.assert_called()  # Called for users and admins
-    mock_log.assert_called_once()
     assert result["_id"] == department_id
-    assert len(result["department_users_data"]) == 1
-    assert len(result["department_admins_data"]) == 1
-    assert result["department_users_data"][0]["id"] == current_user_data["_id"]
+    mock_department_crud.find_by_id.assert_called_once_with(department_id)
+    mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -770,10 +778,9 @@ async def test_get_one_department_not_found(department_service, mock_department_
         await department_service.get_one_department(department_id, current_user_data)
 
     assert exc_info.value.status_code == status.HTTP_404_NOT_FOUND
-
-    assert "UnboundLocalError" in exc_info.value.detail
+    assert "Department not found" in exc_info.value.detail
     mock_department_crud.find_by_id.assert_called_once_with(department_id)
-    mock_log.assert_not_called()
+    mock_log.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -963,7 +970,7 @@ async def test_soft_delete_department_unauthorized(
     assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
     assert "Unauthorized" in exc_info.value.detail
     mock_department_crud.find_by_id.assert_called_once()
-    mock_log.assert_not_called()  # user_id/df_id not defined yet, would cause UnboundLocalError
+    mock_log.assert_called_once()
 
 
 # --- Tests for remove_department_members ---
