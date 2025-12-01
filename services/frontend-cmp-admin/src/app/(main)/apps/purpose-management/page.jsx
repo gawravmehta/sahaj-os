@@ -229,7 +229,7 @@ const Page = () => {
     } catch (error) {
       console.error("Error in get purpose:", error);
       const message = getErrorMessage(error);
-      toast.error(message);
+      console.log(message);
       setLoading(false);
     }
   };

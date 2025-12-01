@@ -23,12 +23,7 @@ client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
 
-s3_client = Minio(
-    settings.S3_URL,
-    access_key=settings.S3_ACCESS_KEY,
-    secret_key=settings.S3_SECRET_KEY,
-    secure=True,
-)
+s3_client = Minio(settings.S3_URL, access_key=settings.MINIO_ROOT_USER, secret_key=settings.MINIO_ROOT_PASSWORD, secure=settings.S3_SECURE)
 
 consent_artifact_collection = db["consent_latest_artifacts"]
 consent_validation_collection = db["consent_validation"]

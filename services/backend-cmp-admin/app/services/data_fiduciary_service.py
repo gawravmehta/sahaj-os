@@ -33,6 +33,67 @@ class DataFiduciaryService:
                 items.append((new_key, v))
         return dict(items)
 
+    DEFAULT_DF_CONFIG = {
+        "configured": False,
+        "ai": {
+            "openrouter_api_key": "",
+        },
+        "communication": {
+            "smtp": {
+                "credentials": {
+                    "provider": "",
+                    "host": "",
+                    "port": 587,
+                    "username": "",
+                    "password": "",
+                    "from_email": "",
+                    "from_name": "",
+                    "tls": False,
+                    "encryption_type": "",
+                },
+                "system": {
+                    "max_email_allowed": 10000,
+                    "daily_email_limit": 500,
+                    "is_active": True,
+                    "is_blocked": False,
+                    "is_sandbox_mode": False,
+                    "email_blacklist": [],
+                    "is_two_factor_enabled": False,
+                    "ip_restrictions": [],
+                    "spam_rate": 0,
+                    "bounce_rate": 0,
+                    "delivery_rate": 0,
+                },
+            },
+        },
+        "org_info": {
+            "country": "",
+            "name": "",
+            "website_url": "",
+            "df_logo_url": "",
+            "cookie_policy_url": "",
+            "privacy_policy_url": "",
+            "address": "",
+        },
+        "dpo_information": {
+            "email": "",
+            "full_name": "",
+            "mobile": "",
+        },
+    }
+
+    def _merge_defaults(self, defaults: Dict[str, Any], target: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Recursively merge defaults into target.
+        Only sets values in target if they are missing or empty dictionaries.
+        """
+        for key, value in defaults.items():
+            if key not in target:
+                target[key] = value
+            elif isinstance(value, dict) and isinstance(target[key], dict):
+                self._merge_defaults(value, target[key])
+        return target
+
     async def setup(self, df_id: str, payload: UpdateDataFiduciary, user: Dict[str, Any]):
         user_email = user.get("email") or user.get("id") or "system"
 
@@ -49,6 +110,29 @@ class DataFiduciaryService:
             raise HTTPException(status_code=404, detail="Data fiduciary not found")
 
         update_doc = jsonable_encoder(payload, exclude_unset=True)
+
+        if not existing_df.get("configured"):
+
+            def inject_recursive(defaults, existing, update):
+                for k, v in defaults.items():
+                    if isinstance(v, dict):
+                        existing_val = existing.get(k, {}) if isinstance(existing, dict) else {}
+                        update_val = update.get(k, {})
+
+                        if k not in update:
+                            update[k] = {}
+                            update_val = update[k]
+
+                        if isinstance(update_val, dict):
+                            inject_recursive(v, existing_val, update_val)
+                    else:
+                        if k not in update:
+                            if isinstance(existing, dict) and k in existing:
+                                pass
+                            else:
+                                update[k] = v
+
+            inject_recursive(self.DEFAULT_DF_CONFIG, existing_df, update_doc)
 
         user_basic_info = update_doc.pop("user_basic_info", None)
 
