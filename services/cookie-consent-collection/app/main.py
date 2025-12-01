@@ -26,8 +26,8 @@ class MongoDB:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    MongoDB.client = AsyncIOMotorClient(settings.MONGO_URI, serverSelectionTimeoutMS=5000)
     setup_logging()
+    MongoDB.client = AsyncIOMotorClient(settings.MONGO_URI, serverSelectionTimeoutMS=5000)
     try:
         await MongoDB.client.admin.command("ping")
         app_logger.info(f"Connected to MongoDB successfully at: {settings.MONGO_URI}")
@@ -81,11 +81,12 @@ async def submit_consent(payload: ConsentPayload, request: Request):
     existing_record = await current_collection.find_one(filter_query)
     action = "updated" if existing_record else "created"
     current_timestamp = datetime.now(UTC)
+    data = payload.model_dump()
 
     current_state_record = {
         "website_id": payload.website_id,
         "unique_key": unique_key,
-        "category_choices": payload.model_dump()["category_choices"],
+        "category_choices": data["category_choices"],
         "language": payload.language,
         "last_updated": current_timestamp,
         "initial_timestamp": existing_record.get("initial_timestamp", current_timestamp) if existing_record else current_timestamp,
@@ -97,7 +98,7 @@ async def submit_consent(payload: ConsentPayload, request: Request):
         "action": action,
         "ip_address": ip_address,
         "timestamp": current_timestamp,
-        "consent_data": payload.model_dump(),
+        "consent_data": data,
         "user_agent": request.headers.get("user-agent"),
         "country": request.headers.get("x-country", "unknown"),
     }
