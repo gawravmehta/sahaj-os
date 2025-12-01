@@ -11,17 +11,41 @@ import Header from "@/components/ui/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tab";
 import { apiCall } from "@/hooks/apiCall";
 import { use, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "@/utils/errorHandler";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
 
 const WebhookDetailsRoute = ({ params }) => {
   const { id } = use(params);
   const [webhookDetails, setWebhookDetails] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
+  const [webhookToActOn, setWebhookToActOn] = useState(null);
 
   const getOneWebhookDetails = async () => {
     try {
       const response = await apiCall(`/webhooks/get-one-webhook/${id}`);
       setWebhookDetails(response);
     } catch (error) {
-      console.error(error);
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const handleActivateWebhook = async () => {
+    setLoading(true);
+    try {
+      await apiCall(`/webhooks/update-webhook/${webhookDetails.webhook_id}`, {
+        method: "PUT",
+        data: { status: "active" },
+      });
+      toast.success("Webhook activated successfully");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+      setIsActivateModalOpen(false);
+      setWebhookToActOn(null);
+      getOneWebhookDetails();
     }
   };
 
@@ -47,8 +71,16 @@ const WebhookDetailsRoute = ({ params }) => {
         />
         <div className="flex items-center gap-3">
           {webhookDetails?.status === "inactive" && (
-            <Button variant="primary" className="px-3" onClick={() => {}}>
-              Test And Activate
+            <Button
+              variant="primary"
+              className="px-3"
+              onClick={() => {
+                setWebhookToActOn(webhookDetails);
+                setIsActivateModalOpen(true);
+              }}
+              disabled={loading}
+            >
+              Activate Webhook
             </Button>
           )}
         </div>
@@ -239,6 +271,17 @@ const WebhookDetailsRoute = ({ params }) => {
           </section>
         </TabsContent>
       </Tabs>
+
+      {isActivateModalOpen && (
+        <ConfirmationModal
+          isOpen={isActivateModalOpen}
+          onClose={() => setIsActivateModalOpen(false)}
+          onConfirm={handleActivateWebhook}
+          title="Confirm Activate Webhook"
+          message={`Are you sure you want to activate the webhook at URL: ${webhookToActOn?.url}? This will trigger a test event, and if successful, set the webhook status to 'active'.`}
+          btnLoading={loading}
+        />
+      )}
     </div>
   );
 };
