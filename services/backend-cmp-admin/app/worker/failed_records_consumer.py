@@ -22,12 +22,7 @@ df_register_collection = db["df_register"]
 genie_user_collection = db["cmp_users"]
 notification_collection = db["notifications"]
 
-s3_client = Minio(
-    settings.S3_URL,
-    access_key=settings.MINIO_ROOT_USER,
-    secret_key=settings.MINIO_ROOT_PASSWORD,
-    secure=settings.S3_SECURE
-)
+s3_client = Minio(settings.S3_URL, access_key=settings.MINIO_ROOT_USER, secret_key=settings.MINIO_ROOT_PASSWORD, secure=settings.S3_SECURE)
 
 QUEUE_NAME = "failed_queue"
 
@@ -177,8 +172,7 @@ async def handle_message(message: aio_pika.IncomingMessage):
                     users_list = [str(u["_id"]) for u in users]
                     notification_title = "Failed-records report ready"
                     notification_message = f"A report of failed records for batch {df_id} is now available."
-                    endpoint = settings.S3_URL
-                    file_url = f"{endpoint}/{settings.FAILED_RECORDS_BUCKET_EXTERNAL}/{object_name}"
+                    file_url = f"{settings.FAILED_RECORDS_BUCKET_EXTERNAL}/{object_name}"
                     try:
                         await create_user_notification(
                             df_id=df_id,

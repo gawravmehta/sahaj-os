@@ -44,7 +44,9 @@ export const apiCall = async (endpoint, options = {}) => {
     const contentType = res.headers.get("content-type");
 
     let responseData = null;
-    if (contentType && contentType.includes("application/json")) {
+    if (options.responseType === "blob") {
+      responseData = await res.blob();
+    } else if (contentType && contentType.includes("application/json")) {
       responseData = await res.json();
     } else {
       responseData = await res.text();

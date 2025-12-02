@@ -103,12 +103,7 @@ class BulkImportDataPrincipal(BaseModel):
         return hashed_mobiles
 
 
-s3_client = Minio(
-    settings.S3_URL,
-    access_key=settings.MINIO_ROOT_USER,
-    secret_key=settings.MINIO_ROOT_PASSWORD,
-    secure=settings.S3_SECURE
-)
+s3_client = Minio(settings.S3_URL, access_key=settings.MINIO_ROOT_USER, secret_key=settings.MINIO_ROOT_PASSWORD, secure=settings.S3_SECURE)
 
 QUEUE_NAME = "dp_processing"
 
@@ -516,7 +511,7 @@ async def process_file(
             notification_message=f"{len(failed_records)} of {total} records failed",
             redirection_route="",
             cta_url="",
-            file_url=f"/download/file/{settings.FAILED_RECORDS_BUCKET}/{filename}",
+            file_url=f"{settings.FAILED_RECORDS_BUCKET}/{filename}",
             priority="high",
             icon_url="",
             category="bulk_import",
