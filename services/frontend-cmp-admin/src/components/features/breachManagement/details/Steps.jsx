@@ -13,6 +13,7 @@ import { RxArrowTopRight } from "react-icons/rx";
 import DataTable from "@/components/shared/data-table/DataTable";
 import { LuCopy } from "react-icons/lu";
 import { InputField, SelectInput, TextareaField } from "@/components/ui/Inputs";
+import { useRouter } from "next/navigation";
 
 const Steps = ({ breachData, refreshData }) => {
   const workflow = breachData?.workflow || [];
@@ -33,6 +34,8 @@ const Steps = ({ breachData, refreshData }) => {
     step_name: "",
     step_description: "",
   });
+
+  const router = useRouter();
 
   const handleAddStep = async () => {
     if (
@@ -129,6 +132,7 @@ const Steps = ({ breachData, refreshData }) => {
         method: "POST",
       });
       toast.success("Notification sent successfully");
+      router.push(`/apps/breach-management`);
     } catch (error) {
       toast.error(getErrorMessage(error));
     }
@@ -378,8 +382,9 @@ const Steps = ({ breachData, refreshData }) => {
               ) : currentStage?.stage_name?.toLowerCase() === "closure" ? (
                 <div className="p-4 border border-borderheader bg-white">
                   <p className="text-gray-600 text-sm">
-                    This breach incident has been closed now and below is the
-                    notification that has been sent to the users.
+                    This breach incident has been closed now, click on the below
+                    send notification button to send the notification to the
+                    affected users.
                   </p>
                 </div>
               ) : (
@@ -484,7 +489,6 @@ const Steps = ({ breachData, refreshData }) => {
         width="600px"
       >
         <div className="flex flex-col gap-4">
-         
           {manageTab === "addStep" && (
             <div className="flex flex-col gap-4">
               <SelectInput

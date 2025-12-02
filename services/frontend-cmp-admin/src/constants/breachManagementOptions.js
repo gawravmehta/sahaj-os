@@ -48,8 +48,6 @@ export const stageOptions = [
   { value: "new", label: "New" },
   { value: "investigating", label: "Investigating" },
   { value: "remediating", label: "Remediating" },
-  { value: "notifying", label: "Notifying" },
-  { value: "complete", label: "Complete" },
 ];
 
 export const authorityOptions = [

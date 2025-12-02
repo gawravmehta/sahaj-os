@@ -14,7 +14,7 @@ const Card = ({ dashboardData }) => {
   const { canRead } = usePermissions();
 
   useEffect(() => {
-    const logoUrl = orgDetails?.org_info?.df_logo_url;
+    const logoUrl = orgDetails?.df?.org_info?.df_logo_url;
     if ((orgDetails && !logoUrl) || logoUrl?.trim() === "") {
       setShowToast(true);
     } else {

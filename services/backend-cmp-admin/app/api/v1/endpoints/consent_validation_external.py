@@ -12,6 +12,7 @@ from app.db.dependencies import (
     get_validation_batch_collection,
     get_vendor_collection,
     get_customer_notifications_collection,
+    get_df_keys_collection,
 )
 from app.db.rabbitmq import publish_message
 from app.schemas.consent_validation_schema import VerificationRequest
@@ -36,6 +37,7 @@ async def verify_consent_external(
     consent_artifact_collection=Depends(get_consent_artifact_collection),
     consent_validation_collection=Depends(get_consent_validation_collection),
     customer_notifications_collection=Depends(get_customer_notifications_collection),
+    df_keys_collection=Depends(get_df_keys_collection),
 ):
     if not dp_id and not dp_system_id and not (dp_e or dp_m):
         raise HTTPException(
@@ -52,12 +54,29 @@ async def verify_consent_external(
     if not api_key or not api_secret:
         raise HTTPException(status_code=400, detail="API Key and API Secret are required")
 
-    data_processor_details = await vendor_master_collection.find_one(
+    df_keys_doc = await df_keys_collection.find_one(
         {
-            "api_key": api_key,
-            "api_secret": api_secret,
+            "df_key": api_key,
+            "df_secret": api_secret,
         }
     )
+
+    data_processor_details = None
+    is_internal_df = False
+
+    if df_keys_doc:
+        is_internal_df = True
+        data_processor_details = {
+            "dpr_name": "Data Fiduciary (Internal)",
+            "_id": df_keys_doc.get("df_id"),
+        }
+    else:
+        data_processor_details = await vendor_master_collection.find_one(
+            {
+                "api_key": api_key,
+                "api_secret": api_secret,
+            }
+        )
 
     if not data_processor_details:
         raise HTTPException(status_code=401, detail="Invalid API Key or API Secret")
@@ -241,14 +260,32 @@ async def authenticate(
     api_secret: str = Header(..., alias="api-secret"),
     vendor_master_collection=Depends(get_vendor_collection),
     validation_batch_collection=Depends(get_validation_batch_collection),
+    df_keys_collection=Depends(get_df_keys_collection),
 ):
     """Authenticate API key/secret and generate or reuse JWT token."""
-    vendor_doc = await vendor_master_collection.find_one({"api_key": api_key, "api_secret": api_secret})
+    # Check for Data Fiduciary Keys first
+    df_keys_doc = await df_keys_collection.find_one(
+        {
+            "df_key": api_key,
+            "df_secret": api_secret,
+        }
+    )
 
-    if not vendor_doc:
-        raise HTTPException(status_code=401, detail="Invalid API Key or Secret")
+    df_id = None
+    vendor_id = None
 
-    df_id = vendor_doc["df_id"]
+    if df_keys_doc:
+        df_id = df_keys_doc["df_id"]
+        vendor_id = df_id  # Use df_id as vendor_id for internal DF auth
+    else:
+        vendor_doc = await vendor_master_collection.find_one({"api_key": api_key, "api_secret": api_secret})
+
+        if not vendor_doc:
+            raise HTTPException(status_code=401, detail="Invalid API Key or Secret")
+
+        df_id = vendor_doc["df_id"]
+        vendor_id = str(vendor_doc["_id"])
+
     batch_data = await validation_batch_collection.find_one({"df_id": df_id})
 
     if batch_data:
@@ -260,7 +297,7 @@ async def authenticate(
                 "token": batch_data["token"],
             }
 
-    vendor_id = str(vendor_doc["_id"])
+    vendor_id = vendor_id or str(vendor_doc["_id"])
 
     token = await generate_jwt_token(df_id, vendor_id, validation_batch_collection)
     return {"message": "Authentication successful", "token": token}
