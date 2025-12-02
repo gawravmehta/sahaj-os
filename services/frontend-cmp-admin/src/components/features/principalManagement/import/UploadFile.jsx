@@ -88,10 +88,10 @@ const UploadFile = ({
   const handleDownloadTemplate = () => {
     const headers = [
       "dp_system_id",
-      "dp_first_name",
       "dp_identifiers",
       "dp_email",
       "dp_mobile",
+      "dp_other_identifier",
       "dp_preferred_lang",
       "dp_country",
       "dp_state",
@@ -99,6 +99,7 @@ const UploadFile = ({
       "is_active",
       "created_at_df",
       "last_activity",
+      "dp_tags",
     ];
 
     const numberOfEmptyRows = 5;
