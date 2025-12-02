@@ -112,7 +112,8 @@ class DepartmentService:
         SYSTEM_ADMIN_ROLE_ID: str,
     ):
         try:
-
+            user_id = str(current_user["_id"])
+            df_id = str(current_user["df_id"])
             if not ObjectId.is_valid(department_id):
                 raise HTTPException(status_code=400, detail="Invalid department_id format")
 
@@ -129,8 +130,6 @@ class DepartmentService:
                 raise HTTPException(status_code=404, detail="Department not found")
 
             user_roles = current_user.get("user_roles", [])
-            user_id = str(current_user["_id"])
-            df_id = str(current_user["df_id"])
 
             is_system_admin = SYSTEM_ADMIN_ROLE_ID in user_roles
             is_department_admin = user_id in department.get("department_admins", [])
@@ -153,24 +152,27 @@ class DepartmentService:
 
             async def validate_users(user_ids: List[str]):
                 valid_users = set()
-                for user_id in user_ids:
-                    if ObjectId.is_valid(user_id):
-                        user = await self.user_crud.get_user_by_id(user_id)
-                        if user and user.df_id == department_df_id:
-                            valid_users.add(user_id)
-                        else:
-                            await log_business_event(
-                                event_type="UPDATE_DEPT_USERS_FAILED",
-                                user_email=current_user["email"],
-                                message="User validation failed",
-                                log_level="ERROR",
-                                context={"user_id": user_id, "df_id": df_id, "invalid_user": user_id},
-                                business_logs_collection=self.business_logs_collection,
-                            )
-                            raise HTTPException(
-                                status_code=400,
-                                detail=f"User {user_id} not found or does not belong to the same df_id as the department",
-                            )
+                for uid in user_ids:
+                    try:
+                        user = await self.user_crud.get_user_by_id(uid)
+                    except Exception as e:
+                        raise HTTPException(status_code=500, detail=f"InvalidId: {str(e)}")
+
+                    if user and getattr(user, "df_id", None) == department_df_id:
+                        valid_users.add(uid)
+                    else:
+                        await log_business_event(
+                            event_type="UPDATE_DEPT_USERS_FAILED",
+                            user_email=current_user["email"],
+                            message="User validation failed",
+                            log_level="ERROR",
+                            context={"user_id": uid, "df_id": df_id, "invalid_user": uid},
+                            business_logs_collection=self.business_logs_collection,
+                        )
+                        raise HTTPException(
+                            status_code=400,
+                            detail=f"User {uid} not found or does not belong to the same df_id as the department",
+                        )
                 return valid_users
 
             new_users = await validate_users(update_data.department_users)
@@ -300,6 +302,9 @@ class DepartmentService:
     ):
         try:
 
+            user_roles = current_user.get("user_roles", [])
+            user_id = str(current_user["_id"])
+            df_id = str(current_user["df_id"])
             if not ObjectId.is_valid(department_id):
                 raise HTTPException(status_code=400, detail="Invalid department_id format")
 
@@ -319,10 +324,6 @@ class DepartmentService:
                     business_logs_collection=self.business_logs_collection,
                 )
                 raise HTTPException(status_code=404, detail="Department not found")
-
-            user_roles = current_user.get("user_roles", [])
-            user_id = str(current_user["_id"])
-            df_id = str(current_user["df_id"])
 
             is_system_admin = SYSTEM_ADMIN_ROLE_ID in user_roles
             is_department_admin = user_id in department.get("department_admins", [])
@@ -624,8 +625,13 @@ class DepartmentService:
             admins = await self.user_crud.find_by_ids(admin_ids)
 
             def clean_user_data(user):
-                user["_id"] = str(user["_id"])
-                return user
+                if isinstance(user, dict):
+                    user["_id"] = str(user["_id"])
+                    return user
+                else:
+                    d = user.model_dump()
+                    d["_id"] = str(d["_id"])
+                    return d
 
             department["department_users_data"] = [clean_user_data(user) for user in users]
             department["department_admins_data"] = [clean_user_data(admin) for admin in admins]

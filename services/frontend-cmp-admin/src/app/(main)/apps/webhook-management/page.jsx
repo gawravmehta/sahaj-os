@@ -136,6 +136,20 @@ const WebhookManagementPage = () => {
       },
     },
     {
+      header: "Webhook For",
+      accessor: "webhook_for",
+      headerClassName: "text-left",
+      render: (element) => {
+        const displayValue =
+          element === "df" ? "Data Fiduciary" : "Data Processor";
+        return (
+          <div className="max-w-44 truncate text-ellipsis font-medium capitalize">
+            {displayValue}
+          </div>
+        );
+      },
+    },
+    {
       header: "Subscribed Events",
       accessor: "subscribed_events",
       headerClassName: "text-left",

@@ -303,8 +303,6 @@ class ConsentArtifactService:
             query["artifact.consent_scope.data_elements.consents.consent_expiry_period"]["$lte"] = seven_days_from_now.isoformat()
         elif days_to_expire == "15":
             query["artifact.consent_scope.data_elements.consents.consent_expiry_period"]["$lte"] = fifteen_days_from_now.isoformat()
-        elif days_to_expire == "30":
-            query["artifact.consent_scope.data_elements.consents.consent_expiry_period"]["$lte"] = thirty_days_from_now.isoformat()
         else:
             query["artifact.consent_scope.data_elements.consents.consent_expiry_period"]["$lte"] = thirty_days_from_now.isoformat()
 
@@ -342,26 +340,26 @@ class ConsentArtifactService:
                     )
 
                     if current_time < consent_expiry_dt <= seven_days_from_now:
-                        if dp_id_from_doc not in seven_days_expiring:
-                            seven_days_expiring[dp_id_from_doc] = ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
-                        seven_days_expiring[dp_id_from_doc].expiring_purposes.append(purpose_consent_expiry)
+                        seven_days_expiring.setdefault(
+                            dp_id_from_doc, ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
+                        ).expiring_purposes.append(purpose_consent_expiry)
 
                     if current_time < consent_expiry_dt <= fifteen_days_from_now:
-                        if dp_id_from_doc not in fifteen_days_expiring:
-                            fifteen_days_expiring[dp_id_from_doc] = ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
-                        fifteen_days_expiring[dp_id_from_doc].expiring_purposes.append(purpose_consent_expiry)
+                        fifteen_days_expiring.setdefault(
+                            dp_id_from_doc, ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
+                        ).expiring_purposes.append(purpose_consent_expiry)
 
                     if current_time < consent_expiry_dt <= thirty_days_from_now:
-                        if dp_id_from_doc not in thirty_days_expiring:
-                            thirty_days_expiring[dp_id_from_doc] = ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
-                        thirty_days_expiring[dp_id_from_doc].expiring_purposes.append(purpose_consent_expiry)
+                        thirty_days_expiring.setdefault(
+                            dp_id_from_doc, ExpiringConsentsByDpIdResponse(dp_id=dp_id_from_doc, expiring_purposes=[])
+                        ).expiring_purposes.append(purpose_consent_expiry)
 
         if days_to_expire == "7":
-            return list(seven_days_expiring.values())
+            result = list(seven_days_expiring.values())
         elif days_to_expire == "15":
-            return list(fifteen_days_expiring.values())
+            result = list(fifteen_days_expiring.values())
         else:
-            expiring_consents_result = list(thirty_days_expiring.values())
+            result = list(thirty_days_expiring.values())
 
         await log_business_event(
             event_type="LIST_EXPIRING_CONSENTS",
@@ -376,4 +374,4 @@ class ConsentArtifactService:
             business_logs_collection=self.business_logs_collection,
         )
 
-        return expiring_consents_result
+        return result
