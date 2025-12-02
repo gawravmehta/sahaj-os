@@ -45,6 +45,12 @@ const DeGeneral = ({ deData }) => {
                 </h1>
                 <p className="font-lato">{deData.de_description || "N/A"}</p>
               </div>
+              <div>
+                <h1 className="mb-1 font-lato text-sm text-subHeading">
+                  Data Element Hash ID:
+                </h1>
+                <p className="font-lato">{deData.de_hash_id || "N/A"}</p>
+              </div>
               <div className="grid grid-cols-2 gap-10">
                 <div className="">
                   <h1 className="mb-1 font-lato text-sm text-subHeading">
@@ -60,7 +66,6 @@ const DeGeneral = ({ deData }) => {
                     Sensitivity:
                   </h1>
                   <p className="capitalize">{deData.de_sensitivity}</p>
-                  
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-10">

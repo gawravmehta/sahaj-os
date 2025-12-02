@@ -61,7 +61,7 @@ export const apiCall = async (endpoint, options = {}) => {
     }
 
     return returnFullResponse
-      ? { data: responseData, status: res.status }
+      ? { data: responseData, status: res.status, headers: res.headers }
       : responseData;
   } catch (error) {
     throw error;

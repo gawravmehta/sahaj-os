@@ -40,18 +40,17 @@ const Page = () => {
 
   const handleDownload = async (fileToDownload, type) => {
     try {
-      const response = await apiCall(
-        `/consent-validation/download-verified-file?file_name=${fileToDownload}&download_type=${type}`
+      const { data: blob, headers } = await apiCall(
+        `/consent-validation/download-verified-file?file_name=${fileToDownload}&download_type=${type}`,
+        {
+          responseType: "blob",
+          returnFullResponse: true,
+        }
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to download file");
-      }
-
-      const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
-      const contentDisposition = response.headers.get("content-disposition");
+      const contentDisposition = headers.get("content-disposition");
       let filename = `verification_logs.${type}`;
 
       if (contentDisposition) {
@@ -138,7 +137,6 @@ const Page = () => {
                     className="flex gap-1 text-[10px] text-subText"
                   />
                   <div className="flex items-center gap-2">
-                    
                     <FiDownload
                       className={`${
                         item.status === "completed"

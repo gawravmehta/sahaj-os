@@ -28,6 +28,7 @@ const General = ({ dpData }) => {
 
   const {
     purpose_title,
+    purpose_hash_id,
     purpose_description,
     consent_directory_category,
     geographical_scope,
@@ -55,6 +56,10 @@ const General = ({ dpData }) => {
             <div>
               <h1 className="text-subHeading">Description</h1>
               <p className="text-[16px]"> {purpose_description}</p>
+            </div>
+            <div>
+              <h1 className="text-subHeading">Purpose Hash ID</h1>
+              <p className="text-[16px]"> {purpose_hash_id}</p>
             </div>
             <div className="grid w-full grid-cols-3 gap-10">
               <div>
