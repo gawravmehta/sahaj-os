@@ -4,7 +4,7 @@ import uuid
 from fastapi import HTTPException
 from app.utils.business_logger import log_business_event
 from app.crud.data_principal_crud import DataPrincipalCRUD
-from app.schemas.data_principal_schema import UpdateDP
+from app.schemas.data_principal_schema import UpdateDP, AddDP
 from app.utils.common import hash_shake256
 from app.utils.data_principal import mask_email, mask_mobile
 from typing import Any, Dict, List, Optional
@@ -17,7 +17,7 @@ class DataPrincipalService:
         self.consent_latest_artifacts = consent_latest_artifacts
         self.business_logs_collection = business_logs_collection
 
-    async def add_data_principal(self, dp_data_list: List[Dict[str, Any]], user: Dict[str, Any]):
+    async def add_data_principal(self, dp_data_list: List[AddDP], user: Dict[str, Any]):
         table_name = "dpd"
 
         user_email = user.get("email")
@@ -27,7 +27,7 @@ class DataPrincipalService:
 
         principal_ids = []
         for dp_data in dp_data_list:
-            if not dp_data.get("dp_system_id") or str(dp_data["dp_system_id"]).strip() == "":
+            if not dp_data.dp_system_id or str(dp_data.dp_system_id).strip() == "":
                 raise HTTPException(status_code=400, detail="System ID is required.")
 
             if "email" in dp_data.dp_identifiers:

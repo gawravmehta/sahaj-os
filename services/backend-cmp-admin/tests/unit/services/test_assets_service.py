@@ -185,7 +185,6 @@ async def test_create_asset_missing_fields(monkeypatch):
     service = AssetService(mock_crud, "logs")
     user = {"_id": "u1", "email": "t@e.com", "df_id": "df123"}
 
-    # Missing category and usage_url
     asset_data = {"asset_name": "Test"}
 
     with pytest.raises(Exception):
@@ -208,6 +207,7 @@ async def test_create_asset_crud_failure(monkeypatch):
     with pytest.raises(Exception):
         await service.create_asset(asset_data, user)
 
+
 @pytest.mark.asyncio
 async def test_update_asset_status_not_draft():
     mock_crud = MagicMock()
@@ -219,6 +219,7 @@ async def test_update_asset_status_not_draft():
         await service.update_asset("a1", {}, {"df_id": "df1", "_id": "u1"})
 
     assert exc.value.status_code == 400
+
 
 @pytest.mark.asyncio
 async def test_update_asset_no_name_no_duplicate_check(monkeypatch):
@@ -236,6 +237,7 @@ async def test_update_asset_no_name_no_duplicate_check(monkeypatch):
     await service.update_asset("a1", {"description": "new desc"}, user)
 
     mock_crud.is_duplicate_name.assert_not_called()
+
 
 @pytest.mark.asyncio
 async def test_update_asset_sets_updated_fields(monkeypatch):
@@ -258,6 +260,7 @@ async def test_update_asset_sets_updated_fields(monkeypatch):
     assert "updated_at" in args
     assert args["updated_by"] == "u1"
 
+
 @pytest.mark.asyncio
 async def test_update_asset_cookie_fields_not_found():
     mock_crud = MagicMock()
@@ -270,6 +273,7 @@ async def test_update_asset_cookie_fields_not_found():
 
     assert exc.value.status_code == 404
 
+
 @pytest.mark.asyncio
 async def test_publish_asset_archived():
     mock_crud = MagicMock()
@@ -281,6 +285,7 @@ async def test_publish_asset_archived():
         await service.publish_asset("a1", {"df_id": "df1"})
 
     assert exc.value.status_code == 400
+
 
 @pytest.mark.asyncio
 async def test_publish_asset_success(monkeypatch):
@@ -297,6 +302,7 @@ async def test_publish_asset_success(monkeypatch):
 
     assert result["published"] is True
     mock_log.assert_called_once()
+
 
 @pytest.mark.asyncio
 async def test_get_all_assets_success(monkeypatch):
@@ -315,6 +321,7 @@ async def test_get_all_assets_success(monkeypatch):
     assert res["total_pages"] == 2
     assert res["assets"] == [1, 2]
 
+
 @pytest.mark.asyncio
 async def test_get_all_assets_with_category(monkeypatch):
     mock_crud = MagicMock()
@@ -328,6 +335,7 @@ async def test_get_all_assets_with_category(monkeypatch):
     await service.get_all_assets(user, category="Website")
 
     mock_crud.get_all_assets.assert_called_with(df_id="df1", offset=0, limit=20, category="Website")
+
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(

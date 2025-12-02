@@ -7,9 +7,6 @@ import httpx
 from app.crud.data_element_crud import DataElementCRUD
 
 
-# ------------------ MOCK COLLECTION FIXTURE ------------------
-
-
 @pytest.fixture
 def mock_de_template_collection():
     """Mocked Mongo collection with correct async behavior."""
@@ -27,7 +24,6 @@ def mock_de_master_collection():
     collection.update_one = AsyncMock()
     collection.count_documents = AsyncMock()
 
-    # Cursor mock for find()
     cursor = MagicMock()
     cursor.skip.return_value = cursor
     cursor.limit.return_value = cursor
@@ -65,9 +61,6 @@ def dummy_data():
         "df_id": "test_df_id",
         "de_status": "draft",
     }
-
-
-# ------------------ TESTS ------------------
 
 
 @pytest.mark.asyncio
@@ -177,7 +170,7 @@ async def test_update_data_element_by_id(crud, mock_de_master_collection, dummy_
 
     mock_de_master_collection.update_one.assert_called_once()
     assert result["_id"] == de_id
-    assert result["de_name"] == dummy_data["de_name"]  # find_one returns dummy_data
+    assert result["de_name"] == dummy_data["de_name"]
 
 
 @pytest.mark.asyncio
@@ -263,9 +256,7 @@ async def test_get_all_de_templates(crud, monkeypatch, params):
 async def test_get_all_de_templates_http_error(crud, monkeypatch):
     mock_async_client = MagicMock()
     mock_response = MagicMock()
-    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError(
-        "Error", request=MagicMock(), response=MagicMock()
-    )
+    mock_response.raise_for_status.side_effect = httpx.HTTPStatusError("Error", request=MagicMock(), response=MagicMock())
 
     mock_async_client.get = AsyncMock(return_value=mock_response)
 

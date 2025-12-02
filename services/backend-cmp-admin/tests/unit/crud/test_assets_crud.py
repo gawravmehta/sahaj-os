@@ -6,9 +6,6 @@ from fastapi import HTTPException
 from app.crud.assets_crud import AssetCrud
 
 
-# ------------------ MOCK COLLECTION FIXTURE ------------------
-
-
 @pytest.fixture
 def mock_collection():
     """Mocked Mongo collection with correct async behavior."""
@@ -20,7 +17,6 @@ def mock_collection():
     collection.count_documents = AsyncMock()
     collection.distinct = AsyncMock()
 
-    # Cursor mock for find()
     cursor = MagicMock()
     cursor.skip.return_value = cursor
     cursor.limit.return_value = cursor
@@ -45,9 +41,6 @@ def dummy_data():
         "asset_status": "draft",
         "meta_cookies": {"cookies_count": 5},
     }
-
-
-# ------------------ TESTS ------------------
 
 
 @pytest.mark.asyncio
@@ -113,7 +106,7 @@ async def test_update_asset_by_id(crud, mock_collection, dummy_data):
 
     mock_collection.update_one.assert_called_once()
     assert result["_id"] == asset_id
-    assert result["asset_name"] == dummy_data["asset_name"]  # find_one returns dummy_data
+    assert result["asset_name"] == dummy_data["asset_name"]
 
 
 @pytest.mark.asyncio
@@ -217,5 +210,4 @@ async def test_create_asset_does_not_mutate_input(crud, mock_collection, dummy_d
 
     await crud.create_asset(original)
 
-    # Ensure original data is untouched
     assert "_id" not in original
