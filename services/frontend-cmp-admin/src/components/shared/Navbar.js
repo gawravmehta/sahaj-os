@@ -78,7 +78,8 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
     }
   };
 
-  const handleReadNotification = async (notificationId) => {
+  const handleReadNotification = async (notification) => {
+    const notificationId = notification?._id;
     try {
       const response = await apiCall(
         `/notifications/read-notification/${notificationId}`,
@@ -97,6 +98,33 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
             n._id === notificationId ? { ...n, is_read: true } : n
           )
         );
+      }
+
+      if (notification?.file_url) {
+        const [bucket, ...rest] = notification.file_url.split("/");
+        const object_name = rest.join("/");
+
+        const fileResponse = await apiCall(
+          `/minio-proxy/download?bucket=${bucket}&object_name=${object_name}`,
+          {
+            method: "GET",
+            responseType: "blob",
+          }
+        );
+
+        if (fileResponse) {
+          const url = window.URL.createObjectURL(new Blob([fileResponse]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute(
+            "download",
+            object_name.split("/").pop() || "download"
+          );
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }
       }
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -296,12 +324,14 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
                       key={notification._id}
                       onClick={() => {
                         if (!notification.is_read) {
-                          handleReadNotification(notification._id);
+                          handleReadNotification(notification);
+                        } else if (notification.file_url) {
+                          handleReadNotification(notification);
                         }
                       }}
                       className={`group relative flex cursor-pointer gap-3 border-b border-[#D2E1FB66] p-2 px-3 ${notification.is_read
-                          ? "bg-white hover:bg-gray-100"
-                          : "bg-[#ECF6FF] hover:bg-[#cee7fe]"
+                        ? "bg-white hover:bg-gray-100"
+                        : "bg-[#ECF6FF] hover:bg-[#cee7fe]"
                         }`}
                     >
                       <span
@@ -316,8 +346,8 @@ const Navbar = ({ showSidebar, setShowSidebar }) => {
                           <span>{notification.notification_title}</span>
                           <span
                             className={`text-xs ${notification.is_read
-                                ? "text-subHeading group-hover:text-gray-600"
-                                : "text-gray-600"
+                              ? "text-subHeading group-hover:text-gray-600"
+                              : "text-gray-600"
                               }`}
                           >
                             {notification.notification_message}

@@ -109,36 +109,12 @@ async def handle_legacy_consent_submission(
         agreement_id,
     )
 
-    purposes_list = []
-    seen = set()
-
-    for element in data_elements_consents:
-        de_base = {
-            "de_id": element.get("de_id"),
-            "de_hash_id": element.get("de_hash_id"),
-            "title": element.get("title"),
-            "data_retention_period": element.get("data_retention_period"),
-        }
-        for consent in element.get("consents", []):
-            unique_key = f"{de_base['de_id']}_{consent.get('purpose_id')}"
-            if unique_key in seen:
-                continue
-            seen.add(unique_key)
-            flattened = {**de_base, **consent}
-            purposes_list.append(flattened)
-
-    message_to_publish = {
-        "dp_id": dp_id,
-        "df_id": df_id,
-        "cp_name": collection_point_name,
-        "event_type": "consent_granted",
-        "timestamp": str(datetime.now(UTC)),
-        "purposes": purposes_list,
+    message_payload = {
+        "event_type": "consent_submission",
+        "timestamp": datetime.now(UTC).isoformat(),
+        "consent_artifact": consent_artifact,
     }
-
-    await publish_message("consent_events_q", json.dumps(message_to_publish))
-
-    await run_in_thread(gdb.consent_artifacts.insert_one, consent_artifact)
+    await publish_message("consent_processing_q", json.dumps(message_payload))
 
     background_tasks.add_task(
         delete_token_information,

@@ -77,7 +77,7 @@ function Page() {
 
       setTableDataRows(formattedData);
     } catch (error) {
-      toast.error(getErrorMessage(error));
+      console.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -175,7 +175,6 @@ function Page() {
           setNoticeAvailable={() => {}}
           setIsNoticeValid={setIsNoticeValid}
         />
-
       </Modal>
     </div>
   );
