@@ -192,7 +192,7 @@ if [ "$DOCKER_DOWN" = true ]; then
   fi
 
   echo "Running: ${CMD[*]} down -v"
-  "${CMD[@]}" down -v
+  "${CMD[@]}" down -v 2>&1 | grep -v "variable is not set"
   echo "Docker compose down -v completed."
 else
   if [ "$any_running" = false ]; then
