@@ -20,7 +20,7 @@ import TimeAgo from "./TimeAgo";
 import Cookies from "js-cookie";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "";
+const baseURL = process.env.NEXT_PUBLIC_ADMIN_URL || "";
 const Navbar = ({ showSidebar, setShowSidebar }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
