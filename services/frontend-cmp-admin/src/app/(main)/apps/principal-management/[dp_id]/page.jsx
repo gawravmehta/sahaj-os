@@ -21,6 +21,7 @@ export default function Page({ params }) {
   const [mobile, setMobile] = useState("");
   const [allEmails, setAllEmails] = useState([]);
   const [allMobile, setAllMobile] = useState([]);
+  const [allOtherIdentifiers, setAllOtherIdentifiers] = useState([]);
   const [allDataElements, setAllDataElements] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -61,12 +62,16 @@ export default function Page({ params }) {
           is_active: Boolean(response.is_active),
           dp_tags: response.dp_tags || [],
           identifiers: response.dp_identifiers || [],
-          email: response.dp_email?.[0] || "",
-          mobile: response.dp_mobile?.[0] || "",
-          dp_other_identifier: response.dp_other_identifier || [],
+          email: "",
+          mobile: "",
+          dp_other_identifier: [],
           systemId: response.dp_system_id || "",
         }));
       }
+
+      setAllEmails(response.dp_email || []);
+      setAllMobile(response.dp_mobile || []);
+      setAllOtherIdentifiers(response.dp_other_identifier || []);
 
       setOldData({
         ...response,
@@ -140,7 +145,9 @@ export default function Page({ params }) {
         ...(formData?.identifiers?.includes("mobile") && {
           dp_mobile: mobile ? [mobile] : [],
         }),
-        dp_other_identifier: formData?.dp_other_identifier || [],
+        dp_other_identifier: (formData?.dp_other_identifier || []).filter(
+          Boolean
+        ),
         dp_preferred_lang: formData.preferredLanguage,
         dp_country: formData.country,
         dp_state: formData.state,
@@ -168,13 +175,9 @@ export default function Page({ params }) {
   const updateDataPrincipal = async () => {
     const data = {
       dp_identifiers: formData.identifiers || [],
-      ...(formData?.identifiers?.includes("email") && {
-        dp_email: [formData.email],
-      }),
-      ...(formData?.identifiers?.includes("mobile") && {
-        dp_mobile: [formData.mobile],
-      }),
-      dp_other_identifier: formData?.dp_other_identifier || [],
+      dp_email: formData.email ? [formData.email] : [],
+      dp_mobile: formData.mobile ? [formData.mobile] : [],
+      dp_other_identifier: formData?.dp_other_identifier,
       dp_preferred_lang: formData.preferredLanguage,
       dp_country: formData.country,
       dp_tags: formData.dp_tags || [],
@@ -205,7 +208,6 @@ export default function Page({ params }) {
       router.push("/apps/principal-management");
     } catch (error) {
       toast.error(getErrorMessage(error));
-      router.push("/apps/principal-management");
     }
   };
   return (
@@ -242,6 +244,7 @@ export default function Page({ params }) {
               setMobile={setMobile}
               allEmails={allEmails}
               allMobile={allMobile}
+              allOtherIdentifiers={allOtherIdentifiers}
               allDataElements={allDataElements}
               setAllDataElements={setAllDataElements}
             />
