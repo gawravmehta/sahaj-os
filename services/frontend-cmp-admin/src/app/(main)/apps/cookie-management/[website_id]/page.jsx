@@ -301,8 +301,21 @@ const Page = () => {
         <TabsContent value="banner">
           <div>
             {assetDetails?.meta_cookies?.script_url?.length > 0 ? (
-              <div>
+              <div className="relative">
                 {" "}
+                <div className="absolute top-2 right-2">
+                  <div className="flex flex-col items-center justify-center gap-4 ">
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        handleBuildCookieBanner();
+                      }}
+                      disabled={buildLoader}
+                    >
+                      {buildLoader ? "Rebuilding..." : "Rebuild Banner"}
+                    </Button>
+                  </div>
+                </div>
                 <CookieIframe
                   scriptUrl={assetDetails?.meta_cookies?.script_url}
                 />{" "}
