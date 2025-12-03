@@ -33,6 +33,8 @@ const AddEditWebhookModal = ({
 
   const [loading, setLoading] = useState(false);
 
+  const [dprs, setDprs] = useState([]);
+
   useEffect(() => {
     if (editingWebhook) {
       setFormData({
@@ -82,6 +84,20 @@ const AddEditWebhookModal = ({
     }
   };
 
+  const getAllVendors = async () => {
+    try {
+      const response = await apiCall("/vendor/get-all-vendors");
+      setDprs(response.vendors || []);
+    } catch (error) {
+      const message = getErrorMessage(error);
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllVendors();
+  }, []);
+
   return (
     <Modal
       isOpen={true}
@@ -108,15 +124,23 @@ const AddEditWebhookModal = ({
             handleSelectChange("webhook_for", selectedOption.value)
           }
           options={WEBHOOK_FOR_OPTIONS}
+          isClearable={false}
         />
 
         {formData.webhook_for === "dpr" && (
-          <InputField
-            label="DPR ID"
+          <SelectInput
+            label="Data Processor"
             name="dpr_id"
-            value={formData.dpr_id}
-            onChange={handleChange}
-            placeholder="Enter DPR ID"
+            value={dprs.find((dpr) => dpr.dpr_id === formData.dpr_id)}
+            onChange={(selectedOption) =>
+              handleSelectChange("dpr_id", selectedOption.value)
+            }
+            options={dprs.map((dpr) => ({
+              value: dpr._id,
+              label: dpr.dpr_name,
+            }))}
+            placeholder="Select Data Processor"
+            isClearable={false}
             required
           />
         )}
@@ -131,6 +155,7 @@ const AddEditWebhookModal = ({
             handleSelectChange("environment", selectedOption.value)
           }
           options={ENVIRONMENT_OPTIONS}
+          isClearable={false}
         />
 
         <div className="flex justify-end gap-2 mt-4">
