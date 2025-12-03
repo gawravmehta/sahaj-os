@@ -36,7 +36,7 @@ async def extract_request_info(request: Optional[Request]) -> Optional[Dict[str,
 opensearch_client = OpenSearch(
     hosts=[{"host": settings.OPENSEARCH_HOST, "port": settings.OPENSEARCH_PORT}],
     http_auth=(settings.OPENSEARCH_USERNAME, settings.TEMPORARY_PASSWORD),
-    use_ssl=False,
+    use_ssl=True,
     verify_certs=False,
     ssl_assert_hostname=False,
     ssl_show_warn=False,
