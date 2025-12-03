@@ -24,12 +24,7 @@ def sample_event():
         "event_type": "consent_given",
         "df_id": "df123",
         "dp_id": "dp789",
-        "purposes": [
-            {
-                "purpose_id": "p1",
-                "data_processors": [{"data_processor_id": "dpr1"}]
-            }
-        ],
+        "purposes": [{"purpose_id": "p1", "data_processors": [{"data_processor_id": "dpr1"}]}],
         "data_elements": [
             {
                 "title": "de1",
@@ -42,10 +37,11 @@ def sample_event():
                     }
                 ],
                 "de_hash_id": "remove",
-                "de_status": "remove"
+                "de_status": "remove",
             }
         ],
     }
+
 
 async def test_filter_payload_removes_hash_fields(classification_service):
     event = sample_event()
@@ -57,6 +53,7 @@ async def test_filter_payload_removes_hash_fields(classification_service):
     assert "de_hash_id" not in filtered["data_elements"][0]
     assert "de_status" not in filtered["data_elements"][0]
 
+
 async def test_classify_and_publish_event_missing_df_id(classification_service):
     event = sample_event()
     event["df_id"] = None
@@ -64,6 +61,7 @@ async def test_classify_and_publish_event_missing_df_id(classification_service):
     result = await classification_service.classify_and_publish_event(event)
 
     assert result == {"status": "failed", "reason": "df_id missing"}
+
 
 async def test_classify_no_webhooks_found(classification_service, mock_webhooks_service):
     event = sample_event()
@@ -75,16 +73,11 @@ async def test_classify_no_webhooks_found(classification_service, mock_webhooks_
     assert result["reason"] == "no webhooks found"
     mock_webhooks_service._publish_webhook_event.assert_not_called()
 
+
 async def test_classify_publish_to_df_webhook(classification_service, mock_webhooks_service):
     event = sample_event()
 
-    mock_webhooks_service.list_webhooks.return_value = [
-        {
-            "_id": "w1",
-            "webhook_for": "df",
-            "subscribed_events": ["CONSENT_GIVEN"]
-        }
-    ]
+    mock_webhooks_service.list_webhooks.return_value = [{"_id": "w1", "webhook_for": "df", "subscribed_events": ["CONSENT_GIVEN"]}]
 
     mock_webhooks_service._publish_webhook_event.return_value = "evt123"
 
@@ -95,21 +88,19 @@ async def test_classify_publish_to_df_webhook(classification_service, mock_webho
     assert result["status"] == "classified and published"
     assert result["event_ids"] == ["evt123"]
 
+
 async def test_classify_df_webhook_not_subscribed(classification_service, mock_webhooks_service):
     event = sample_event()
 
     mock_webhooks_service.list_webhooks.return_value = [
-        {
-            "_id": "w1",
-            "webhook_for": "df",
-            "subscribed_events": ["CONSENT_WITHDRAWN"]  # does NOT match
-        }
+        {"_id": "w1", "webhook_for": "df", "subscribed_events": ["CONSENT_WITHDRAWN"]}  # does NOT match
     ]
 
     result = await classification_service.classify_and_publish_event(event)
 
     mock_webhooks_service._publish_webhook_event.assert_not_called()
     assert result["event_ids"] == []
+
 
 async def test_classify_publish_to_dpr_webhook(classification_service, mock_webhooks_service):
     event = sample_event()
@@ -132,6 +123,7 @@ async def test_classify_publish_to_dpr_webhook(classification_service, mock_webh
 
     assert result["event_ids"] == ["evt456"]
 
+
 async def test_classify_dpr_webhook_not_matching_dpr(classification_service, mock_webhooks_service):
     event = sample_event()
 
@@ -149,15 +141,26 @@ async def test_classify_dpr_webhook_not_matching_dpr(classification_service, moc
     mock_webhooks_service._publish_webhook_event.assert_not_called()
     assert result["event_ids"] == []
 
-async def test_event_classification_logic(classification_service):
+
+async def test_event_classification_logic(classification_service, mock_webhooks_service):
     event = sample_event()
+
+    # Ensure a DF webhook that IS subscribed so event actually publishes
+    mock_webhooks_service.list_webhooks.return_value = [{"_id": "w1", "webhook_for": "df", "subscribed_events": ["CONSENT_GIVEN"]}]
+
+    mock_webhooks_service._publish_webhook_event.return_value = "evt999"
 
     result = await classification_service.classify_and_publish_event(event)
 
-    # inside the payload sent out, classification should exist
-    args, kwargs = classification_service.webhooks_service._publish_webhook_event.call_args
+    # verify it published
+    mock_webhooks_service._publish_webhook_event.assert_called_once()
+
+    # extract payload
+    _, kwargs = mock_webhooks_service._publish_webhook_event.call_args
     payload_sent = kwargs["payload"]
 
+    # classification should exist
     assert payload_sent["classification"] == "approved"
     assert "classification_timestamp" in payload_sent
 
+    assert result["event_ids"] == ["evt999"]
