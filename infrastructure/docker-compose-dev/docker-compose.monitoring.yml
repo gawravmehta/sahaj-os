@@ -51,6 +51,9 @@ services:
         condition: service_started
     volumes:
       - ./infrastructure/deployment-configs/opensearch-dashboards/opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+    environment:
+      - OPENSEARCH_USERNAME=${OPENSEARCH_USERNAME}
+      - TEMPORARY_PASSWORD=${TEMPORARY_PASSWORD}
     ports:
       - "5601:5601"
     networks:

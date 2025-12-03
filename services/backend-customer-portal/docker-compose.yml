@@ -36,6 +36,8 @@ services:
       - RABBITMQ_VHOST_NAME=${RABBITMQ_VHOST_NAME}
       - RABBITMQ_POOL_SIZE=${RABBITMQ_POOL_SIZE}
 
+    volumes:
+      - ./services/backend-customer-portal/logs:/usr/src/application/logs
     networks:
       - concur-cfc-network
     depends_on:
