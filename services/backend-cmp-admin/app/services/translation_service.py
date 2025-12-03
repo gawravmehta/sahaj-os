@@ -173,3 +173,9 @@ class TranslationService:
 
         logger.info(f"Finished translation for all languages for DF: {df_id}", extra={"df_id": df_id, "total_translations": len(translations)})
         return translations
+
+    def return_transaltion_response(self, text: str, translations: Dict[str, str]):
+        final_translations = {code: translations.get(code, "") for code in supported_languages_map}
+        final_translations["eng"] = text
+        data = {"text_to_translate": text, "translations": final_translations}
+        return data
