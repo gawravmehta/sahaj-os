@@ -119,11 +119,21 @@ async def test_resolve_grievance_success_no_dp_notification(service, mock_grieva
     assert result["data"]["request_status"] == "resolved"
 
 @pytest.mark.asyncio
-async def test_resolve_grievance_not_found(service, mock_grievance_crud, mock_user, monkeypatch):
+async def test_resolve_grievance_not_found(
+    service,
+    mock_grievance_crud,
+    mock_customer_notification_collection,  # FIXED
+    mock_user,
+    monkeypatch
+):
     grievance_id = str(ObjectId())
     mock_grievance_crud.get_by_id.return_value = None
+
     mock_log_business_event = AsyncMock()
-    monkeypatch.setattr("app.services.grievance_service.log_business_event", mock_log_business_event)
+    monkeypatch.setattr(
+        "app.services.grievance_service.log_business_event",
+        mock_log_business_event
+    )
 
     with pytest.raises(HTTPException) as exc_info:
         await service.resolve_grievance(mock_user, grievance_id)
@@ -132,5 +142,6 @@ async def test_resolve_grievance_not_found(service, mock_grievance_crud, mock_us
     mock_log_business_event.assert_called_once()
     mock_grievance_crud.resolve_grievance.assert_not_called()
     mock_customer_notification_collection.insert_one.assert_not_called()
+
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "Grievance not found"
