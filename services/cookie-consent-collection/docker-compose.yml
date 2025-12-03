@@ -10,5 +10,7 @@ services:
       - MONGO_URI=${MONGO_URI}
       - DB_NAME_COOKIE_MANAGEMENT=${DB_NAME_COOKIE_MANAGEMENT}
       - RATE_LIMIT_DEFAULT=${RATE_LIMIT_DEFAULT}
+    volumes:
+      - ./services/cookie-consent-collection/logs:/usr/src/application/logs
     networks:
       - concur-cfc-network

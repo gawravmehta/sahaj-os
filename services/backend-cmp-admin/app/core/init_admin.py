@@ -325,4 +325,4 @@ async def create_initial_admin(client: AsyncIOMotorClient):
 
     await df_init
 
-    app_logger.critical(f"Initial Admin Created. Email: {settings.SUPERADMIN_EMAIL}, Password: {settings.TEMPORARY_PASSWORD}")
+    app_logger.info(f"Initial Admin Created.")

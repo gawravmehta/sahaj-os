@@ -60,9 +60,13 @@ services:
   backend-notice:
     <<: *notice-service-template
     command: uvicorn app.main:app --host 0.0.0.0 --port 3332 --reload --timeout-keep-alive 300
+    volumes:
+      - ./services/backend-notice/logs:/usr/src/application/logs
     ports:
     - "3332:3332"
 
   consent-processing-consumer:
     <<: *notice-consumer-template
     command: python -m app.worker.consent_processing_consumer
+    volumes:
+      - ./services/backend-notice/logs/consent_processing_consumer:/usr/src/application/logs
