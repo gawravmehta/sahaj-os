@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Header, HTTPException
 from app.core.config import settings
 from app.core.logging_config import logger
 from app.services.webhook_processor import WebhookProcessor
-from app.db.mongo import dummy_df
+from app.db.mongo import dummy_df, dpr_dummy_df, dpr2_dummy_df
 
 router = APIRouter()
 
@@ -17,14 +17,46 @@ async def root():
     return {"service_name": settings.SERVICE_NAME}
 
 
-@router.get("/events", response_model=List[Dict[str, Any]])
 async def get_all_events():
-    """
-    Retrieve all events from the dummy_df collection.
-    """
     logger.info("Fetching all events from dummy_df collection.")
     events = []
     async for doc in dummy_df.find():
+        doc["_id"] = str(doc["_id"])
+        events.append(doc)
+    logger.info(f"Retrieved {len(events)} events.")
+    return events
+
+
+@router.get("/events/df", response_model=List[Dict[str, Any]])
+async def get_df_events():
+    """
+    Retrieve all events from the dummy_df collection.
+    """
+    return await get_all_events()
+
+
+@router.get("/events/dp1", response_model=List[Dict[str, Any]])
+async def get_dp1_events():
+    """
+    Retrieve all events from the dpr_dummy_df collection.
+    """
+    logger.info("Fetching all events from dpr_dummy_df collection.")
+    events = []
+    async for doc in dpr_dummy_df.find():
+        doc["_id"] = str(doc["_id"])
+        events.append(doc)
+    logger.info(f"Retrieved {len(events)} events.")
+    return events
+
+
+@router.get("/events/dp2", response_model=List[Dict[str, Any]])
+async def get_dp2_events():
+    """
+    Retrieve all events from the dpr2_dummy_df collection.
+    """
+    logger.info("Fetching all events from dpr2_dummy_df collection.")
+    events = []
+    async for doc in dpr2_dummy_df.find():
         doc["_id"] = str(doc["_id"])
         events.append(doc)
     logger.info(f"Retrieved {len(events)} events.")
