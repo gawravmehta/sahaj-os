@@ -11,7 +11,7 @@ class WebhookProcessor:
         await dummy_df.insert_one(
             {
                 "payload": payload,
-                "event": payload.get("event"),
+                "event": payload.get("event_type"),
                 "timestamp": payload.get("timestamp"),
                 "processed": False,
             }
@@ -25,7 +25,7 @@ class WebhookProcessor:
         if not verify_signature(payload, signature):
             raise ValueError("Invalid signature")
 
-        event_type = payload.get("event")
+        event_type = payload.get("event_type")
         logger.info(f"Received event type: {event_type}\n")
 
         response_status = "ok"
