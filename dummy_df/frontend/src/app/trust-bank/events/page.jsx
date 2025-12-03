@@ -32,9 +32,11 @@ const EventsPage = () => {
 
     const fetchEvents = async () => {
       try {
-        let url = "http://127.0.0.1:8000/events/df";
-        if (activeTab === "dp1") url = "http://127.0.0.1:8000/events/dp1";
-        if (activeTab === "dp2") url = "http://127.0.0.1:8000/events/dp2";
+        let url = "http://127.0.0.1:8000/events?target_for=df";
+        if (activeTab === "dpr1")
+          url = "http://127.0.0.1:8000/events?target_for=dpr1";
+        if (activeTab === "dpr2")
+          url = "http://127.0.0.1:8000/events?target_for=dpr2";
 
         const response = await fetch(url);
         if (!response.ok) {
@@ -161,9 +163,9 @@ const EventsPage = () => {
             Data Fiduciary
           </button>
           <button
-            onClick={() => setActiveTab("dp1")}
+            onClick={() => setActiveTab("dpr1")}
             className={`py-4 border-b-2 font-medium text-sm transition-colors ${
-              activeTab === "dp1"
+              activeTab === "dpr1"
                 ? "border-blue-900 text-blue-900"
                 : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
@@ -171,9 +173,9 @@ const EventsPage = () => {
             Data Processor 1
           </button>
           <button
-            onClick={() => setActiveTab("dp2")}
+            onClick={() => setActiveTab("dpr2")}
             className={`py-4 border-b-2 font-medium text-sm transition-colors ${
-              activeTab === "dp2"
+              activeTab === "dpr2"
                 ? "border-blue-900 text-blue-900"
                 : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
@@ -194,7 +196,7 @@ const EventsPage = () => {
               Real-time{" "}
               {activeTab === "df"
                 ? "Data Fiduciary"
-                : activeTab === "dp1"
+                : activeTab === "dpr1"
                 ? "Data Processor 1"
                 : "Data Processor 2"}{" "}
               Monitor
