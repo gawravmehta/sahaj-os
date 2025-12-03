@@ -27,6 +27,7 @@ from app.api.v1.endpoints import (
     dashboard,
     consent_audit,
     minio_proxy,
+    logs,
 )
 
 
@@ -34,6 +35,7 @@ api_router = APIRouter()
 
 api_router.include_router(minio_proxy.router, prefix="/v1/minio-proxy", tags=["Minio Proxy"])
 api_router.include_router(consent_audit.router, prefix="/v1/consent_audit", tags=["Audit"])
+api_router.include_router(logs.router, prefix="/v1/business-logs", tags=["Business-logs"])
 api_router.include_router(dashboard.router, prefix="/v1/dashboard", tags=["Dashboard"])
 api_router.include_router(webhooks.router, prefix="/v1/webhooks", tags=["Webhooks Management"])
 api_router.include_router(data_fiduciary.router, prefix="/v1/data-fiduciary", tags=["Data Fiduciary"])
