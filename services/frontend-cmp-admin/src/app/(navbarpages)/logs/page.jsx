@@ -70,9 +70,7 @@ const Page = () => {
       if (startDate) params.append("start_time", startDate.toISOString());
       if (endDate) params.append("end_time", endDate.toISOString());
 
-      const response = await apiCall(
-        `/assets/logs/business?${params.toString()}`
-      );
+      const response = await apiCall(`/business-logs?${params.toString()}`);
 
       setLogs(response.logs || []);
       setStatistics(
