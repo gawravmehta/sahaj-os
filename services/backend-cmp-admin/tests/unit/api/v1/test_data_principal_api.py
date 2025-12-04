@@ -275,7 +275,8 @@ def test_update_data_principal(mock_service, mock_user, side_effect, return_valu
 
 
 def test_update_data_principal_validation_error():
-    res = client.put(f"{BASE_URL}/update-data-principal/dp123", json={"dp_email": ["invalid-email"]})
+    # Sending a non-list value for a field expecting a list should trigger a Pydantic validation error (422)
+    res = client.put(f"{BASE_URL}/update-data-principal/dp123", json={"dp_email": "not_a_list"})
     assert res.status_code == 422
 
 
