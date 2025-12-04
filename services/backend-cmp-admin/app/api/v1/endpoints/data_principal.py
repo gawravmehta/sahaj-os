@@ -34,12 +34,19 @@ async def search_data_principals(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
+    try:
+        data_elements = body.filter.data_elements or []
 
-    data_elements = body.filter.data_elements or []
+        result = await service.get_dps_by_data_elements(data_elements, current_user)
 
-    result = await service.get_dps_by_data_elements(data_elements, current_user)
-
-    return {"message": "Data Principals fetched successfully", "count": len(result), "data_principals": result}
+        return {"message": "Data Principals fetched successfully", "count": len(result), "data_principals": result}
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.post("/add-data-principal")
@@ -48,8 +55,15 @@ async def add_data_principal(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.add_data_principal(dp_data_list, current_user)
+    try:
+        return await service.add_data_principal(dp_data_list, current_user)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.get("/view-data-principal/{principal_id}")
@@ -58,8 +72,15 @@ async def get_dp(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.get_data_principal(principal_id, current_user)
+    try:
+        return await service.get_data_principal(principal_id, current_user)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.delete("/delete-data-principal/{principal_id}")
@@ -68,8 +89,15 @@ async def delete_dp(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.delete_data_principal(principal_id, current_user)
+    try:
+        return await service.delete_data_principal(principal_id, current_user)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.get("/get-all-data-principals")
@@ -85,18 +113,25 @@ async def get_all_data_principals(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.get_all_data_principals(
-        page,
-        limit,
-        current_user,
-        dp_country,
-        dp_preferred_lang,
-        is_legacy,
-        consent_status,
-        added_with,
-        search,
-    )
+    try:
+        return await service.get_all_data_principals(
+            page,
+            limit,
+            current_user,
+            dp_country,
+            dp_preferred_lang,
+            is_legacy,
+            consent_status,
+            added_with,
+            search,
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.put("/update-data-principal/{principal_id}")
@@ -106,8 +141,15 @@ async def update_dp(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.update_data_principal(principal_id, update, current_user)
+    try:
+        return await service.update_data_principal(principal_id, update, current_user)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
 
 
 @router.get("/get-all-dp-tags")
@@ -115,5 +157,12 @@ async def get_all_dp_tags(
     current_user: dict = Depends(get_current_user),
     service: DataPrincipalService = Depends(get_data_principal_service),
 ):
-
-    return await service.get_all_dp_tags(current_user)
+    try:
+        return await service.get_all_dp_tags(current_user)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Internal Server Error",
+        )
