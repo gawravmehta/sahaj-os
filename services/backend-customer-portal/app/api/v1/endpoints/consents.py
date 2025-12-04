@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Body, Depends
+from fastapi.responses import StreamingResponse
 from app.db.dependencies import get_consent_artifact_collection, get_purpose_master_collection
 from app.schemas.consent_schema import UpdateConsent
 from app.services.consent_service import ConsentService
@@ -69,3 +70,18 @@ async def renew_consent(
     app_logger.info(f"API Call: /renew-consent/{agreement_id}")
     service = ConsentService(artifact_collection, purpose_collection)
     return await service.renew_consent(agreement_id, update_consent)
+
+
+@router.get("/pdf-document/{agreement_id}")
+async def get_pdf_document(
+    agreement_id: str,
+    artifact_collection=Depends(get_consent_artifact_collection),
+    current_user: dict = Depends(get_current_user),
+):
+    app_logger.info(f"API Call: /pdf-document/{agreement_id}")
+    service = ConsentService(artifact_collection)
+    pdf_buffer = await service.get_pdf_document(agreement_id)
+
+    return StreamingResponse(
+        pdf_buffer, media_type="application/pdf", headers={"Content-Disposition": f"attachment; filename=agreement_{agreement_id}.pdf"}
+    )

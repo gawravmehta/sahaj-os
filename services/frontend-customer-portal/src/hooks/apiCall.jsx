@@ -17,6 +17,7 @@ export const apiCall = async (endpoint, options = {}) => {
     params = {},
     headers = {},
     returnFullResponse = false,
+    responseType = null, // Add responseType option
   } = options;
 
   const token = Cookies.get("access_token");
@@ -39,6 +40,27 @@ export const apiCall = async (endpoint, options = {}) => {
 
   try {
     const res = await fetch(url, fetchOptions);
+
+    // Handle blob response type for file downloads
+    if (responseType === "blob") {
+      if (!res.ok) {
+        // Try to parse error as JSON if possible
+        const contentType = res.headers.get("content-type");
+        let errorData = null;
+        if (contentType && contentType.includes("application/json")) {
+          errorData = await res.json();
+        } else {
+          errorData = await res.text();
+        }
+        throw {
+          status: res.status,
+          message: errorData?.message || res.statusText,
+          data: errorData,
+        };
+      }
+      return await res.blob();
+    }
+
     const contentType = res.headers.get("content-type");
 
     let responseData = null;
