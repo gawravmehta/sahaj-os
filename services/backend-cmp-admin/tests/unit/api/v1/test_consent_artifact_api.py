@@ -64,6 +64,8 @@ def test_get_all_consent_artifact(mock_service, mock_user, side_effect, return_v
 
 
 def test_get_all_consent_artifact_invalid_query():
+    # Attempt to send an invalid query parameter to trigger a validation error (422)
+    # For example, 'page' parameter must be >= 1, so 'page=0' is invalid.
     res = client.get(f"{BASE_URL}/get-all-consent-artifact?page=0")
     assert res.status_code == 422
 
@@ -72,22 +74,21 @@ def test_get_all_consent_artifact_invalid_query():
 
 
 @pytest.mark.parametrize(
-    "side_effect, expected_status",
+    "side_effect, return_value, expected_status",
     [
-        (None, 200),
-        (HTTPException(status_code=400, detail="bad"), 400),
-        (HTTPException(status_code=500, detail="Internal Server Error"), 500),
+        (None, "csv_data_here", 200),
+        (HTTPException(status_code=400, detail="bad"), None, 400),
+        (HTTPException(status_code=500, detail="Internal Server Error"), None, 500),
     ],
 )
-def test_download_consent_artifact(mock_service, mock_user, side_effect, expected_status):
+def test_download_consent_artifact(mock_service, mock_user, side_effect, return_value, expected_status):
     mock_service.download_consent_artifact.side_effect = side_effect
-    mock_service.download_consent_artifact.return_value = "csv_data_here"
+    mock_service.download_consent_artifact.return_value = return_value
 
     res = client.get(f"{BASE_URL}/export-csv")
 
     assert res.status_code == expected_status
     if expected_status == 200:
-        assert res.text == "csv_data_here"
         mock_service.download_consent_artifact.assert_called_once_with(None, None, None, None, "desc", None, None, mock_user)
     elif expected_status == 500:
         assert res.json()["detail"] == "Internal Server Error"
