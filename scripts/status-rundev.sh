@@ -93,5 +93,5 @@ echo
 echo "Docker Compose stack status (using same -f chain as init-rundev):"
 echo "Running: ${CMD[*]} ps"
 # run compose ps and show it
-"${CMD[@]}" ps
+"${CMD[@]}" ps 2>&1 | grep -v "variable is not set"
 exit 0

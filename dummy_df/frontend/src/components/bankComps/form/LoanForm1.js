@@ -41,12 +41,8 @@ const LoanForm1 = () => {
       await loadConcurNotice();
 
       window.invokeNotice({
-        collection_point_id: "68b157955392f9da736070d0",
-        notice_id: "68b123c1e6ef7bbc4b109051",
-        dp_id: "a3e1bc2f-8d3e-4a9b-9c41-f6a2e8f3d123",
-        dp_e: "gewgawrav@gmail.com",
-        dp_m: "8770467824",
-        redirect_url: "http://localhost:3000/trust-bank",
+        cp_id: "692ffd0df2c04cbd82d38087",
+        dp_e: "abhishekkhare583@gmail.com",
       });
       setTimeout(() => {
         setDisabled1(false);
@@ -57,32 +53,6 @@ const LoanForm1 = () => {
     }
   };
 
-  // const handleShowNotice = async () => {
-  //   console.log("handleShowNotice function call");
-  //   const agreementId = localStorage.getItem("agreement_id");
-
-  //   if (agreementId) {
-  //     // If agreement_id exists, route to the landing page
-  //     router.push("/trust-bank/home"); // Replace "/trust-bank/home" with your actual landing page route
-  //     localStorage.removeItem("agreement_id");
-  //   } else {
-  //     // If agreement_id doesn't exist, show the notice center
-  //     const { morajNoticeCenter } = await import(
-  //       "concur-consent/morajNoticeCenter"
-  //     );
-
-  //     morajNoticeCenter(
-  //       "66c83c7fec50fbe3e39a8986",
-  //       "bebdbc7d6478da15",
-  //       "66c7080d8039b28a25d760e4",
-  //       "UBgPUCMdp8iXV4ZZ7Ks7DA",
-  //       "-_TF41WvWHwwYfV28IUi1aH503T8GXxIWvj2s6MKda0"
-  //     );
-  //     setTimeout(() => {
-  //       setDisabled1(false);
-  //     }, 2000);
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -180,8 +150,8 @@ const LoanForm1 = () => {
             type="submit"
             className="text-red-500 border border-red-500 focus:ring-4 hover:bg-red-500 hover:text-white font-medium rounded-md text-base w-full sm:w-auto px-7 py-3 text-center"
           >
-            {disabled1? <Loader /> : "Submit"}
-            
+            {disabled1 ? <Loader /> : "Submit"}
+
           </button>
         </div>
       </form>

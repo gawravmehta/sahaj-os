@@ -7,14 +7,35 @@ from typing import Optional
 from app.core.config import settings
 from app.core.logging_config import logger
 
-def verify_signature(payload: dict, signature: str) -> bool:
+
+def verify_signature(payload: dict, signature: str, target_for: str) -> bool:
     """Verify HMAC-SHA256 signature from headers."""
     payload_str = json.dumps(payload, separators=(",", ":"), sort_keys=True)
-    computed_sig = hmac.new(
-        settings.WEBHOOK_SECRET.encode(),
-        msg=payload_str.encode(),
-        digestmod=hashlib.sha256,
-    ).hexdigest()
+
+    computed_sig = None
+    if target_for == "df":
+        computed_sig = hmac.new(
+            settings.WEBHOOK_SECRET.encode(),
+            msg=payload_str.encode(),
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+    elif target_for == "dpr1":
+        computed_sig = hmac.new(
+            settings.DPR1_WEBHOOK_SECRET.encode(),
+            msg=payload_str.encode(),
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+    elif target_for == "dpr2":
+        computed_sig = hmac.new(
+            settings.DPR2_WEBHOOK_SECRET.encode(),
+            msg=payload_str.encode(),
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+
+    if computed_sig is None:
+        logger.error(f"Unknown target_for: {target_for}")
+        return False
+
     logger.debug(f"Computed signature: {computed_sig}")
     return hmac.compare_digest(computed_sig, signature)
 

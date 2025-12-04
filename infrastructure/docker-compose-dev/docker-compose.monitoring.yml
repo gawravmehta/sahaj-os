@@ -51,6 +51,9 @@ services:
         condition: service_started
     volumes:
       - ./infrastructure/deployment-configs/opensearch-dashboards/opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+    environment:
+      - OPENSEARCH_USERNAME=${OPENSEARCH_USERNAME}
+      - TEMPORARY_PASSWORD=${TEMPORARY_PASSWORD}
     ports:
       - "5601:5601"
     networks:
@@ -69,7 +72,25 @@ services:
     volumes:
       - ./infrastructure/deployment-configs/fluentbit/fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
       - ./infrastructure/deployment-configs/fluentbit/parsers.conf:/fluent-bit/etc/parsers.conf
-      - ./services/backend-cmp-admin:/var/log/backend-cmp-admin
+      - ./services/backend-cmp-admin/logs:/var/log/backend-cmp-admin
+      - ./services/backend-cmp-admin/logs/dp_processing_consumer:/var/log/dp_processing_consumer
+      - ./services/backend-cmp-admin/logs/dp_external_processing_consumer:/var/log/dp_external_processing_consumer
+      - ./services/backend-cmp-admin/logs/failed_records_consumer:/var/log/failed_records_consumer
+      - ./services/backend-cmp-admin/logs/notice_notification_consumer:/var/log/notice_notification_consumer
+      - ./services/backend-cmp-admin/logs/send_email_consumer:/var/log/send_email_consumer
+      - ./services/backend-cmp-admin/logs/consent_validation_internal_consumer:/var/log/consent_validation_internal_consumer
+      - ./services/backend-cmp-admin/logs/consent_event_consumer:/var/log/consent_event_consumer
+      - ./services/backend-cmp-admin/logs/consent_expiry_consumer:/var/log/consent_expiry_consumer
+      - ./services/backend-cmp-admin/logs/consent_expiry_scheduler:/var/log/consent_expiry_scheduler
+      - ./services/backend-cmp-admin/logs/consent_validation_external_consumer:/var/log/consent_validation_external_consumer
+      - ./services/backend-cmp-admin/logs/cookie_scan_consumer:/var/log/cookie_scan_consumer
+      - ./services/backend-cmp-admin/logs/data_expiry_consumer:/var/log/data_expiry_consumer
+      - ./services/backend-cmp-admin/logs/data_expiry_scheduler:/var/log/data_expiry_scheduler
+      - ./services/backend-cmp-admin/logs/webhook_consumer:/var/log/webhook_consumer
+      - ./services/backend-customer-portal/logs:/var/log/backend-customer-portal
+      - ./services/backend-notice/logs:/var/log/backend-notice
+      - ./services/backend-notice/logs/consent_processing_consumer:/var/log/consent_processing_consumer
+      - ./services/cookie-consent-collection/logs:/var/log/cookie-consent-collection
     ports:
       - "24224:24224"
       - "24224:24224/udp"

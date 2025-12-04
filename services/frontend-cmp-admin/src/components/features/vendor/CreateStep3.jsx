@@ -1,4 +1,3 @@
-import { countryOptions } from "@/constants/countryOptions";
 import { useState } from "react";
 import { FiPhone } from "react-icons/fi";
 import { GoMail, GoPlus } from "react-icons/go";
@@ -33,6 +32,16 @@ const CreateStep3 = ({
     document_url: "",
     signed_on: "",
   });
+
+  const contactDesignationOptions = [
+    { label: "Data Protection Officer (DPO)", value: "DPO" },
+    { label: "Chief Information Security Officer (CISO)", value: "CISO" },
+    { label: "Legal Counsel", value: "Legal Counsel" },
+    { label: "Compliance Manager", value: "Compliance Manager" },
+    { label: "IT Manager", value: "IT Manager" },
+    { label: "Director", value: "Director" },
+    { label: "Other", value: "Other" },
+  ];
 
   return (
     <div className="flex w-full max-w-lg flex-col px-3 pb-2 pt-6">
@@ -160,12 +169,11 @@ r"
           missingFields={missingFields}
         />
         <SelectInput
-          name="dpr_country_risk"
+          name="contact_designation"
           label="Contact Designation"
-          tooltipText="Role of the contact person.
-"
+          tooltipText="Role of the contact person."
           value={
-            countryOptions.find(
+            contactDesignationOptions.find(
               (item) => item.value === contact_person.designation
             ) || null
           }
@@ -175,7 +183,7 @@ r"
               designation: selectedOption?.value || "",
             }))
           }
-          options={countryOptions}
+          options={contactDesignationOptions}
           placeholder="Select Designation"
           className="w-full"
         />
