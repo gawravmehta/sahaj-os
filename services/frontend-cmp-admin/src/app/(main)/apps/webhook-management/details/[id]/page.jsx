@@ -55,7 +55,10 @@ const WebhookDetailsRoute = ({ params }) => {
 
   const breadcrumbsProps = {
     path: `/apps/webhook-management/${id}`,
-    skip: "/",
+    skip: `/apps`,
+    labels: {
+      [`/apps/webhook-management/${id}`]: "webhooks",
+    },
   };
 
   return (
