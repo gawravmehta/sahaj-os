@@ -61,6 +61,11 @@ async def update_cp_endpoint(
     try:
         update_dict = update_data.model_dump(exclude_unset=True, exclude_defaults=True)
         updated_cp = await service.update_collection_point(cp_id, update_dict, current_user)
+        if not updated_cp:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Collection Point with id '{cp_id}' not found.",
+            )
         logger.info(f"Collection point {cp_id} updated by user {current_user.get('email')}.")
         return updated_cp
     except HTTPException as e:
@@ -68,7 +73,7 @@ async def update_cp_endpoint(
         raise
     except Exception as e:
         logger.critical(f"Internal Server Error while updating collection point {cp_id} for user {current_user.get('email')}: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.patch(
