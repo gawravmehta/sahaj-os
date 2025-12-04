@@ -23,14 +23,12 @@ async def process_and_ack_verification():
     async for doc in cursor:
         dp_id = doc["payload"]["dp_id"]
         df_id = doc["payload"]["df_id"]
-        request_id = doc["payload"]["request_id"]
 
         logger.info(f"Processing verification for DP ID: {dp_id}")
 
         ack_payload = {
             "dp_id": dp_id,
             "df_id": df_id,
-            "request_id": request_id,
             "ack_timestamp": datetime.now(settings.DATETIME_UTC).isoformat(),
         }
 

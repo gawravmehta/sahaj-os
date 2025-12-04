@@ -8,6 +8,8 @@ load_dotenv()
 class Settings:
     MONGO_URI = os.getenv("MONGO_URI")
     WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
+    DPR1_WEBHOOK_SECRET = os.getenv("DPR1_WEBHOOK_SECRET")
+    DPR2_WEBHOOK_SECRET = os.getenv("DPR2_WEBHOOK_SECRET")
     WEBHOOK_AUTH_HEADER = "X-Consent-Signature"
     SERVICE_NAME = os.getenv("SERVICE_NAME", "concur-service")
     CMP_WEBHOOK_SECRET = os.getenv("CMP_WEBHOOK_SECRET", "cmp_webhook_secret")

@@ -2,17 +2,19 @@ from app.db.mongo import dummy_df
 from app.services.signature_service import verify_signature
 from app.core.logging_config import logger
 
+
 class WebhookProcessor:
     @staticmethod
-    async def process_webhook_event(payload: dict, signature: str) -> str:
+    async def process_webhook_event(payload: dict, signature: str, target_for: str = "df") -> str:
         logger.info(f"Received payload: {payload}")
 
         await dummy_df.insert_one(
             {
                 "payload": payload,
-                "event": payload.get("event"),
+                "event": payload.get("event_type") or payload.get("event"),
                 "timestamp": payload.get("timestamp"),
                 "processed": False,
+                "target_for": target_for,
             }
         )
         logger.info("Payload saved to MongoDB dummy_df collection.")
@@ -21,10 +23,10 @@ class WebhookProcessor:
         if not signature:
             raise ValueError("Missing signature header")
 
-        if not verify_signature(payload, signature):
+        if not verify_signature(payload, signature, target_for):
             raise ValueError("Invalid signature")
 
-        event_type = payload.get("event")
+        event_type = payload.get("event_type") or payload.get("event")
         logger.info(f"Received event type: {event_type}\n")
 
         response_status = "ok"
