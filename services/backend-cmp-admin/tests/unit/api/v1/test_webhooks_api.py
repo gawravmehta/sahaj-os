@@ -226,4 +226,32 @@ def test_delete_webhook(mock_service, mock_user, side_effect, expected_status):
         assert "detail" in res.json()
 
 
+# ---------------- TEST TEST WEBHOOK ---------------- #
+
+
+@pytest.mark.parametrize(
+    "side_effect, return_value, expected_status",
+    [
+        (None, {"message": "Test webhook sent successfully"}, 200),
+        (HTTPException(status_code=404, detail="not found"), None, 404),
+        (HTTPException(status_code=500, detail="Internal Server Error"), None, 500),
+    ],
+)
+def test_test_webhook(mock_service, mock_user, side_effect, return_value, expected_status):
+    mock_service.test_webhook.side_effect = side_effect
+    mock_service.test_webhook.return_value = return_value
+
+    webhook_id = "wh123"
+    res = client.post(f"{BASE_URL}/test/{webhook_id}")
+
+    assert res.status_code == expected_status
+    if expected_status == 200:
+        assert res.json()["message"] == "Test webhook sent successfully"
+        mock_service.test_webhook.assert_called_once_with(webhook_id, mock_user)
+    elif expected_status == 500:
+        assert res.json()["detail"] == "Internal Server Error"
+    else:
+        assert "detail" in res.json()
+
+
 # ---------------- End of Tests ---------------- #
