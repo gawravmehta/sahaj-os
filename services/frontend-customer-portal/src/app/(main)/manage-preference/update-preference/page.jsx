@@ -220,7 +220,10 @@ function Page() {
                       Consent Agreement
                     </h1>
                   </div>
-                  <div className="w-1/2 flex gap-4 h-11 justify-end border border-[#C7CFE2]">
+                  <div
+                    onClick={handlePdfDownload}
+                    className="w-1/2 flex gap-4 h-11 justify-end "
+                  >
                     <div>
                       <div className="text-[16px] text-[#000000]">
                         Agreement ID
@@ -231,7 +234,6 @@ function Page() {
                     </div>
                     <div
                       className="flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity"
-                      onClick={handlePdfDownload}
                       title="Download Agreement PDF"
                     >
                       <Image

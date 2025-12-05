@@ -202,7 +202,7 @@ class ConsentTransactionService:
 
             consent_count = await self.collection.count_documents({"dp_id": dp_id})
 
-            cp_count = len(await self.collection.distinct("cp_name", {"dp_id": dp_id}))
+            cp_count = len(await self.collection.distinct("cp_id", {"dp_id": dp_id}))
 
             dpar_count = await self.dpar_collection.count_documents({"requested_by": dp_id})
 
