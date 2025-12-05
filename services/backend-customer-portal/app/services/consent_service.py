@@ -180,3 +180,15 @@ class ConsentService:
             "linked_to": agreement_id,
             "agreement_hash_id": new_artifact["agreement_hash_id"],
         }
+
+    async def get_pdf_document(self, agreement_id: str):
+        from app.utils.pdf_generator import generate_agreement_pdf
+
+        artifact = await self.artifact_collection.find_one({"artifact.agreement_id": agreement_id})
+        if not artifact:
+            app_logger.warning(f"Consent agreement not found for ID: {agreement_id}")
+            raise HTTPException(status_code=404, detail="Consent agreement not found")
+
+        # Generate PDF
+        pdf_buffer = generate_agreement_pdf(artifact)
+        return pdf_buffer

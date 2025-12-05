@@ -53,16 +53,12 @@ const Page = () => {
       await loadConcurNotice();
 
       window.invokeNotice({
-        collection_point_id: "68b152a05392f9da736070c5",
-        notice_id: "68b123c1e6ef7bbc4b109051",
-        dp_id: "a3e1bc2f-8d3e-4a9b-9c41-f6a2e8f3d123",
-        dp_e: "gewgawrav@gmail.com",
-        dp_m: "8770467824",
-        redirect_url: "http://localhost:3000/trust-bank",
+        cp_id: "69306a9a969d5c1cc1b2126e",
+        dp_e: "abhishekkhare583@gmail.com",
       });
       setTimeout(() => {
         setDisabled1(false);
-      },2000);
+      }, 2000);
     } catch (err) {
       console.error("Failed to load notice script:", err);
       setDisabled1(false);
@@ -256,7 +252,7 @@ const Page = () => {
             type="submit"
             className="text-red-500 border border-red-500 focus:ring-4 hover:bg-red-500 hover:text-white font-medium cursor-pointer rounded-md text-base w-full sm:w-auto px-7 py-3 text-center"
           >
-        {   disabled1? <Loader /> : "Apply Now"}
+            {disabled1 ? <Loader /> : "Apply Now"}
           </button>
         </div>
       </form>

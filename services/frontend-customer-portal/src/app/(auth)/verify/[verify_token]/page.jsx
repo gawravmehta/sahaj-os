@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { apiCall } from "@/hooks/apiCall";
 
 const Page = ({ params: paramsPromise }) => {
   const router = useRouter();

@@ -81,6 +81,32 @@ function Page() {
     }
   }, [agreementId]);
 
+  const handlePdfDownload = async () => {
+    try {
+      const response = await apiCall(
+        `/api/v1/consents/pdf-document/${agreementId}`,
+        {
+          method: "GET",
+          responseType: "blob",
+        }
+      );
+
+      // Create a blob URL and trigger download
+      const blob = new Blob([response], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `agreement_${agreementId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error downloading PDF:", err);
+      alert("Failed to download PDF. Please try again.");
+    }
+  };
+
   const handleUpdateConsent = async () => {
     if (
       consentChanges.toRevoke.length === 0 &&
@@ -194,7 +220,10 @@ function Page() {
                       Consent Agreement
                     </h1>
                   </div>
-                  <div className="w-1/2 flex gap-4 h-11 justify-end">
+                  <div
+                    onClick={handlePdfDownload}
+                    className="w-1/2 flex gap-4 h-11 justify-end "
+                  >
                     <div>
                       <div className="text-[16px] text-[#000000]">
                         Agreement ID
@@ -203,7 +232,10 @@ function Page() {
                         {consentData.agreement_id}
                       </div>
                     </div>
-                    <div className="flex items-center justify-center">
+                    <div
+                      className="flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity"
+                      title="Download Agreement PDF"
+                    >
                       <Image
                         src={"/pdf.png"}
                         height={100}
