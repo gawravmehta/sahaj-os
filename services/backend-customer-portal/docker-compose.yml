@@ -1,7 +1,7 @@
 version: "3"
 services:
   backend-customer-portal:
-    build: 
+    build:
       context: ./services/backend-customer-portal
     image: backend-customer-portal:latest
     environment:
@@ -38,6 +38,9 @@ services:
 
     volumes:
       - ./services/backend-customer-portal/logs:/usr/src/application/logs
+    ports:
+      - "3331:3331"
+
     networks:
       - concur-cfc-network
     depends_on:
