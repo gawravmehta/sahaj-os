@@ -17,18 +17,18 @@ const CheckboxGroup = ({ label, options, selectedValues, onChange }) => {
       {label && <label className="text-sm font-medium text-gray-700">{label}</label>}
       <div className="grid grid-cols-2 gap-2">
         {options.map((option) => (
-          <div key={option} className="flex items-center">
+          <div key={option.value} className="flex items-center">
             <input
               type="checkbox"
-              id={option}
-              name={option}
-              value={option}
-              checked={selectedValues.includes(option)}
+              id={option.value}
+              name={option.value}
+              value={option.value}
+              checked={selectedValues.includes(option.value)}
               onChange={handleCheckboxChange}
               className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
-            <label htmlFor={option} className="ml-2 text-sm text-gray-900">
-              {option}
+            <label htmlFor={option.value} className="ml-2 text-sm text-gray-900">
+              {option.label}
             </label>
           </div>
         ))}
