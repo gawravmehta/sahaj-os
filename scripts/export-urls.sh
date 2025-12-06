@@ -26,6 +26,7 @@ if [[ "$MODE" == "prod" ]]; then
   export API_COOKIE_CONSENT_HOST="api-cookie-consent.${MAIN_DOMAIN}"
   export FRONTEND_CMP_HOST="cmp.${MAIN_DOMAIN}"
   export FRONTEND_CUSTOMER_HOST="dpar.${MAIN_DOMAIN}"
+  export MINIO_BROWSER_URL="cmp-cdn.${MAIN_DOMAIN}"
 
   export POSTGRES_DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres16:5432/postgres"
   export MONGO_URI="mongodb://${POSTGRES_USER}:${POSTGRES_PASSWORD}@ferretdb:27017"

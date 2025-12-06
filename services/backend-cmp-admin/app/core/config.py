@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     MINIO_ROOT_PASSWORD: str
     S3_URL: str
     S3_SECURE: bool = False
+    MINIO_BROWSER_URL: str
 
     NOTICE_WORKER_BUCKET: str = "notice-worker-dev"
     PROCESSED_FILES_BUCKET: str = "processed-files-dev-1"

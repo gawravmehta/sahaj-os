@@ -51,6 +51,21 @@ def get_s3_client() -> Minio:
     )
 
 
+# policy = {
+#     "Version": "2012-10-17",
+#     "Statement": [
+#         {
+#             "Effect": "Allow",
+#             "Principal": {"AWS": "*"},
+#             "Action": ["s3:GetObject"],
+#             "Resource": [f"arn:aws:s3:::{settings.COOKIE_CONSENT_BUCKET}/*"]
+#         }
+#     ],
+# }
+
+# client.set_bucket_policy(settings.COOKIE_CONSENT_BUCKET, json.dumps(policy))
+
+
 def make_s3_buckets():
     s3_client = get_s3_client()
     bucket_names = [
