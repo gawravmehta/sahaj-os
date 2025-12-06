@@ -9,6 +9,7 @@ set -euo pipefail
 : "${API_COOKIE_CONSENT_HOST:?}"
 : "${FRONTEND_CMP_HOST:?}"
 : "${FRONTEND_CUSTOMER_HOST:?}"
+: "${MINIO_BROWSER_URL:?}"
 
 DOMAINS=(
   "$API_CMP_HOST"
@@ -17,6 +18,7 @@ DOMAINS=(
   "$API_COOKIE_CONSENT_HOST"
   "$FRONTEND_CMP_HOST"
   "$FRONTEND_CUSTOMER_HOST"
+  "$MINIO_BROWSER_URL"
 )
 
 echo "Issuing/renewing certificates for:"

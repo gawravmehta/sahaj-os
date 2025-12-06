@@ -9,6 +9,7 @@ set -euo pipefail
 : "${API_COOKIE_CONSENT_HOST:?}"
 : "${FRONTEND_CMP_HOST:?}"
 : "${FRONTEND_CUSTOMER_HOST:?}"
+: "${MINIO_BROWSER_URL:?}"
 
 NGINX_CONF_DIR="/etc/nginx/sites-available"
 ENABLED_DIR="/etc/nginx/sites-enabled"
@@ -56,6 +57,7 @@ _write_and_enable "${API_NOTICE_WORKER_HOST}" "http://127.0.0.1:3332"
 _write_and_enable "${API_COOKIE_CONSENT_HOST}" "http://127.0.0.1:3333"
 _write_and_enable "${FRONTEND_CMP_HOST}" "http://127.0.0.1:3000"
 _write_and_enable "${FRONTEND_CUSTOMER_HOST}" "http://127.0.0.1:3001"
+_write_and_enable "${MINIO_BROWSER_URL}" "http://127.0.0.1:9000"
 
 echo "Testing nginx configuration..."
 sudo nginx -t
