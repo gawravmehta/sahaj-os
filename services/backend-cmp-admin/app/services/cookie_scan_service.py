@@ -1,7 +1,6 @@
 import os
 import json
 import time
-import logging
 from typing import Any, Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
@@ -15,10 +14,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from motor.motor_asyncio import AsyncIOMotorCollection
+from app.core.logger import get_logger
 
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-logger = logging.getLogger("cookie_scanner")
+logger = get_logger("worker.cookie_scan_consumer")
 
 
 @dataclass
