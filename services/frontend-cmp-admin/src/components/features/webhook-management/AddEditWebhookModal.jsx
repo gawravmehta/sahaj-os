@@ -3,10 +3,30 @@
 import { useState, useEffect } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import CheckboxGroup from "@/components/ui/CheckboxGroup";
 import { InputField, SelectInput } from "@/components/ui/Inputs";
 import { apiCall } from "@/hooks/apiCall";
 import { getErrorMessage } from "@/utils/errorHandler";
 import toast from "react-hot-toast";
+
+const CONSENT_EVENT_OPTIONS = [
+  { value: "CONSENT_GRANTED", label: "Consent Granted" },
+  { value: "CONSENT_VALIDATED", label: "Consent Validated" },
+  { value: "CONSENT_UPDATED", label: "Consent Updated" },
+  { value: "CONSENT_RENEWED", label: "Consent Renewed" },
+  { value: "CONSENT_WITHDRAWN", label: "Consent Withdrawn" },
+  { value: "CONSENT_EXPIRED", label: "Consent Expired" },
+  {
+    value: "DATA_ERASURE_MANUAL_TRIGGERED",
+    label: "Data Erasure Manual Triggered",
+  },
+  {
+    value: "DATA_ERASURE_RETENTION_TRIGGERED",
+    label: "Data Erasure Retention Triggered",
+  },
+  { value: "DATA_UPDATE_REQUESTED", label: "Data Update Requested" },
+  { value: "GRIEVANCE_RAISED", label: "Grievance Raised" },
+];
 
 const WEBHOOK_FOR_OPTIONS = [
   { value: "df", label: "Data Fiduciary" },
@@ -32,8 +52,8 @@ const AddEditWebhookModal = ({
   });
 
   const [loading, setLoading] = useState(false);
-
   const [dprs, setDprs] = useState([]);
+  const [selectedEvents, setSelectedEvents] = useState([]);
 
   useEffect(() => {
     if (editingWebhook) {
@@ -43,6 +63,12 @@ const AddEditWebhookModal = ({
         dpr_id: editingWebhook.dpr_id || "",
         environment: editingWebhook.environment || "testing",
       });
+      setSelectedEvents(
+        editingWebhook.subscribed_events ||
+          CONSENT_EVENT_OPTIONS.map((event) => event.value)
+      );
+    } else {
+      setSelectedEvents(CONSENT_EVENT_OPTIONS.map((event) => event.value));
     }
   }, [editingWebhook]);
 
@@ -55,20 +81,33 @@ const AddEditWebhookModal = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCheckboxChange = (selectedValues) => {
+    setSelectedEvents(selectedValues);
+  };
+
+  const handleSelectAllChange = (e) => {
+    if (e.target.checked) {
+      setSelectedEvents(CONSENT_EVENT_OPTIONS.map((event) => event.value));
+    } else {
+      setSelectedEvents([]);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
+      const dataToSend = { ...formData, subscribed_events: selectedEvents };
       if (editingWebhook) {
         await apiCall(`/webhooks/update-webhook/${editingWebhook.webhook_id}`, {
           method: "PUT",
-          data: formData,
+          data: dataToSend,
         });
         toast.success("Webhook updated successfully");
       } else {
         const response = await apiCall("/webhooks/create-webhook", {
           method: "POST",
-          data: formData,
+          data: dataToSend,
         });
         toast.success(response.message || "Webhook created successfully");
         if (onWebhookCreated) {
@@ -156,6 +195,16 @@ const AddEditWebhookModal = ({
           }
           options={ENVIRONMENT_OPTIONS}
           isClearable={false}
+        />
+
+        <CheckboxGroup
+          label="Subscribed Events"
+          options={CONSENT_EVENT_OPTIONS}
+          selectedValues={selectedEvents}
+          onChange={handleCheckboxChange}
+          selectAllCheckbox={true}
+          isAllSelected={selectedEvents.length === CONSENT_EVENT_OPTIONS.length}
+          onSelectAllChange={handleSelectAllChange}
         />
 
         <div className="flex justify-end gap-2 mt-4">
