@@ -45,6 +45,7 @@ x-common-env: &common-env
   OPENSEARCH_PORT: ${OPENSEARCH_PORT}
   OPENSEARCH_USERNAME: ${OPENSEARCH_USERNAME}
   PUBLIC_KEY_PEM: ${PUBLIC_KEY_PEM}
+  MINIO_BROWSER_URL: ${MINIO_BROWSER_URL}
 
 x-common-depends: &common-depends
   app-base:

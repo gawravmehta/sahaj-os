@@ -178,7 +178,7 @@ class WidgetService:
                 content_type=content_type,
             )
 
-            file_url = f"https://{settings.S3_URL}/{settings.COOKIE_CONSENT_BUCKET}/{filename}"
+            file_url = f"https://{settings.MINIO_BROWSER_URL}/{settings.COOKIE_CONSENT_BUCKET}/{filename}"
 
             logger.info(f"Widget uploaded and accessible at {file_url}", extra={"widget_name": widget_name, "file_url": file_url})
 

@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     MINIO_ROOT_USER: str
     MINIO_ROOT_PASSWORD: str
     S3_SECURE: bool = False
+    MINIO_BROWSER_URL: str
     CUSTOMER_PORTAL_BUCKET: str
     KYC_DOCUMENTS_BUCKET: str
 

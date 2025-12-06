@@ -35,6 +35,7 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
       - RABBITMQ_VHOST_NAME=${RABBITMQ_VHOST_NAME}
       - RABBITMQ_POOL_SIZE=${RABBITMQ_POOL_SIZE}
+      - MINIO_BROWSER_URL=${MINIO_BROWSER_URL}
 
     volumes:
       - ./services/backend-customer-portal/logs:/usr/src/application/logs

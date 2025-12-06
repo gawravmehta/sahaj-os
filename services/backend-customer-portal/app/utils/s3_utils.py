@@ -3,21 +3,23 @@ from fastapi import HTTPException, UploadFile
 from minio import Minio, S3Error
 from app.core.config import settings
 from minio.lifecycleconfig import LifecycleConfig, Rule, Expiration
+from minio.commonconfig import Filter, ENABLED
 from app.core.logger import app_logger
 
 
 def set_bucket_expiry(s3_client: Minio, bucket_name: str, days: int = 60):
-    config = LifecycleConfig(
-        [
+    lifecycle_config = LifecycleConfig(
+        rules=[
             Rule(
-                rule_filter={"prefix": ""},
-                rule_id="auto-delete-60-days",
-                status="Enabled",
+                status=ENABLED,
+                rule_filter=Filter(prefix=""),
+                rule_id="auto-expire",
                 expiration=Expiration(days=days),
             )
         ]
     )
-    s3_client.set_bucket_lifecycle(bucket_name, config)
+
+    s3_client.set_bucket_lifecycle(bucket_name, lifecycle_config)
 
 
 def make_s3_bucket(bucket_names: list[str], s3_client: Minio):
@@ -47,7 +49,7 @@ def upload_file_to_s3(file: UploadFile, s3_client: Minio) -> str:
             content_type=file.content_type,
         )
 
-        file_url = f"http://{settings.S3_URL}/{settings.KYC_DOCUMENTS_BUCKET}/{unique_filename}"
+        file_url = f"https://{settings.MINIO_BROWSER_URL}/{settings.KYC_DOCUMENTS_BUCKET}/{unique_filename}"
         return file_url
 
     except S3Error as e:
