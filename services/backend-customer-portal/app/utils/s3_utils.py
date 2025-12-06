@@ -3,7 +3,7 @@ from fastapi import HTTPException, UploadFile
 from minio import Minio, S3Error
 from app.core.config import settings
 from minio.lifecycleconfig import LifecycleConfig, Rule, Expiration
-from minio.commonconfig import Filter
+from minio.commonconfig import Filter, ENABLED
 from app.core.logger import app_logger
 
 
@@ -11,9 +11,9 @@ def set_bucket_expiry(s3_client: Minio, bucket_name: str, days: int = 60):
     lifecycle_config = LifecycleConfig(
         rules=[
             Rule(
+                status=ENABLED,
+                rule_filter=Filter(prefix=""),
                 rule_id="auto-expire",
-                status="Enabled",
-                filter=Filter(prefix=""),
                 expiration=Expiration(days=days),
             )
         ]
