@@ -2,12 +2,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from typing import List, Optional, Dict
 import json
 from app.api.v1.deps import get_asset_service, get_current_user, get_cookie_service, get_widget_service
+from app.db.dependencies import get_df_register_collection
 from app.services.cookie_service import CookieManagementService
 from app.services.assets_service import AssetService
 from app.services.cookie_widget_service import WidgetService
 from app.schemas.cookie_schema import CookieCreate, CookieUpdate, CookieResponse, CookiesPaginatedResponse
 from app.db.rabbitmq import publish_message
 from app.db.session import get_s3_client
+from motor.motor_asyncio import AsyncIOMotorCollection
 
 router = APIRouter()
 
@@ -48,12 +50,21 @@ async def scan_cookies_by_asset(
     asset_id: str = Query(..., description="Selected Asset ID"),
     current_user: dict = Depends(get_current_user),
     service: AssetService = Depends(get_asset_service),
+    df_register_collection: AsyncIOMotorCollection = Depends(get_df_register_collection),
 ):
     """
     Publishes a message to a RabbitMQ queue to initiate a cookie scan.
     The actual scan will be performed by a separate consumer worker.
     """
     try:
+        df_doc = await df_register_collection.find_one({"df_id": current_user["df_id"]})
+        if not df_doc:
+            raise HTTPException(status_code=404, detail="Data fiduciary not found.")
+
+        openrouter_key = df_doc.get("ai", {}).get("openrouter_api_key")
+        if not openrouter_key:
+            raise HTTPException(status_code=400, detail="OpenRouter API key not configured for this DF. Please configure it in DF settings.")
+
         asset = await service.get_asset(asset_id=asset_id, user=current_user, for_system=True)
 
         if not asset:

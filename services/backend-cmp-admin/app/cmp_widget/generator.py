@@ -318,8 +318,8 @@ initWidget({{ translations, template, styles, websiteId, consentApiBaseUrl }});
             env["BUILD_ENTRY"] = relative_entry_file_posix
             env["BUILD_FILE_NAME"] = self.output_file_name.split(".")[0]
 
-            subprocess.run(["npm", "install"], check=True, env=env, shell=True, cwd=base_dir)
-            subprocess.run(["npm", "run", "build"], check=True, env=env, shell=True, cwd=base_dir)
+            subprocess.run("npm install", check=True, env=env, shell=True, cwd=base_dir)
+            subprocess.run("npm run build", check=True, env=env, shell=True, cwd=base_dir)
 
             self._mock_upload_dist_file()
             self._clean_build_directory()

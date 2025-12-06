@@ -67,8 +67,9 @@ class NoticeNotificationService:
                 "notice_notification_id": str(result.inserted_id),
             }
 
+        except HTTPException:
+            raise
         except Exception as e:
-
             await log_business_event(
                 event_type="NOTICE_SEND_FAILED",
                 user_email=current_user.get("email"),
@@ -83,6 +84,7 @@ class NoticeNotificationService:
     async def get_notifications_overview(self, page, limit, current_user):
         try:
             if page < 1 or limit < 1:
+
                 raise HTTPException(status_code=400, detail="Page and limit must be greater than 0")
 
             df_id = current_user.get("df_id")
@@ -117,10 +119,12 @@ class NoticeNotificationService:
                 },
             }
 
+        except HTTPException:
+            raise
         except Exception as e:
             await log_business_event(
                 event_type="NOTICE_LIST_FAILED",
-                user_email=current_user.get("email"),
+                user_email=current_user.get("email") if isinstance(current_user, dict) else None,
                 context={"page": page, "limit": limit},
                 message="Failed to fetch notifications overview",
                 business_logs_collection=self.business_logs_collection,
@@ -147,6 +151,8 @@ class NoticeNotificationService:
 
             return StreamingResponse(self._get_pixel_stream(), media_type="image/png")
 
+        except HTTPException:
+            raise
         except Exception as e:
             await log_business_event(
                 event_type="NOTICE_EMAIL_OPEN_FAILED",
@@ -168,6 +174,15 @@ class NoticeNotificationService:
             elif url_type == "mln":
                 redirect_url = f"{settings.CMP_NOTICE_WORKER_URL}/api/v1/ln/mln/{token}"
             else:
+                await log_business_event(
+                    event_type="NOTICE_CLICK_FAILED",
+                    user_email=None,
+                    context={"event_id": event_id, "url_type": url_type},
+                    message=f"Unknown url_type={url_type} for event {event_id}",
+                    business_logs_collection=self.business_logs_collection,
+                    log_level="ERROR",
+                    error_details="Unknown url_type",
+                )
                 raise HTTPException(status_code=400, detail="Unknown url_type")
 
             await log_business_event(
@@ -180,6 +195,8 @@ class NoticeNotificationService:
 
             return RedirectResponse(url=redirect_url)
 
+        except HTTPException:
+            raise
         except Exception as e:
             await log_business_event(
                 event_type="NOTICE_CLICK_FAILED",
